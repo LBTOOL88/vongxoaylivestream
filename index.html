@@ -346,22 +346,18 @@
     </div>
 
     <script>
-        const prizes_normal = [
-            // Các giải có tỷ lệ trúng 0%
-            { text: "🏍️ XE SH 350I", color: "#FF0000", weight: 0 },
-            { text: "💎 8888K", color: "#8E44AD", weight: 0 },
-            { text: "💳 68K", color: "#2ECC71", weight: 0 }, // Giữ lại một giải 68K với weight 0
-            { text: "💰 8K", color: "#A7D397", weight: 0 },    // Đặt weight của 8K về 0 theo yêu cầu mới
-            { text: "🎁 KHUYẾN KHÍCH", color: "#3498DB", weight: 0 }, // Đặt weight của Khuyến Khích về 0
-
-            // Các giải có tỷ lệ trúng cụ thể
-            { text: "💴 88K", color: "#27AE60", weight: 20 },       // 20%
-            { text: "💰 188K", color: "#FF6B6B", weight: 20 },      // 20% (Sử dụng một trong các giải 188K)
-            // { text: "💵 188K", color: "#E74C3C", weight: 0 }, // Giải 188K còn lại đặt weight 0
-            { text: "💰 388K", color: "#F39C12", weight: 20 },   // 20%
-            { text: "💸 588K", color: "#E67E22", weight: 20 },   // 20%
-            { text: "💎 888K", color: "#9B59B6", weight: 10 },  // 10%
-            { text: "💰 18K", color: "#75A2D9", weight: 10 }     // 10%
+        const prizes_normal = [ 
+            { text: "🏍️ XE SH 350I", color: "#FF0000", weight: 0 },   
+            { text: "💰 188K", color: "#FF6B6B", weight: 30 },      
+            { text: "💎 8888K", color: "#8E44AD", weight: 10 },  
+            { text: "💵 88K", color: "#E74C3C", weight: 10 },
+            { text: "💰 25 XU TOOL SLOT", color: "#F39C12", weight: 10 },
+            { text: "💸 588K", color: "#E67E22", weight: 10 },   
+            { text: "💴 78K", color: "#27AE60", weight: 10 },      
+            { text: "💳 100 XU TOOL VIP", color: "#2ECC71", weight: 10 },
+            { text: "💳 68K", color: "#A7D397", weight: 10 },
+            { text: "💎 888K", color: "#9B59B6", weight: 10 },
+            { text: "🎁 CHÚC BẠN MAY MẮN LẦN SAU", color: "#3498DB", weight: 0 }
         ];
 
         const prizes_vip = [
@@ -711,7 +707,7 @@
                 prize.text = "Giải không xác định"; 
             }
 
-            if (prize.text.includes('KHUYẾN KHÍCH') || prize.text.toLowerCase().includes('lần sau') || prize.text.toLowerCase().includes('may mắn sẽ đến')) { 
+            if (prize.text.includes('CHÚC BẠN MAY MẮN LẦN SAU') || prize.text.toLowerCase().includes('lần sau') || prize.text.toLowerCase().includes('may mắn sẽ đến')) { // Updated text
                 popupTitle.textContent = '😊 CHÚC BẠN MAY MẮN LẦN SAU!';
                 popupPrize.textContent = prize.text; 
                 popupMessage.textContent = 'Đừng buồn! Vẫn còn nhiều cơ hội phía trước. Hãy thử lại nhé!';
