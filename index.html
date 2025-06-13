@@ -373,26 +373,23 @@
         let activeWheelButton = document.getElementById('btnNormalWheel');
         let activeWheelType = 'normal';
 
-        // MÃ CHO VÒNG QUAY THƯỜNG (50 MÃ NGẪU NHIÊN - 5 CHỮ SỐ KHÁC NHAU)
+        // === START: CODE CHANGE ===
+        // MÃ MỚI CHO VÒNG QUAY THƯỜNG (20 MÃ)
         const validCodes = [
-            "LB73915", "LB28406", "LB91734", "LB50281", "LB64739",
-            "LB19825", "LB82504", "LB37196", "LB05482", "LB46917",
-            "LB71539", "LB20864", "LB95318", "LB58270", "LB61943",
-            "LB14075", "LB80329", "LB36751", "LB09246", "LB42708",
-            "LB78162", "LB25093", "LB90471", "LB53824", "LB67150",
-            "LB12986", "LB86357", "LB31024", "LB04791", "LB49158",
-            "LB75032", "LB29486", "LB93850", "LB57123", "LB60497",
-            "LB18264", "LB83719", "LB30582", "LB06945", "LB41207",
-            "LB70851", "LB24193", "LB97530", "LB51862", "LB65294",
-            "LB10627", "LB85091", "LB39468", "LB02735", "LB48106"
+            "LB88193", "LB74502", "LB60391", "LB95284", "LB17056",
+            "LB53829", "LB49170", "LB26538", "LB01947", "LB38265",
+            "LB91740", "LB82065", "LB75913", "LB64182", "LB50739",
+            "LB42816", "LB36095", "LB28471", "LB19520", "LB03684"
         ];
+        // === END: CODE CHANGE ===
 
-        // MÃ CHO VÒNG QUAY VIP (10 MÃ NGẪU NHIÊN - 5 CHỮ SỐ KHÁC NHAU)
+        // MÃ CHO VÒNG QUAY VIP (10 MÃ)
         const validVipCodes = [
             "VIP75391", "VIP20846", "VIP91374", "VIP58021", "VIP63749",
             "VIP19285", "VIP82054", "VIP37916", "VIP05842", "VIP46170"
         ];
         
+        // usedCodes sẽ lưu các đối tượng { code: "...", count: X } để theo dõi số lần sử dụng
         let usedCodes = []; 
         let isSpinning = false;
         let currentUser = "";
@@ -531,6 +528,8 @@
             return (usePound ? "#" : "") + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
         }
         
+        // === START: CODE CHANGE ===
+        // Cập nhật hàm validateCode để xử lý logic sử dụng mã 3 lần
         function validateCode() {
             const usernameInput = document.getElementById('username');
             const codeInput = document.getElementById('code');
@@ -539,15 +538,16 @@
             if (!usernameInput || !codeInput || !loginMessage) return;
 
             const username = usernameInput.value.trim();
-            const code = codeInput.value.trim();
+            const code = codeInput.value.trim().toUpperCase(); // Chuyển mã về chữ hoa để đồng nhất
             
             if (!username) {
                 showLoginMessage("❌ Vui lòng nhập tài khoản!", "error");
                 return;
             }
 
-            let isValidForSelectedWheel = false; 
+            let isValidCodeForSelectedWheel = false; 
             let codeTypeMessage = "";
+            let codeIsOptional = false;
 
             if (activeWheelType === 'vip') {
                 if (!code) {
@@ -555,36 +555,46 @@
                     return;
                 }
                 if (validVipCodes.includes(code)) {
-                    isValidForSelectedWheel = true;
+                    isValidCodeForSelectedWheel = true;
                     codeTypeMessage = "VIP";
                 } else {
                     showLoginMessage("❌ Mã Code VIP không hợp lệ!", "error");
                     return;
                 }
-            } else { 
-                if (code) { 
+            } else { // Vòng quay thường
+                if (code) { // Nếu người dùng nhập mã
                     if (validCodes.includes(code)) {
-                        isValidForSelectedWheel = true;
+                        isValidCodeForSelectedWheel = true;
                         codeTypeMessage = "thường";
                     } else if (validVipCodes.includes(code)) {
-                        showLoginMessage("❌ Mã Code này dành cho Vòng Quay VIP. Vui lòng chọn Vòng Quay VIP!", "error");
+                        showLoginMessage("❌ Mã này dành cho Vòng Quay VIP. Vui lòng chọn Vòng Quay VIP!", "error");
                         return;
                     } else {
                         showLoginMessage("❌ Mã Code không hợp lệ!", "error");
                         return;
                     }
-                } else { 
-                    isValidForSelectedWheel = true; 
+                } else { // Nếu người dùng không nhập mã
+                    isValidCodeForSelectedWheel = true; 
+                    codeIsOptional = true;
                 }
             }
 
-            if (code && isValidForSelectedWheel && usedCodes.includes(code)) {
-                showLoginMessage(`❌ Mã Code ${codeTypeMessage} này đã được sử dụng!`, "error");
-                return;
-            }
-            
-            if (code && isValidForSelectedWheel) { 
-                usedCodes.push(code); 
+            // Chỉ kiểm tra và cập nhật số lần sử dụng nếu có mã được cung cấp
+            if (!codeIsOptional && code && isValidCodeForSelectedWheel) {
+                const usageRecord = usedCodes.find(record => record.code === code);
+
+                // Kiểm tra nếu đã dùng quá 3 lần
+                if (usageRecord && usageRecord.count >= 3) {
+                    showLoginMessage(`❌ Mã Code ${codeTypeMessage} này đã được sử dụng tối đa 3 lần!`, "error");
+                    return;
+                }
+                
+                // Cập nhật số lần sử dụng
+                if (usageRecord) {
+                    usageRecord.count++;
+                } else {
+                    usedCodes.push({ code: code, count: 1 });
+                }
                 localStorage.setItem('usedWheelCodes_LongBao', JSON.stringify(usedCodes));
                 console.log("Đã cập nhật usedCodes vào localStorage:", usedCodes);
             }
@@ -601,6 +611,7 @@
                 createWheel(); 
             }, 1500);
         }
+        // === END: CODE CHANGE ===
         
         function showLoginMessage(message, type) {
             const loginMessage = document.getElementById('loginMessage');
@@ -942,10 +953,20 @@
 
 
         window.addEventListener('load', () => {
+            // Tải dữ liệu mã đã sử dụng từ localStorage
             const storedUsedCodes = localStorage.getItem('usedWheelCodes_LongBao');
             if (storedUsedCodes) {
-                usedCodes = JSON.parse(storedUsedCodes);
-                console.log("Đã tải usedCodes từ localStorage:", usedCodes);
+                try {
+                    usedCodes = JSON.parse(storedUsedCodes);
+                    // Đảm bảo usedCodes là một mảng
+                    if (!Array.isArray(usedCodes)) {
+                        usedCodes = [];
+                    }
+                    console.log("Đã tải usedCodes từ localStorage:", usedCodes);
+                } catch (e) {
+                    console.error("Lỗi khi parse usedCodes từ localStorage, reset về mảng rỗng.", e);
+                    usedCodes = [];
+                }
             } else {
                 usedCodes = []; 
                 console.log("Không có usedCodes trong localStorage, khởi tạo mảng rỗng.");
