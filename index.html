@@ -66,7 +66,7 @@
         }
         .retro-button:disabled { opacity: 0.4; cursor: not-allowed; }
         .retro-container { background-color: rgba(0,0,0,0.8); border: 1px solid var(--retro-green); }
-        .retro-header { border-bottom: 1px solid var(--retro-green); padding: 1rem; text-transform: uppercase; }
+        .retro-header { border-bottom: 1px solid var(--retro-green); padding: 0.75rem; text-transform: uppercase; }
         .glitch-text { animation: glitch 1.5s linear infinite; }
         .typing-cursor {
             display: inline-block; width: 10px; height: 1.2em;
@@ -76,7 +76,6 @@
         .blessing-glow {
              animation: glowing-blessing 2s ease-in-out infinite;
         }
-        /* NEW: Red alert flash animation */
         .red-alert-flash {
             animation: red-flash 0.8s infinite;
         }
@@ -91,7 +90,6 @@
             50% { box-shadow: 0 0 20px var(--retro-green), 0 0 25px var(--retro-green); }
             100% { box-shadow: 0 0 5px var(--retro-green); }
         }
-        /* NEW: Keyframes for red flash */
         @keyframes red-flash {
             0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
             50% { box-shadow: 0 0 50px 30px rgba(255, 0, 0, 0.7), inset 0 0 30px rgba(255,0,0,0.6); }
@@ -147,7 +145,7 @@
             playReceive() { this.synth?.triggerAttackRelease("C5", "8n"); },
             playError() { this.noise?.triggerAttackRelease("2n"); },
             playTyping() { this.synth?.triggerAttackRelease("C3", "32n"); },
-            playAlert() { // NEW sound for alerts
+            playAlert() {
                  if (!this.isStarted) this.init();
                  const synth = new Tone.Synth({
                     oscillator: { type: 'square' },
@@ -345,19 +343,19 @@
 
             return (
                  <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{animation: 'fadeIn 1s forwards'}}>
-                    <div className="w-full max-w-md p-8 space-y-6 retro-container">
-                        <h2 className="text-4xl text-center glitch-text">AQUARIUS OS</h2>
-                        <p className="text-center text-lg">> YÊU CẦU XÁC THỰC PILOT</p>
-                        <div className="space-y-6">
+                    <div className="w-full max-w-md p-4 sm:p-8 space-y-4 retro-container">
+                        <h2 className="text-3xl sm:text-4xl text-center glitch-text">AQUARIUS OS</h2>
+                        <p className="text-center text-md sm:text-lg">> YÊU CẦU XÁC THỰC PILOT</p>
+                        <div className="space-y-4">
                             <div>
-                                <label className="text-lg">> MÃ HIỆU PILOT:</label>
+                                <label className="text-md sm:text-lg">> MÃ HIỆU PILOT:</label>
                                 <input value={username} onChange={e => setUsername(e.target.value)} type="text" required className="w-full mt-1 retro-input" />
                             </div>
                             <div>
-                                <label className="text-lg">> MẬT KHẨU:</label>
+                                <label className="text-md sm:text-lg">> MẬT KHẨU:</label>
                                 <input value={password} onChange={e => setPassword(e.target.value)} type="password" required className="w-full mt-1 retro-input" />
                             </div>
-                            {error && <div className="text-lg text-center py-2 bg-red-900 bg-opacity-50 border border-red-500">{error}<span className="typing-cursor"></span></div>}
+                            {error && <div className="text-md sm:text-lg text-center py-2 bg-red-900 bg-opacity-50 border border-red-500">{error}<span className="typing-cursor"></span></div>}
                             <div className="flex items-center space-x-4">
                                 <button onClick={handleLogin} disabled={isLoading} className="w-full retro-button">{isLoading ? 'ĐANG KẾT NỐI...' : 'KẾT NỐI'}</button>
                                 <button onClick={handleSignup} disabled={isLoading} className="w-full retro-button">KHỞI TẠO</button>
@@ -452,61 +450,57 @@
             };
 
             return (
-                <div className="flex w-full h-screen p-4">
-                    <aside className={`w-full md:w-1/3 retro-container flex-col ${currentChat ? 'hidden md:flex' : 'flex'}`}>
+                <div className="flex w-full h-screen p-1 sm:p-2 md:p-4">
+                    <aside className={`w-full md:w-1/3 lg:w-1/4 retro-container flex-col ${currentChat ? 'hidden md:flex' : 'flex'}`}>
                         <header className="retro-header flex justify-between items-center flex-shrink-0">
-                            <h2 className="text-xl glitch-text">TRUNG TÂM ĐIỀU KHIỂN</h2>
+                            <h2 className="text-lg sm:text-xl glitch-text">ĐIỀU KHIỂN</h2>
                             <button onClick={onLogout} className="text-xs retro-button">ĐĂNG XUẤT</button>
                         </header>
                          <div className="p-2 border-b border-green-900">
-                            <p className="text-lg">TRẠNG THÁI HỆ THỐNG</p>
+                            <p className="text-md sm:text-lg">TRẠNG THÁI</p>
                             <AsciiChart value={onlineCount} total={conversations.length} />
                         </div>
                         <div className="flex-1 overflow-y-auto">
                             {conversations.map(conv => (
-                                <div key={conv.id} onClick={() => loadConversation(conv)} className={`p-4 border-b border-green-900 cursor-pointer hover:bg-green-900 bg-opacity-50 ${currentChat?.id === conv.id ? 'bg-green-800' : ''}`}>
-                                    <p className="font-semibold text-lg">> {conv.username || 'Unknown'}</p>
+                                <div key={conv.id} onClick={() => loadConversation(conv)} className={`p-3 border-b border-green-900 cursor-pointer hover:bg-green-900 bg-opacity-50 ${currentChat?.id === conv.id ? 'bg-green-800' : ''}`}>
+                                    <p className="font-semibold text-md sm:text-lg truncate">> {conv.username || 'Unknown'}</p>
                                 </div>
                             ))}
                         </div>
                     </aside>
-                    <section className={`w-full md:w-2/3 flex-col retro-container ml-0 md:ml-2 ${currentChat ? 'flex' : 'hidden md:flex'}`}>
+                    <section className={`w-full md:w-2/3 lg:w-3/4 flex-col retro-container ml-0 md:ml-2 ${currentChat ? 'flex' : 'hidden md:flex'}`}>
                         {currentChat ? (
                             <React.Fragment>
                                 <header className="retro-header flex items-center">
                                     <button onClick={() => setCurrentChat(null)} className="md:hidden mr-4 retro-button text-sm p-2">&lt;</button>
-                                    > KÊNH LIÊN LẠC: {currentChat.username}
+                                    > KÊNH: {currentChat.username}
                                 </header>
-                                <main ref={messagesListRef} className="flex-1 p-4 overflow-y-auto">
+                                <main ref={messagesListRef} className="flex-1 p-2 sm:p-4 overflow-y-auto">
                                     {messages.map(msg => (
                                         <div key={msg.id} className={`flex mb-4 ${msg.senderId === currentUser.uid ? 'justify-end' : 'justify-start'}`}>
-                                            {/* FIXED: Changed <p> to <div> to prevent nesting errors */}
                                             <div className={`max-w-lg p-2 ${msg.senderId === currentUser.uid ? 'text-cyan-300' : ''}`}><MessageContent msg={msg}/></div>
                                         </div>
                                     ))}
                                 </main>
-                                <footer className="p-4 border-t border-green-900">
-                                    {/* Table Alert Section */}
-                                    <div className="flex items-center border border-red-500 p-2 mb-3">
-                                        <input value={tableAlertInput} onChange={e => setTableAlertInput(e.target.value)} className="flex-1 retro-input" placeholder="> NHẬP SỐ BÀN CẢNH BÁO..." />
-                                        <button onClick={handleSendGlobalAlert} className="ml-3 retro-button border-red-500 text-red-400 hover:bg-red-500 hover:text-black">GỬI CẢNH BÁO</button>
+                                <footer className="p-2 sm:p-4 border-t border-green-900">
+                                    <div className="flex items-center border border-red-500 p-2 mb-2">
+                                        <input value={tableAlertInput} onChange={e => setTableAlertInput(e.target.value)} className="flex-1 retro-input text-sm" placeholder="> BÀN CẢNH BÁO..." />
+                                        <button onClick={handleSendGlobalAlert} className="ml-2 retro-button border-red-500 text-red-400 hover:bg-red-500 hover:text-black text-sm">GỬI</button>
                                     </div>
-                                    {/* Quick Replies */}
-                                    <div className="flex flex-wrap gap-2 mb-3">
-                                        <button onClick={() => handleQuickReply('NHÀ CON')} className="retro-button text-sm flex-grow">NHÀ CON</button>
-                                        <button onClick={() => handleQuickReply('NHÀ CÁI')} className="retro-button text-sm flex-grow">NHÀ CÁI</button>
-                                        <button onClick={() => handleQuickReply('LONG BẢO')} className="retro-button text-sm flex-grow">LONG BẢO</button>
-                                        <button onClick={() => handleQuickReply('XIN VUI LÒNG ĐỢI')} className="retro-button text-sm flex-grow">XIN VUI LÒNG ĐỢI</button>
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                                        <button onClick={() => handleQuickReply('NHÀ CON')} className="retro-button text-sm">NHÀ CON</button>
+                                        <button onClick={() => handleQuickReply('NHÀ CÁI')} className="retro-button text-sm">NHÀ CÁI</button>
+                                        <button onClick={() => handleQuickReply('LONG BẢO')} className="retro-button text-sm">LONG BẢO</button>
+                                        <button onClick={() => handleQuickReply('XIN VUI LÒNG ĐỢI')} className="retro-button text-sm">XIN VUI LÒNG ĐỢI</button>
                                     </div>
-                                    {/* Standard Message */}
                                     <div className="flex items-center">
                                         <input value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} className="flex-1 retro-input" placeholder="> Phản hồi..." />
-                                        <button onClick={handleSendMessage} className="ml-3 retro-button">GỬI</button>
+                                        <button onClick={handleSendMessage} className="ml-2 retro-button">GỬI</button>
                                     </div>
                                 </footer>
                             </React.Fragment>
                         ) : (
-                            <div className="flex-1 flex items-center justify-center opacity-50 text-xl">> ĐANG CHỜ CHỌN KÊNH LIÊN LẠC</div>
+                            <div className="flex-1 flex items-center justify-center opacity-50 text-xl">> CHỌN KÊNH LIÊN LẠC</div>
                         )}
                     </section>
                 </div>
@@ -664,7 +658,7 @@
                 return (
                     <div className="w-full border border-green-700 p-1">
                         <div className="flex items-center">
-                            <div className="text-sm mr-2">NĂNG LƯỢNG:</div>
+                            <div className="text-xs sm:text-sm mr-2">N.LƯỢNG:</div>
                             <div className="flex-1 h-4 bg-gray-800">
                                 <div className={`h-full ${barColor}`} style={{width: barWidth}}></div>
                             </div>
@@ -677,17 +671,17 @@
             const username = currentUser.email.split('@')[0];
 
             return (
-                 <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                    <div className="w-full max-w-2xl h-[90vh] flex flex-col retro-container crt-effect">
+                 <div className="h-screen p-1 sm:p-2 md:p-4">
+                    <div className="w-full h-full flex flex-col retro-container crt-effect">
                         <header className="retro-header flex justify-between items-center">
-                            <h2 className="text-xl glitch-text">AQUARIUS TERMINAL</h2>
-                            <button onClick={() => { soundService.playClick(); onLogout(); }} className="text-xs retro-button">NGẮT KẾT NỐI</button>
+                            <h2 className="text-lg sm:text-xl glitch-text">AQUARIUS TERMINAL</h2>
+                            <button onClick={() => { soundService.playClick(); onLogout(); }} className="text-xs retro-button p-2">NGẮT KẾT NỐI</button>
                         </header>
                         <div className="p-2 border-b border-green-900">
-                            <p>> PILOT: {username}</p>
+                            <p className="truncate">> PILOT: {username}</p>
                             <EnergyBar value={energy} />
                         </div>
-                        <main ref={messagesListRef} className="flex-1 p-4 sm:p-6 overflow-y-auto">
+                        <main ref={messagesListRef} className="flex-1 p-2 sm:p-4 overflow-y-auto">
                             {messages.map((msg) => (
                                 <div key={msg.id} className="mb-2">
                                     <div className={msg.senderId === currentUser.uid ? 'text-cyan-300' : ''}>
@@ -697,29 +691,29 @@
                                 </div>
                             ))}
                         </main>
-                        <div className="p-2 border-t border-b border-green-900 flex justify-center space-x-4 relative">
+                        <div className="p-2 border-t border-b border-green-900 flex justify-around items-center space-x-2 relative">
                             {cooldownTimeLeft > 0 ? (
-                                <div className="text-center text-sm">
-                                    <p className="opacity-70">HỒI CHIÊU BAN PHƯỚC</p>
-                                    <p className="text-lg">{formatTime(cooldownTimeLeft)}</p>
+                                <div className="text-center text-xs">
+                                    <p className="opacity-70">HỒI CHIÊU</p>
+                                    <p className="text-sm sm:text-lg">{formatTime(cooldownTimeLeft)}</p>
                                 </div>
                             ) : (
-                                <button onClick={() => {soundService.playClick(); setShowBlessingModal(true);}} className="retro-button text-sm">[BAN PHƯỚC]</button>
+                                <button onClick={() => {soundService.playClick(); setShowBlessingModal(true);}} className="retro-button text-xs sm:text-sm p-2">[BAN PHƯỚC]</button>
                             )}
-                            <button onClick={() => {soundService.playClick(); alert('TÀI KHOẢN CỦA BẠN KHÔNG ĐỦ ĐIỀU KIỆN! HÃY CHƠI ĐỀU VÀ LÊN VIP');}} className="retro-button text-sm">[ỨNG TIỀN]</button>
+                            <button onClick={() => {soundService.playClick(); alert('TÀI KHOẢN CỦA BẠN KHÔNG ĐỦ ĐIỀU KIỆN! HÃY CHƠI ĐỀU VÀ LÊN VIP');}} className="retro-button text-xs sm:text-sm p-2">[ỨNG TIỀN]</button>
                         </div>
-                        <footer className="p-3 border-t border-green-900">
+                        <footer className="p-2 border-t border-green-900">
                             <div className="flex w-full items-center">
                                 <span className="mr-2 text-lg">></span>
-                                <input className="flex-1 retro-input" placeholder="Nhập lệnh hoặc tin nhắn..." value={inputMessage} onChange={(e) => {setInputMessage(e.target.value); soundService.playTyping();}} onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleSendMessage())} />
-                                <button onClick={handleSendMessage} disabled={energy < MESSAGE_COST} className="ml-3 retro-button">GỬI</button>
+                                <input className="flex-1 retro-input" placeholder="Nhập lệnh..." value={inputMessage} onChange={(e) => {setInputMessage(e.target.value); soundService.playTyping();}} onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleSendMessage())} />
+                                <button onClick={handleSendMessage} disabled={energy < MESSAGE_COST} className="ml-2 retro-button p-2">GỬI</button>
                             </div>
                         </footer>
                     </div>
                     {showBlessingModal && (
                         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-                            <div className="p-8 retro-container w-full max-w-sm md:max-w-md" onClick={e => e.stopPropagation()}>
-                                <h3 className="text-2xl glitch-text mb-4">TRUYỀN TẢI THỈNH CẦU</h3>
+                            <div className="p-6 retro-container w-full max-w-sm" onClick={e => e.stopPropagation()}>
+                                <h3 className="text-xl sm:text-2xl glitch-text mb-4">TRUYỀN TẢI THỈNH CẦU</h3>
                                 <textarea value={plea} onChange={e => setPlea(e.target.value)} className="w-full h-24 retro-textarea" placeholder="> Viết lời thỉnh cầu của bạn tại đây..."></textarea>
                                 <div className="flex justify-end space-x-4 mt-4">
                                     <button onClick={() => {soundService.playClick(); setShowBlessingModal(false);}} className="retro-button">HỦY</button>
@@ -730,19 +724,19 @@
                     )}
                     {showInfoModal && (
                         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-                            <div className="p-8 retro-container w-full max-w-sm md:max-w-md" onClick={e => e.stopPropagation()}>
-                                <h3 className="text-2xl glitch-text mb-4">YÊU CẦU KHAI BÁO</h3>
+                            <div className="p-6 retro-container w-full max-w-sm" onClick={e => e.stopPropagation()}>
+                                <h3 className="text-xl sm:text-2xl glitch-text mb-4">YÊU CẦU KHAI BÁO</h3>
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-lg">> TÊN TK F168:</label>
+                                        <label className="text-md sm:text-lg">> TÊN TK F168:</label>
                                         <input value={infoFormData.f168Account} onChange={e => setInfoFormData({...infoFormData, f168Account: e.target.value})} type="text" className="w-full mt-1 retro-input" />
                                     </div>
                                     <div>
-                                        <label className="text-lg">> SỐ VỐN:</label>
+                                        <label className="text-md sm:text-lg">> SỐ VỐN:</label>
                                         <input value={infoFormData.capital} onChange={e => setInfoFormData({...infoFormData, capital: e.target.value})} type="text" className="w-full mt-1 retro-input" />
                                     </div>
                                      <div>
-                                        <label className="text-lg">> MUỐN LÊN BAO NHIÊU:</label>
+                                        <label className="text-md sm:text-lg">> MUỐN LÊN BAO NHIÊU:</label>
                                         <input value={infoFormData.target} onChange={e => setInfoFormData({...infoFormData, target: e.target.value})} type="text" className="w-full mt-1 retro-input" />
                                     </div>
                                 </div>
@@ -760,8 +754,8 @@
         const GlobalAlertBanner = ({ alert }) => {
             if (!alert) return null;
             return (
-                <div className="fixed top-0 left-0 w-full bg-red-800 bg-opacity-90 border-b-2 border-red-500 text-white p-3 text-center z-[10000] text-2xl glitch-text">
-                    !!! CẢNH BÁO: LẬP TỨC TẬP TRUNG TẠI BÀN {alert.table} !!!
+                <div className="fixed top-0 left-0 w-full bg-red-800 bg-opacity-90 border-b-2 border-red-500 text-white p-3 text-center z-[10000] text-lg sm:text-2xl glitch-text">
+                    !!! CẢNH BÁO: TẬP TRUNG TẠI BÀN {alert.table} !!!
                 </div>
             );
         };
@@ -773,7 +767,7 @@
             const [currentUser, setCurrentUser] = useState(null);
             const [isLoading, setIsLoading] = useState(true);
             const [isAdmin, setIsAdmin] = useState(false);
-            const [activeAlert, setActiveAlert] = useState(null); // NEW state for global alert
+            const [activeAlert, setActiveAlert] = useState(null);
 
             useEffect(() => {
                 const startAudio = () => {
@@ -800,17 +794,14 @@
                     }
                 });
 
-                // NEW: Listener for global alerts
                 const q = db.collection('global_alerts').orderBy('timestamp', 'desc').limit(1);
                 const unsubscribeAlerts = q.onSnapshot(snapshot => {
                     if (!snapshot.empty) {
                         const alertData = snapshot.docs[0].data();
                         const alertTimestamp = alertData.timestamp;
-                        // Only trigger for recent alerts (within last 15 seconds)
                         if (alertTimestamp && (Date.now() - alertTimestamp.toMillis() < 15000)) {
                             setActiveAlert(alertData);
                             soundService.playAlert();
-                            // Alert will be visible for 8 seconds
                             const timer = setTimeout(() => setActiveAlert(null), 8000);
                             return () => clearTimeout(timer);
                         }
