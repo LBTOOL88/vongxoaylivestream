@@ -76,8 +76,9 @@
         .blessing-glow {
              animation: glowing-blessing 2s ease-in-out infinite;
         }
-        .red-alert-flash {
-            animation: red-flash 0.8s infinite;
+        /* NEW: Yellow alert flash for user view */
+        .yellow-alert-flash {
+            animation: yellow-flash 1s 2; /* Flash twice */
         }
         
         @keyframes scan { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
@@ -90,9 +91,10 @@
             50% { box-shadow: 0 0 20px var(--retro-green), 0 0 25px var(--retro-green); }
             100% { box-shadow: 0 0 5px var(--retro-green); }
         }
-        @keyframes red-flash {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
-            50% { box-shadow: 0 0 50px 30px rgba(255, 0, 0, 0.7), inset 0 0 30px rgba(255,0,0,0.6); }
+        /* NEW: Keyframes for yellow flash */
+        @keyframes yellow-flash {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 0, 0); }
+            50% { box-shadow: 0 0 40px 20px rgba(255, 255, 0, 0.6), inset 0 0 25px rgba(255, 255, 0, 0.5); }
         }
     </style>
 </head>
@@ -238,12 +240,20 @@
             switch(msg.type) {
                 case 'system': return <p className="text-yellow-300 w-full text-center">{msg.text}</p>;
                 case 'plea': return <p className="opacity-80 italic">Lời thỉnh cầu: "{msg.text}"</p>;
-                case 'blessing': return (
-                    <div className="border border-green-700 p-2 mt-1 blessing-glow">
-                        <p className="glitch-text text-center text-lg">LỜI BAN PHƯỚC</p>
-                        <p>> BÀN CHƠI: {msg.content.table}</p>
-                        <p>> KẾT QUẢ DỰ ĐOÁN: {msg.content.side}</p>
-                        <p>> TAY BÀI THỨ: {msg.content.hand}</p>
+                case 'table_announcement': return (
+                    <div className="text-center my-2 p-3 border-2 border-yellow-400 bg-yellow-900 bg-opacity-50">
+                        <p className="text-yellow-300 text-lg glitch-text uppercase">!!! CHÚ Ý BÀN !!!</p>
+                        <p className="text-white text-2xl font-bold">{msg.text}</p>
+                    </div>
+                );
+                case 'blessing': return ( // MODIFIED: Blessing message format
+                    <div className="border-2 border-green-400 p-4 mt-1 blessing-glow text-center">
+                        <p className="text-2xl glitch-text text-green-300 uppercase">Lời Ban Phước</p>
+                        <div className="mt-4 text-left space-y-2">
+                            <p className="text-lg"><span className="font-bold text-green-400 w-24 inline-block">SỐ BÀN:</span> <span className="text-white text-xl font-bold">{msg.content.table}</span></p>
+                            <p className="text-lg"><span className="font-bold text-green-400 w-24 inline-block">KẾT QUẢ:</span> <span className="text-white text-xl font-bold">{msg.content.side}</span></p>
+                            <p className="text-lg"><span className="font-bold text-green-400 w-24 inline-block">TAY THỨ:</span> <span className="text-white text-xl font-bold">{msg.content.hand}</span></p>
+                        </div>
                     </div>
                 );
                 case 'info_submission': return (
@@ -378,7 +388,7 @@
             const [messages, setMessages] = useState([]);
             const [inputMessage, setInputMessage] = useState('');
             const [onlineCount, setOnlineCount] = useState(0);
-            const [tableAlertInput, setTableAlertInput] = useState('');
+            const [tableAnnounceInput, setTableAnnounceInput] = useState('');
             const messagesListRef = useRef(null);
             let unsubscribeMessages = useRef(null);
 
@@ -431,14 +441,16 @@
                 });
             };
 
-            const handleSendGlobalAlert = async () => {
-                if (tableAlertInput.trim() === '') return;
+            const handleSendTableMessage = async () => {
+                if (tableAnnounceInput.trim() === '' || !currentChat) return;
                 soundService.playAlert();
-                await db.collection('global_alerts').add({
-                    table: tableAlertInput.trim(),
+                await db.collection(`user_chats/${currentChat.id}/messages`).add({
+                    type: 'table_announcement',
+                    text: tableAnnounceInput.trim(),
+                    senderId: currentUser.uid,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 });
-                setTableAlertInput('');
+                setTableAnnounceInput('');
             };
             
             const AsciiChart = ({ value, total }) => {
@@ -483,9 +495,9 @@
                                     ))}
                                 </main>
                                 <footer className="p-2 sm:p-4 border-t border-green-900">
-                                    <div className="flex items-center border border-red-500 p-2 mb-2">
-                                        <input value={tableAlertInput} onChange={e => setTableAlertInput(e.target.value)} className="flex-1 retro-input text-sm" placeholder="> BÀN CẢNH BÁO..." />
-                                        <button onClick={handleSendGlobalAlert} className="ml-2 retro-button border-red-500 text-red-400 hover:bg-red-500 hover:text-black text-sm">GỬI</button>
+                                    <div className="flex items-center border border-yellow-500 p-2 mb-2">
+                                        <input value={tableAnnounceInput} onChange={e => setTableAnnounceInput(e.target.value)} className="flex-1 retro-input text-sm" placeholder="> GỬI BÀN..." />
+                                        <button onClick={handleSendTableMessage} className="ml-2 retro-button border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black text-sm">GỬI BÀN</button>
                                     </div>
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
                                         <button onClick={() => handleQuickReply('NHÀ CON')} className="retro-button text-sm">NHÀ CON</button>
@@ -520,6 +532,7 @@
             const [lastBlessingTime, setLastBlessingTime] = useState(null);
             const [showInfoModal, setShowInfoModal] = useState(false);
             const [infoFormData, setInfoFormData] = useState({ f168Account: '', capital: '', target: '' });
+            const [isAnnouncing, setIsAnnouncing] = useState(false); // NEW state for announcement animation
             const messagesListRef = useRef(null);
 
             useEffect(() => {
@@ -540,8 +553,18 @@
                 const unsubMessages = messagesRef.onSnapshot(snapshot => {
                     setMessages(prevMessages => {
                         const newMessages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        if (prevMessages.length > 0 && newMessages.length > prevMessages.length && newMessages[newMessages.length-1].senderId !== currentUser.uid) {
-                            soundService.playReceive();
+                        if (newMessages.length > prevMessages.length) {
+                            const latestMsg = newMessages[newMessages.length - 1];
+                            if (latestMsg.senderId !== currentUser.uid) {
+                                if (latestMsg.type === 'table_announcement') {
+                                    soundService.playAlert();
+                                    // Trigger the animation
+                                    setIsAnnouncing(true);
+                                    setTimeout(() => setIsAnnouncing(false), 2000); // Animation lasts 2 seconds
+                                } else {
+                                    soundService.playReceive();
+                                }
+                            }
                         }
                         return newMessages;
                     });
@@ -671,7 +694,7 @@
             const username = currentUser.email.split('@')[0];
 
             return (
-                 <div className="h-screen p-1 sm:p-2 md:p-4">
+                 <div className={`h-screen p-1 sm:p-2 md:p-4 ${isAnnouncing ? 'yellow-alert-flash' : ''}`}>
                     <div className="w-full h-full flex flex-col retro-container crt-effect">
                         <header className="retro-header flex justify-between items-center">
                             <h2 className="text-lg sm:text-xl glitch-text">AQUARIUS TERMINAL</h2>
@@ -686,7 +709,7 @@
                                 <div key={msg.id} className="mb-2">
                                     <div className={msg.senderId === currentUser.uid ? 'text-cyan-300' : ''}>
                                         {msg.type === 'system' ? '' : <span className="mr-2">{msg.senderId === currentUser.uid ? `<${username}>` : '<AQUARIUS>'}</span>}
-                                        {msg.type === 'blessing' ? <TypingMessage text={JSON.stringify(msg.content, null, 2)} /> : <MessageContent msg={msg} />}
+                                        <MessageContent msg={msg} />
                                     </div>
                                 </div>
                             ))}
@@ -749,16 +772,6 @@
                  </div>
             );
         };
-
-        // NEW: Component for the global alert banner
-        const GlobalAlertBanner = ({ alert }) => {
-            if (!alert) return null;
-            return (
-                <div className="fixed top-0 left-0 w-full bg-red-800 bg-opacity-90 border-b-2 border-red-500 text-white p-3 text-center z-[10000] text-lg sm:text-2xl glitch-text">
-                    !!! CẢNH BÁO: TẬP TRUNG TẠI BÀN {alert.table} !!!
-                </div>
-            );
-        };
         
         //================================================================================
         // TOP-LEVEL COMPONENT: System
@@ -767,7 +780,6 @@
             const [currentUser, setCurrentUser] = useState(null);
             const [isLoading, setIsLoading] = useState(true);
             const [isAdmin, setIsAdmin] = useState(false);
-            const [activeAlert, setActiveAlert] = useState(null);
 
             useEffect(() => {
                 const startAudio = () => {
@@ -794,23 +806,8 @@
                     }
                 });
 
-                const q = db.collection('global_alerts').orderBy('timestamp', 'desc').limit(1);
-                const unsubscribeAlerts = q.onSnapshot(snapshot => {
-                    if (!snapshot.empty) {
-                        const alertData = snapshot.docs[0].data();
-                        const alertTimestamp = alertData.timestamp;
-                        if (alertTimestamp && (Date.now() - alertTimestamp.toMillis() < 15000)) {
-                            setActiveAlert(alertData);
-                            soundService.playAlert();
-                            const timer = setTimeout(() => setActiveAlert(null), 8000);
-                            return () => clearTimeout(timer);
-                        }
-                    }
-                });
-
                 return () => {
                     unsubscribeAuth();
-                    unsubscribeAlerts();
                     document.removeEventListener('click', startAudio);
                     document.removeEventListener('keydown', startAudio);
                 };
@@ -827,8 +824,7 @@
             };
             
             return (
-                <div className={activeAlert ? 'red-alert-flash' : ''}>
-                    <GlobalAlertBanner alert={activeAlert} />
+                <div>
                     <Starfield />
                     {isLoading ? (
                         <div className="min-h-screen bg-black flex items-center justify-center text-2xl animate-pulse"><p>ĐANG KHỞI ĐỘNG HỆ THỐNG...<span className="typing-cursor"></span></p></div>
