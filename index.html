@@ -1,845 +1,976 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AQUARIUS AI - IMMERSIVE OS v9.3</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Nohu 2026</title>
     
-    <!-- React & Babel -->
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Phosphor Icons for professional icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/p.js"></script>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-
-    <!-- Tone.js for Sound Effects -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Roboto', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        'tech-blue': '#00BFFF', // Màu xanh nước biển công nghệ cao
+                        'dark-bg': '#0A0A10', // Nền cực tối (Professional look)
+                        'card-bg': '#1A1A22', // Nền card
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --retro-green: #33ff33;
-            --dark-bg: #0a0a0a;
+        /* Đảm bảo toàn bộ màn hình được sử dụng và không có cuộn */
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', 'Roboto', 'Arial', 'sans-serif';
+            background-color: #0A0A10;
         }
-        body {
-            font-family: 'VT323', monospace;
-            background-color: var(--dark-bg);
-            color: var(--retro-green);
-            text-shadow: 0 0 5px rgba(51, 255, 51, 0.5);
-            overflow: hidden;
+
+        /* Hiệu ứng bóng đổ cho chữ (Sci-Fi feel) */
+        .tech-shadow {
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5), 0 0 10px rgba(0, 191, 255, 0.3);
         }
-        #starfield-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+
+        /* Animation cho cảnh báo chớp tắt */
+        .animate-pulse-strong {
+            animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-        .scanlines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px;
-            animation: scan 0.1s linear infinite;
-            z-index: 9999;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-        .crt-effect {
-            box-shadow: 0 0 25px rgba(51, 255, 51, 0.3), inset 0 0 25px rgba(51, 255, 51, 0.2);
-            border-radius: 20px;
-            animation: flicker 0.15s infinite;
+
+        /* --- Custom Styles cho Screen --- */
+
+        /* Screen nền (Login/Register) */
+        #login-register-screen {
+            /* Desktop Background */
+            background-image: url('https://i.ibb.co/99g35nbp/123.jpg'); 
+            /* Mobile Background (Mặc định) */
+            background-image: url('https://i.ibb.co/7JHZpPPL/unnamed.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            position: relative;
         }
-        .retro-input, .retro-textarea {
-            background-color: transparent; border: 1px solid var(--retro-green); border-radius: 0;
-            color: var(--retro-green); padding: 8px; outline: none; resize: none;
+        /* Mobile Breakpoint (Overwrite for Mobile) */
+        @media (min-width: 768px) {
+            #login-register-screen {
+                /* Desktop Background */
+                background-image: url('https://i.ibb.co/99g35nbp/123.jpg'); 
+            }
         }
-        .retro-input:focus, .retro-textarea:focus {
-            background-color: rgba(51, 255, 51, 0.1); box-shadow: 0 0 8px var(--retro-green);
+
+        /* Main Menu Screen nền */
+        #main-menu-screen {
+             /* Mobile Background (Mặc định) */
+            background-image: url('https://i.ibb.co/27FC7VYC/ZOMBILE.jpg');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            position: relative;
         }
-        .retro-button {
-            background-color: transparent; border: 1px solid var(--retro-green); color: var(--retro-green);
-            padding: 10px 15px; border-radius: 0; transition: all 0.2s; cursor: pointer;
-        }
-        .retro-button:hover:not(:disabled) {
-            background-color: var(--retro-green); color: var(--dark-bg); text-shadow: none;
-        }
-        .retro-button:disabled { opacity: 0.4; cursor: not-allowed; }
-        .retro-container { background-color: rgba(0,0,0,0.8); border: 1px solid var(--retro-green); }
-        .retro-header { border-bottom: 1px solid var(--retro-green); padding: 0.75rem; text-transform: uppercase; }
-        .glitch-text { animation: glitch 1.5s linear infinite; }
-        .typing-cursor {
-            display: inline-block; width: 10px; height: 1.2em;
-            background-color: var(--retro-green);
-            animation: blink-caret 1s step-end infinite; vertical-align: bottom;
-        }
-        .blessing-glow {
-             animation: glowing-blessing 2s ease-in-out infinite;
-        }
-        /* NEW: Yellow alert flash for user view */
-        .yellow-alert-flash {
-            animation: yellow-flash 1s 2; /* Flash twice */
+        /* Desktop Breakpoint (Overwrite for Desktop) */
+        @media (min-width: 768px) {
+            #main-menu-screen {
+                 /* Desktop Background */
+                background-image: url('https://i.ibb.co/677k1vDy/unnamed.jpg');
+            }
         }
         
-        @keyframes scan { 0% { background-position: 0 0; } 100% { background-position: 0 4px; } }
-        @keyframes glitch { 2%,64%{ transform: translate(2px,0) skew(0deg); } 4%,60%{ transform: translate(-2px,0) skew(0deg); } 62%{ transform: translate(0,0) skew(5deg); } }
-        @keyframes blink-caret { from, to { background-color: transparent; } 50% { background-color: var(--retro-green); } }
-        @keyframes flicker { 0% { opacity: 1; } 50% { opacity: 0.98; } 100% { opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes glowing-blessing {
-            0% { box-shadow: 0 0 5px var(--retro-green); }
-            50% { box-shadow: 0 0 20px var(--retro-green), 0 0 25px var(--retro-green); }
-            100% { box-shadow: 0 0 5px var(--retro-green); }
+        /* Lớp phủ màu tối cho ảnh nền */
+        .screen-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75); /* Lớp phủ đen 75% */
+            z-index: 0; 
         }
-        /* NEW: Keyframes for yellow flash */
-        @keyframes yellow-flash {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 0, 0); }
-            50% { box-shadow: 0 0 40px 20px rgba(255, 255, 0, 0.6), inset 0 0 25px rgba(255, 255, 0, 0.5); }
+
+        /* --- Custom Styles cho Card Game --- */
+        .game-card-slot:hover {
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.5); /* Tech Blue Glow */
+            transform: translateY(-5px);
+        }
+        .game-card-tool:hover {
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.5); /* Orange Glow for tool */
+            transform: translateY(-5px);
+        }
+        .scan-modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .scan-modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        /* Giao diện thanh tiến trình */
+        .progress-bar-segment {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-out, background-color 0.5s ease-out;
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
-    <div class="scanlines"></div>
+<body class="antialiased text-white">
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        // --- REAL FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHDzGbXmHNWKL2UtRm57vPRVxZb31dHto",
-            authDomain: "long-bao-tool-ai.firebaseapp.com",
-            projectId: "long-bao-tool-ai",
-            storageBucket: "long-bao-tool-ai.appspot.com",
-            messagingSenderId: "259613170671",
-            appId: "1:259613170671:web:55291d0b0af4e69052b41a",
-            measurementId: "G-7V7H3JWX7K"
-        };
-        const ADMIN_USERNAME = "admin";
-        const DUMMY_DOMAIN = "@long-bao-tool-ai.web.app";
-
-        // --- FIREBASE INIT ---
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const rtdb = firebase.database();
-
-        // --- GAME DATA ---
-        const BACARAT_TABLES = ["BACARAT C04", "BACARAT C05", "BACARAT C06", "BACARAT C07", "BACARAT C01", "BACARAT C02", "BACARAT C03", "BACARAT C08", "BACARAT C09", "BACARAT C10", "BACARAT 1", "BACARAT 2", "BACARAT 3", "BACARAT 4", "BACARAT 5", "BACARAT 7", "BACARAT 8", "BACARAT 9", "BACARAT 10", "BACARAT C11", "BACARAT C12", "BACARAT C13", "BACARAT C15"];
-        const COOLDOWN_DURATION = 24 * 60 * 60 * 1000;
-        const MESSAGE_COST = 7;
-
-        // --- SOUND SERVICE ---
-        const soundService = {
-            isStarted: false, synth: null, noise: null, ambient: null,
-            init() {
-                if (this.isStarted || typeof Tone === 'undefined') return;
-                this.synth = new Tone.Synth().toDestination();
-                this.noise = new Tone.NoiseSynth({ volume: -20 }).toDestination();
-                this.ambient = new Tone.Noise("brown").toDestination();
-                this.ambient.volume.value = -40;
-                this.isStarted = true;
-            },
-            startAmbient() { if(this.ambient && this.ambient.state !== 'started') this.ambient.start(); },
-            stopAmbient() { if(this.ambient) this.ambient.stop(); },
-            playClick() { this.synth?.triggerAttackRelease("C2", "8n"); },
-            playSend() { this.synth?.triggerAttackRelease("G4", "8n"); },
-            playReceive() { this.synth?.triggerAttackRelease("C5", "8n"); },
-            playError() { this.noise?.triggerAttackRelease("2n"); },
-            playTyping() { this.synth?.triggerAttackRelease("C3", "32n"); },
-            playAlert() {
-                 if (!this.isStarted) this.init();
-                 const synth = new Tone.Synth({
-                    oscillator: { type: 'square' },
-                    envelope: { attack: 0.01, decay: 0.2, sustain: 0.2, release: 0.2 }
-                }).toDestination();
-                synth.triggerAttackRelease('G5', '8n', Tone.now());
-                synth.triggerAttackRelease('G5', '8n', Tone.now() + 0.2);
-            }
-        };
-
-        //================================================================================
-        // COMPONENT: Starfield
-        //================================================================================
-        const Starfield = () => {
-            const canvasRef = useRef(null);
-            useEffect(() => {
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext('2d');
-                let stars = [];
-                const numStars = 300;
-                let animationFrameId;
-
-                const resizeCanvas = () => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    stars = [];
-                    for (let i = 0; i < numStars; i++) {
-                        stars.push({
-                            x: Math.random() * canvas.width,
-                            y: Math.random() * canvas.height,
-                            size: Math.random() * 1.5,
-                            speed: Math.random() * 0.5 + 0.1
-                        });
-                    }
-                };
-
-                const animate = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = 'rgba(51, 255, 51, 0.8)';
-                    stars.forEach(star => {
-                        star.y += star.speed;
-                        if (star.y > canvas.height) {
-                            star.y = 0;
-                            star.x = Math.random() * canvas.width;
-                        }
-                        ctx.beginPath();
-                        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                    animationFrameId = requestAnimationFrame(animate);
-                };
-
-                resizeCanvas();
-                animate();
-                window.addEventListener('resize', resizeCanvas);
-                return () => {
-                    window.removeEventListener('resize', resizeCanvas);
-                    cancelAnimationFrame(animationFrameId);
-                }
-            }, []);
-            return <canvas id="starfield-canvas" ref={canvasRef}></canvas>;
-        };
-
-        //================================================================================
-        // COMPONENT: TypingMessage
-        //================================================================================
-        const TypingMessage = ({ text, onComplete }) => {
-            const [displayedText, setDisplayedText] = useState('');
-            useEffect(() => {
-                setDisplayedText('');
-                let index = 0;
-                const intervalId = setInterval(() => {
-                    soundService.playTyping();
-                    setDisplayedText(prev => prev + text.charAt(index));
-                    index++;
-                    if (index >= text.length) {
-                        clearInterval(intervalId);
-                        if(onComplete) onComplete();
-                    }
-                }, 50);
-                return () => clearInterval(intervalId);
-            }, [text]);
-            return <p>{displayedText}<span className="typing-cursor"></span></p>;
-        };
+    <!-- Screen Container: Chứa tất cả màn hình (Login, Menu, Games List) -->
+    <div id="screen-container" class="min-h-screen">
         
-        //================================================================================
-        // COMPONENT: MessageContent
-        //================================================================================
-        const MessageContent = ({ msg }) => {
-            switch(msg.type) {
-                case 'system': return <p className="text-yellow-300 w-full text-center">{msg.text}</p>;
-                case 'plea': return <p className="opacity-80 italic">Lời thỉnh cầu: "{msg.text}"</p>;
-                case 'table_announcement': return (
-                    <div className="text-center my-2 p-3 border-2 border-yellow-400 bg-yellow-900 bg-opacity-50">
-                        <p className="text-yellow-300 text-lg glitch-text uppercase">!!! CHÚ Ý BÀN !!!</p>
-                        <p className="text-white text-2xl font-bold">{msg.text}</p>
-                    </div>
-                );
-                case 'blessing': return ( // MODIFIED: Blessing message format
-                    <div className="border-2 border-green-400 p-4 mt-1 blessing-glow text-center">
-                        <p className="text-2xl glitch-text text-green-300 uppercase">Lời Ban Phước</p>
-                        <div className="mt-4 text-left space-y-2">
-                            <p className="text-lg"><span className="font-bold text-green-400 w-24 inline-block">SỐ BÀN:</span> <span className="text-white text-xl font-bold">{msg.content.table}</span></p>
-                            <p className="text-lg"><span className="font-bold text-green-400 w-24 inline-block">KẾT QUẢ:</span> <span className="text-white text-xl font-bold">{msg.content.side}</span></p>
-                            <p className="text-lg"><span className="font-bold text-green-400 w-24 inline-block">TAY THỨ:</span> <span className="text-white text-xl font-bold">{msg.content.hand}</span></p>
-                        </div>
-                    </div>
-                );
-                case 'info_submission': return (
-                    <div className="border border-cyan-700 p-2 mt-1">
-                        <p className="glitch-text text-center text-lg text-cyan-400">BÁO CÁO KHỞI TẠO</p>
-                        <p>> TÀI KHOẢN F168: {msg.content.f168Account}</p>
-                        <p>> SỐ VỐN: {msg.content.capital}</p>
-                        <p>> MỤC TIÊU: {msg.content.target}</p>
-                    </div>
-                );
-                default: return <p>{msg.text}</p>;
-            }
-        };
-        
-        //================================================================================
-        // COMPONENT: LoginScreen
-        //================================================================================
-        const LoginScreen = () => {
-            const [username, setUsername] = useState('');
-            const [password, setPassword] = useState('');
-            const [error, setError] = useState('');
-            const [isLoading, setIsLoading] = useState(false);
-            const [booting, setBooting] = useState(true);
-            const [bootLines, setBootLines] = useState([]);
-
-            useEffect(() => {
-                const bootSequence = [
-                    'AQUARIUS OS v9.3 INITIALIZING...',
-                    'CHECKING MEMORY... OK',
-                    'LOADING CORE MODULES... OK',
-                    'ESTABLISHING FIREBASE CONNECTION... SECURE',
-                    'AWAITING PILOT AUTHENTICATION...'
-                ];
-                let index = 0;
-                const interval = setInterval(() => {
-                    soundService.playTyping();
-                    setBootLines(prev => [...prev, bootSequence[index]]);
-                    index++;
-                    if (index >= bootSequence.length) {
-                        clearInterval(interval);
-                        setTimeout(() => setBooting(false), 500);
-                    }
-                }, 600);
-                return () => clearInterval(interval);
-            }, []);
-
-            const handleLogin = async () => {
-                setError(''); setIsLoading(true);
-                const processedUsername = username.trim().toLowerCase();
-                if (!processedUsername || !password) { setError("LỖI: THIẾU TÍN HIỆU"); setIsLoading(false); return; }
-                const email = processedUsername + DUMMY_DOMAIN;
-                try { await auth.signInWithEmailAndPassword(email, password); } 
-                catch (err) { setError("LỖI: XÁC THỰC THẤT BẠI"); } 
-                finally { setIsLoading(false); }
-            };
+        <!-- 1. MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÍ -->
+        <div id="login-register-screen" class="screen-overlay min-h-screen flex flex-col items-center justify-center p-4" style="opacity: 1;">
             
-            const handleSignup = async () => {
-                setError(''); setIsLoading(true);
-                const processedUsername = username.trim().toLowerCase();
-                if (!processedUsername || !password) { setError("LỖI: THIẾU TÍN HIỆU"); setIsLoading(false); return; }
-                if (password.length < 6) { setError("LỖI: MẬT KHẨU QUÁ NGẮN (TỐI THIỂU 6 KÝ TỰ)"); setIsLoading(false); return; }
-                
-                try {
-                    const usersRef = db.collection("users");
-                    const existingUserQuery = await usersRef.where("username", "==", processedUsername).get();
-                    if (!existingUserQuery.empty) {
-                        setError("LỖI: MÃ HIỆU PILOT ĐÃ TỒN TẠI");
-                        setIsLoading(false);
-                        return;
-                    }
+            <div class="relative z-10 w-full flex flex-col items-center">
+                <!-- Card Đăng Nhập/Đăng Ký -->
+                <div class="w-full max-w-sm p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30">
+                    <h2 class="text-4xl font-extrabold text-center text-tech-blue mb-6 tech-shadow">
+                        TOOL NOHU 2026
+                    </h2>
 
-                    const email = processedUsername + DUMMY_DOMAIN;
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    await db.collection("users").doc(userCredential.user.uid).set({
-                        uid: userCredential.user.uid,
-                        username: processedUsername,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        energy: 7,
-                        hasSubmittedInfo: false,
-                    }, { merge: true });
-                } catch (err) {
-                    if (err.code === 'auth/email-already-in-use') { setError("LỖI: MÃ HIỆU PILOT ĐÃ TỒN TẠI"); } 
-                    else { setError("LỖI: KHỞI TẠO PILOT THẤT BẠI"); }
-                } finally { setIsLoading(false); }
-            };
-
-            if (booting) {
-                return (
-                    <div className="min-h-screen bg-black flex items-center justify-center">
-                        <div className="w-full max-w-2xl p-4">
-                            {bootLines.map((line, i) => <p key={i} className="text-lg">> {line}</p>)}
-                            <span className="typing-cursor"></span>
-                        </div>
+                    <!-- Toggle Button -->
+                    <div class="flex bg-gray-800 p-1 rounded-lg mb-6">
+                        <button id="show-login" class="flex-1 py-2 rounded-lg text-sm font-semibold transition duration-300 bg-tech-blue text-white shadow-md shadow-tech-blue/40">
+                            ĐĂNG NHẬP
+                        </button>
+                        <button id="show-register" class="flex-1 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:bg-gray-700/50 transition duration-300">
+                            ĐĂNG KÍ
+                        </button>
                     </div>
-                );
-            }
 
-            return (
-                 <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{animation: 'fadeIn 1s forwards'}}>
-                    <div className="w-full max-w-md p-4 sm:p-8 space-y-4 retro-container">
-                        <h2 className="text-3xl sm:text-4xl text-center glitch-text">AQUARIUS OS</h2>
-                        <p className="text-center text-md sm:text-lg">> YÊU CẦU XÁC THỰC PILOT</p>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-md sm:text-lg">> MÃ HIỆU PILOT:</label>
-                                <input value={username} onChange={e => setUsername(e.target.value)} type="text" required className="w-full mt-1 retro-input" />
-                            </div>
-                            <div>
-                                <label className="text-md sm:text-lg">> MẬT KHẨU:</label>
-                                <input value={password} onChange={e => setPassword(e.target.value)} type="password" required className="w-full mt-1 retro-input" />
-                            </div>
-                            {error && <div className="text-md sm:text-lg text-center py-2 bg-red-900 bg-opacity-50 border border-red-500">{error}<span className="typing-cursor"></span></div>}
-                            <div className="flex items-center space-x-4">
-                                <button onClick={handleLogin} disabled={isLoading} className="w-full retro-button">{isLoading ? 'ĐANG KẾT NỐI...' : 'KẾT NỐI'}</button>
-                                <button onClick={handleSignup} disabled={isLoading} className="w-full retro-button">KHỞI TẠO</button>
-                            </div>
+                    <!-- Form Đăng Nhập -->
+                    <form id="login-form" onsubmit="event.preventDefault(); window.handleLogin();">
+                        <div class="mb-5">
+                            <label for="username" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-user-circle-bold text-lg mr-2 text-tech-blue"></i>Tên Đăng Nhập</label>
+                            <input type="text" id="login-username" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập tên tài khoản" required>
                         </div>
-                        <div className="text-center pt-4 border-t border-green-900">
-                            <a href="https://t.me/longbaoF168" target="_blank" rel="noopener noreferrer" className="retro-button">LIÊN HỆ LONG BẢO</a>
+                        <div class="mb-6">
+                            <label for="password" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-lock-key-bold text-lg mr-2 text-tech-blue"></i>Mật Khẩu</label>
+                            <input type="password" id="login-password" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập mật khẩu" required>
                         </div>
+                        <button type="submit" class="w-full bg-tech-blue text-white py-3 rounded-lg font-bold text-lg hover:bg-opacity-90 transition duration-300 shadow-xl shadow-tech-blue/40">
+                            ĐĂNG NHẬP HỆ THỐNG
+                        </button>
+                    </form>
+
+                    <!-- Form Đăng Ký (Hidden by default) -->
+                    <form id="register-form" onsubmit="event.preventDefault(); window.handleRegister();" class="hidden">
+                         <div class="mb-5">
+                            <label for="reg-username" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-user-circle-bold text-lg mr-2 text-tech-blue"></i>Tên Đăng Nhập</label>
+                            <input type="text" id="reg-username" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Chọn tên tài khoản" required>
+                        </div>
+                         <div class="mb-5">
+                            <label for="reg-phone" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-phone-bold text-lg mr-2 text-tech-blue"></i>Số Điện Thoại</label>
+                            <input type="tel" id="reg-phone" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập số điện thoại" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="reg-password" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-lock-key-bold text-lg mr-2 text-tech-blue"></i>Mật Khẩu</label>
+                            <input type="password" id="reg-password" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Tạo mật khẩu" required>
+                        </div>
+                        <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3 rounded-lg font-bold text-lg hover:bg-yellow-400 transition duration-300 shadow-xl shadow-yellow-500/40">
+                            ĐĂNG KÝ TÀI KHOẢN
+                        </button>
+                    </form>
+                    
+                    <!-- Message Box -->
+                    <div id="message-box" class="mt-6 p-3 bg-red-600 rounded-lg text-center text-sm font-medium hidden"></div>
+
+                    <!-- THÔNG BÁO VÀ LIÊN KẾT HỖ TRỢ -->
+                    <div class="mt-6 pt-4 border-t border-gray-700 text-center">
+                        <p class="text-xs font-semibold text-red-500 animate-pulse-strong mb-2">
+                            <i class="ph-warning-bold mr-1"></i>
+                            TOOL CHỈ HOẠT ĐỘNG TÀI KHOẢN ĐĂNG KÍ Ở 
+                            <a href="http://www.fly88nohu.com" target="_blank" class="text-tech-blue hover:text-tech-blue/80 underline font-bold">FLY88NOHU.COM</a>
+                        </p>
+                        <a href="https://t.me/CSKHFLY88_code" target="_blank" class="text-xs text-gray-400 hover:text-tech-blue transition duration-200 font-medium flex items-center justify-center">
+                            <i class="ph-headset-bold text-lg mr-1"></i>
+                            LIÊN HỆ CSKH ĐỂ KÍCH HOẠT
+                        </a>
                     </div>
                 </div>
-            );
-        };
-        
-        //================================================================================
-        // COMPONENT: AdminDashboard
-        //================================================================================
-        const AdminDashboard = ({ currentUser, onLogout }) => {
-            const [conversations, setConversations] = useState([]);
-            const [currentChat, setCurrentChat] = useState(null);
-            const [messages, setMessages] = useState([]);
-            const [inputMessage, setInputMessage] = useState('');
-            const [onlineCount, setOnlineCount] = useState(0);
-            const [tableAnnounceInput, setTableAnnounceInput] = useState('');
-            const messagesListRef = useRef(null);
-            let unsubscribeMessages = useRef(null);
-
-            useEffect(() => {
-                const convRef = db.collection('user_chats').orderBy('lastUpdate', 'desc');
-                const unsubConv = convRef.onSnapshot(snapshot => setConversations(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))), console.error);
                 
-                const statusRef = rtdb.ref('status');
-                const unsubStatus = statusRef.on('value', snapshot => {
-                    const statuses = snapshot.val() || {};
-                    const count = Object.values(statuses).filter(s => s.isOnline).length;
-                    setOnlineCount(count);
-                });
+                <!-- Bản quyền -->
+                <p class="text-xs text-gray-500 mt-4 mb-4 relative z-10">
+                    BẢN QUYỀN THUỘC VỀ LONG BẢO
+                </p>
+            </div>
+        </div>
 
-                return () => { unsubConv(); unsubStatus(); };
-            }, []);
-            
-            useEffect(() => {
-                if (messagesListRef.current) messagesListRef.current.scrollTop = messagesListRef.current.scrollHeight;
-            }, [messages]);
-
-            const loadConversation = (conv) => {
-                setCurrentChat(conv);
-                if (unsubscribeMessages.current) unsubscribeMessages.current();
-                const messagesRef = db.collection('user_chats').doc(conv.id).collection('messages').orderBy('timestamp');
-                unsubscribeMessages.current = messagesRef.onSnapshot(snapshot => {
-                    setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-                }, console.error);
-            };
-
-            const handleSendMessage = async () => {
-                if (inputMessage.trim() === '' || !currentChat) return;
-                await db.collection(`user_chats/${currentChat.id}/messages`).add({
-                    type: 'text',
-                    text: inputMessage,
-                    senderId: currentUser.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                setInputMessage('');
-            };
-
-            const handleQuickReply = async (text) => {
-                if (!currentChat) return;
-                soundService.playSend();
-                await db.collection(`user_chats/${currentChat.id}/messages`).add({
-                    type: 'text',
-                    text: text,
-                    senderId: currentUser.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            };
-
-            const handleSendTableMessage = async () => {
-                if (tableAnnounceInput.trim() === '' || !currentChat) return;
-                soundService.playAlert();
-                await db.collection(`user_chats/${currentChat.id}/messages`).add({
-                    type: 'table_announcement',
-                    text: tableAnnounceInput.trim(),
-                    senderId: currentUser.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                });
-                setTableAnnounceInput('');
-            };
-            
-            const AsciiChart = ({ value, total }) => {
-                const percentage = total > 0 ? (value / total) * 100 : 0;
-                const filledChars = Math.round((percentage / 100) * 20);
-                const emptyChars = 20 - filledChars;
-                const bar = `[${'█'.repeat(filledChars)}${'░'.repeat(emptyChars)}]`;
-                return <pre className="text-sm">{bar} {value}/{total} ONLINE</pre>;
-            };
-
-            return (
-                <div className="flex w-full h-screen p-1 sm:p-2 md:p-4">
-                    <aside className={`w-full md:w-1/3 lg:w-1/4 retro-container flex-col ${currentChat ? 'hidden md:flex' : 'flex'}`}>
-                        <header className="retro-header flex justify-between items-center flex-shrink-0">
-                            <h2 className="text-lg sm:text-xl glitch-text">ĐIỀU KHIỂN</h2>
-                            <button onClick={onLogout} className="text-xs retro-button">ĐĂNG XUẤT</button>
-                        </header>
-                         <div className="p-2 border-b border-green-900">
-                            <p className="text-md sm:text-lg">TRẠNG THÁI</p>
-                            <AsciiChart value={onlineCount} total={conversations.length} />
-                        </div>
-                        <div className="flex-1 overflow-y-auto">
-                            {conversations.map(conv => (
-                                <div key={conv.id} onClick={() => loadConversation(conv)} className={`p-3 border-b border-green-900 cursor-pointer hover:bg-green-900 bg-opacity-50 ${currentChat?.id === conv.id ? 'bg-green-800' : ''}`}>
-                                    <p className="font-semibold text-md sm:text-lg truncate">> {conv.username || 'Unknown'}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </aside>
-                    <section className={`w-full md:w-2/3 lg:w-3/4 flex-col retro-container ml-0 md:ml-2 ${currentChat ? 'flex' : 'hidden md:flex'}`}>
-                        {currentChat ? (
-                            <React.Fragment>
-                                <header className="retro-header flex items-center">
-                                    <button onClick={() => setCurrentChat(null)} className="md:hidden mr-4 retro-button text-sm p-2">&lt;</button>
-                                    > KÊNH: {currentChat.username}
-                                </header>
-                                <main ref={messagesListRef} className="flex-1 p-2 sm:p-4 overflow-y-auto">
-                                    {messages.map(msg => (
-                                        <div key={msg.id} className={`flex mb-4 ${msg.senderId === currentUser.uid ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-lg p-2 ${msg.senderId === currentUser.uid ? 'text-cyan-300' : ''}`}><MessageContent msg={msg}/></div>
-                                        </div>
-                                    ))}
-                                </main>
-                                <footer className="p-2 sm:p-4 border-t border-green-900">
-                                    <div className="flex items-center border border-yellow-500 p-2 mb-2">
-                                        <input value={tableAnnounceInput} onChange={e => setTableAnnounceInput(e.target.value)} className="flex-1 retro-input text-sm" placeholder="> GỬI BÀN..." />
-                                        <button onClick={handleSendTableMessage} className="ml-2 retro-button border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black text-sm">GỬI BÀN</button>
-                                    </div>
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
-                                        <button onClick={() => handleQuickReply('NHÀ CON')} className="retro-button text-sm">NHÀ CON</button>
-                                        <button onClick={() => handleQuickReply('NHÀ CÁI')} className="retro-button text-sm">NHÀ CÁI</button>
-                                        <button onClick={() => handleQuickReply('LONG BẢO')} className="retro-button text-sm">LONG BẢO</button>
-                                        <button onClick={() => handleQuickReply('XIN VUI LÒNG ĐỢI')} className="retro-button text-sm">XIN VUI LÒNG ĐỢI</button>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSendMessage()} className="flex-1 retro-input" placeholder="> Phản hồi..." />
-                                        <button onClick={handleSendMessage} className="ml-2 retro-button">GỬI</button>
-                                    </div>
-                                </footer>
-                            </React.Fragment>
-                        ) : (
-                            <div className="flex-1 flex items-center justify-center opacity-50 text-xl">> CHỌN KÊNH LIÊN LẠC</div>
-                        )}
-                    </section>
+        <!-- 2. MÀN HÌNH MENU CHÍNH -->
+        <div id="main-menu-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
+            <div class="relative z-10 w-full max-w-6xl">
+                
+                <!-- Tiêu đề và Thông tin User -->
+                <div class="flex justify-between items-center mb-6 pt-4 border-b border-gray-700/50 pb-4">
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-tech-blue tech-shadow flex items-center">
+                        <i class="ph-gauge-bold mr-3"></i>
+                        MENU CHỌN SẢNH SĂN HỦ
+                    </h1>
+                    <div class="text-sm md:text-lg font-medium text-gray-300 bg-gray-900/50 p-2 rounded-lg border border-gray-700">
+                        <i class="ph-user-bold mr-1 text-yellow-400"></i>
+                        Xin chào, <span id="display-username"></span>
+                    </div>
+                    <button onclick="window.handleLogout()" class="text-xs md:text-sm text-red-400 hover:text-red-500 transition duration-200 flex items-center p-2 rounded-lg bg-gray-900/50 border border-gray-700">
+                        <i class="ph-sign-out-bold mr-1"></i>
+                        Đăng Xuất
+                    </button>
                 </div>
-            );
-        };
+                
+                <!-- Lưới Games -->
+                <div id="games-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mt-8">
+                    <!-- Cards sẽ được render tại đây -->
+                </div>
 
-        //================================================================================
-        // COMPONENT: UserView
-        //================================================================================
-        const UserView = ({ currentUser, onLogout }) => {
-            const [messages, setMessages] = useState([]);
-            const [inputMessage, setInputMessage] = useState('');
-            const [energy, setEnergy] = useState(7);
-            const [showBlessingModal, setShowBlessingModal] = useState(false);
-            const [plea, setPlea] = useState('');
-            const [cooldownTimeLeft, setCooldownTimeLeft] = useState(0);
-            const [lastBlessingTime, setLastBlessingTime] = useState(null);
-            const [showInfoModal, setShowInfoModal] = useState(false);
-            const [infoFormData, setInfoFormData] = useState({ f168Account: '', capital: '', target: '' });
-            const [isAnnouncing, setIsAnnouncing] = useState(false); // NEW state for announcement animation
-            const messagesListRef = useRef(null);
+                <div class="w-full text-center mt-12">
+                    <p class="text-xs text-gray-500 mb-4 relative z-10">
+                        BẢN QUYỀN THUỘC VỀ LONG BẢO
+                    </p>
+                </div>
+            </div>
+        </div>
 
-            useEffect(() => {
-                if (!currentUser) return;
-                const userDocRef = db.collection('users').doc(currentUser.uid);
-                const unsubUser = userDocRef.onSnapshot(doc => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        setLastBlessingTime(data.lastBlessingTimestamp?.toMillis() || null);
-                        setEnergy(data.energy !== undefined ? data.energy : 7);
-                        if (data.hasSubmittedInfo !== true) {
-                            setShowInfoModal(true);
-                        }
-                    }
+        <!-- 3. MÀN HÌNH DANH SÁCH GAME PG -->
+        <div id="pg-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
+            <!-- Content will be rendered by renderGameList -->
+        </div>
+
+        <!-- 4. MÀN HÌNH DANH SÁCH GAME JILI -->
+        <div id="jili-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
+            <!-- Content will be rendered by renderGameList -->
+        </div>
+
+        <!-- 5. MÀN HÌNH DANH SÁCH GAME 168 -->
+        <div id="168-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
+            <!-- Content will be rendered by renderGameList -->
+        </div>
+
+        <!-- 6. MÀN HÌNH DANH SÁCH GAME FC -->
+        <div id="fc-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
+            <!-- Content will be rendered by renderGameList -->
+        </div>
+
+        <!-- Modal Hiệu ứng Quét (Scanner) -->
+        <div id="scan-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center scan-modal-enter">
+            <div class="bg-gray-900 p-8 rounded-xl shadow-2xl w-full max-w-sm text-center border border-tech-blue/50">
+                <i class="ph-infinity-bold text-5xl text-tech-blue animate-spin mb-4"></i>
+                <h3 class="text-xl font-bold mb-3 text-tech-blue tech-shadow">ĐANG QUÉT VÀ PHÂN TÍCH DỮ LIỆU...</h3>
+                <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-tech-blue animate-pulse-strong" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Chi tiết Game -->
+        <div id="detail-modal" class="fixed inset-0 bg-black/80 z-40 hidden flex items-center justify-center modal-enter">
+            <div class="bg-gray-950 p-4 md:p-6 rounded-xl shadow-2xl w-full max-w-xs md:max-w-md border border-yellow-500/50">
+                <!-- Modal content goes here -->
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        // Firebase initialization (MANDATORY for Canvas environment)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Initialize Firebase (Error handling for robustness)
+        let app, db, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            // Handle Authentication
+            if (initialAuthToken) {
+                signInWithCustomToken(auth, initialAuthToken).catch(error => {
+                    console.error("Custom token sign in failed, attempting anonymous sign in:", error);
+                    signInAnonymously(auth).catch(err => console.error("Anonymous sign in failed:", err));
                 });
+            } else {
+                signInAnonymously(auth).catch(err => console.error("Anonymous sign in failed:", err));
+            }
 
-                const messagesRef = db.collection('user_chats').doc(currentUser.uid).collection('messages').orderBy('timestamp');
-                const unsubMessages = messagesRef.onSnapshot(snapshot => {
-                    setMessages(prevMessages => {
-                        const newMessages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        if (newMessages.length > prevMessages.length) {
-                            const latestMsg = newMessages[newMessages.length - 1];
-                            if (latestMsg.senderId !== currentUser.uid) {
-                                if (latestMsg.type === 'table_announcement') {
-                                    soundService.playAlert();
-                                    // Trigger the animation
-                                    setIsAnnouncing(true);
-                                    setTimeout(() => setIsAnnouncing(false), 2000); // Animation lasts 2 seconds
-                                } else {
-                                    soundService.playReceive();
-                                }
-                            }
-                        }
-                        return newMessages;
-                    });
-                }, console.error);
-                
-                return () => { unsubUser(); unsubMessages(); };
-            }, [currentUser]);
-
-            useEffect(() => {
-                const timer = setInterval(() => {
-                    if (lastBlessingTime) {
-                        const timeLeft = (lastBlessingTime + COOLDOWN_DURATION) - Date.now();
-                        setCooldownTimeLeft(timeLeft > 0 ? timeLeft : 0);
-                    }
-                }, 1000);
-                return () => clearInterval(timer);
-            }, [lastBlessingTime]);
-
-            useEffect(() => {
-                 if (messagesListRef.current) messagesListRef.current.scrollTop = messagesListRef.current.scrollHeight;
-            }, [messages]);
-
-            const sendMessage = async (type, data, cost = 0) => {
-                const userDocRef = db.collection('users').doc(currentUser.uid);
-                const messagesPath = `user_chats/${currentUser.uid}/messages`;
-
-                try {
-                    await db.runTransaction(async (transaction) => {
-                        const userDoc = await transaction.get(userDocRef);
-                        if (!userDoc.exists) { throw "User document does not exist!"; }
-
-                        const currentEnergy = userDoc.data().energy || 0;
-                        if (currentEnergy < cost) { throw "Not enough energy!"; }
-
-                        if (cost > 0) {
-                            transaction.update(userDocRef, { energy: firebase.firestore.FieldValue.increment(-cost) });
-                        }
-
-                        const messageData = { type, senderId: currentUser.uid, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
-                        if (type === 'text' || type === 'plea') messageData.text = data;
-                        else messageData.content = data;
-                        
-                        const newMessageRef = db.collection(messagesPath).doc();
-                        transaction.set(newMessageRef, messageData);
-                    });
-                    soundService.playSend();
-                } catch (error) {
-                    console.error("Transaction failed: ", error);
-                    if (error === "Not enough energy!") { alert("NĂNG LƯỢNG KHÔNG ĐỦ!"); } 
-                    else { alert("LỖI: KHÔNG THỂ GỬI TIN NHẮN."); }
-                    soundService.playError();
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log("Firebase Auth Ready. User ID:", user.uid);
+                } else {
+                    console.log("Firebase Auth Ready. User is anonymous/signed out.");
                 }
-            };
+            });
 
-            const handleSendMessage = async () => {
-                const content = inputMessage.trim();
-                if (content === '') return;
-                await sendMessage('text', content, MESSAGE_COST);
-                setInputMessage('');
-            };
+        } catch (error) {
+            console.error("Failed to initialize Firebase:", error);
+        }
 
-            const handleBlessingRequest = async () => {
-                if (plea.trim() === '') return;
-                setShowBlessingModal(false);
-                await sendMessage('plea', plea.trim());
+        // --- GLOBAL STATE & DOM ELEMENTS ---
+        const GAMES = [
+            { name: 'PG GAMING', slug: 'pg', image: 'https://i.ibb.co/7JMZMSfC/PG-GAMING.webp', screen: 'pg-games-list-screen', type: 'slot' },
+            { name: 'JILI', slug: 'jili', image: 'https://i.ibb.co/GQ42Nq8R/JILI.webp', screen: 'jili-games-list-screen', type: 'slot' },
+            { name: '168 GAME', slug: '168', image: 'https://i.ibb.co/prBDV4tW/168-GAME.webp', screen: '168-games-list-screen', type: 'slot' },
+            { name: 'FC GAMING', slug: 'fc', image: 'https://i.ibb.co/xtBF4j6H/FC-GAMING.webp', screen: 'fc-games-list-screen', type: 'slot' },
+            // Thẻ mới SIÊU TOOL A.I BACARAT
+            { name: 'SIÊU TOOL A.I BACARAT', slug: 'baccarat', image: 'https://i.ibb.co/39NrvXPG/AQUA.jpg', link: 'https://www.aquariusvip.site', type: 'tool' } 
+        ];
+
+        const PG_GAMES = [
+            { name: 'QUYẾT CHIẾN TIÊN THƯỞNG', slug: 'quyet-chien-tien-thuong', image: 'https://i.ibb.co/NgZ7cQnt/QUYET-CHIEN-TIEN-THUONG.jpg' },
+            { name: 'KHO BÁU AZTEC', slug: 'kho-bau-aztec', image: 'https://i.ibb.co/VWhjjfbB/KHO-BAU-AZTEC.jpg' },
+            { name: 'MÈO MAY MẮN (NEKO)', slug: 'neko-may-man', image: 'https://i.ibb.co/s9vnQVRT/NEKO-MAY-MAN.jpg' },
+            { name: 'KI LÂN MẠCH NƯỚC', slug: 'ki-lan-mach-nuoc', image: 'https://i.ibb.co/p6K4Lrzw/KI-LAN-MACH-NUOC.jpg' },
+            { name: 'CÔ BÉ QUÀNG KHĂN ĐỎ', slug: 'co-be-quang-khan-do', image: 'https://i.ibb.co/ZzxRV0zJ/CO-BE-QUANG-KHAN-DO.jpg' },
+            { name: 'CHIẾN THẮNG CAISHEN', slug: 'chien-thang-caishen', image: 'https://i.ibb.co/twyfpWKB/CHIEN-THANG-CAISHEN.jpg' },
+            { name: 'ĐẠI DỊCH ZOMBIE', slug: 'dai-dich-zombie', image: 'https://i.ibb.co/gMZhJ8wQ/DAI-DICH-ZOMBIE.jpg' },
+            { name: 'ĐÊM COCKTAIL', slug: 'dem-cocktail', image: 'https://i.ibb.co/rGdpPGNB/DEM-COCKTAIL.jpg' },
+            { name: 'ĐƯỜNG MẬT CHUỘC (1)', slug: 'duong-mat-chuoc-1', image: 'https://i.ibb.co/B5HzQ2KX/DUONG-MAT-CHUOC-1.jpg' },
+            { name: 'GƯƠNG QUAY TÌNH YÊU', slug: 'guong-quay-tinh-yeu', image: 'https://i.ibb.co/WWqSGFtz/GUONG-QUAY-TINH-YEU.jpg' },
+            { name: 'KHO BÁU HIỆP SĨ', slug: 'kho-bau-hiep-si', image: 'https://i.ibb.co/Z1Y4KVMw/HKHO-BAU-HIEP-SI.jpg' },
+            { name: 'HOA ANH ĐÀO', slug: 'hoa-anh-dao', image: 'https://i.ibb.co/JLbZpHT/HOA-ANH-ĐÀO.jpg' },
+            { name: 'MAFIA', slug: 'mafia', image: 'https://i.ibb.co/6RNc3XLB/MAFIA.jpg' },
+            { name: 'MEDUSA (1)', slug: 'medusa1', image: 'https://i.ibb.co/rGtXP0LP/MEDUSA1.jpg' },
+            { name: 'NỮ HẢI TẶC', slug: 'nu-hai-tac', image: 'https://i.ibb.co/CK1MY559/NU-HAI-TAC.jpg' },
+            { name: 'PHÁO HOA WILD', slug: 'phao-hoa-wild', image: 'https://i.ibb.co/Ps3MtBKj/PHAO-HOA-WILD.jpg' },
+            { name: 'SÁCH THẦN KÌ', slug: 'sach-than-ki', image: 'https://i.ibb.co/HMhk8b8/SACH-THAN-KI.jpg' },
+            { name: 'THỎ MAY MẮN', slug: 'tho-may-man', image: 'https://i.ibb.co/pBbDPYnX/THO-MAY-MAN.jpg' },
+            { name: 'VOI MAY MẮN', slug: 'voi-may-man', image: 'https://i.ibb.co/V0rBFRvf/VOI-MAY-MAN.jpg' },
+            { name: 'WILD APE', slug: 'wild-ape', image: 'https://i.ibb.co/XxB448Fz/WILD-APE.jpg' },
+            { name: 'WILD ĐẠO TẶC', slug: 'wild-dao-tac', image: 'https://i.ibb.co/KjWrMRQV/WILD-DAO-TAC.jpg' },
+        ];
+
+        const JILI_GAMES = [
+            { name: 'QUYỀN VƯƠNG', slug: 'quyen-vuong', image: 'https://i.ibb.co/99LGBwK2/QUYEN-VUONG.jpg' },
+            { name: '7 ĐIÊN CUỒNG', slug: '7-dien-cuong', image: 'https://i.ibb.co/Rkm2TRdr/7-DIEN-CUONG.jpg' },
+            { name: 'CÂY PHÁT TÀI', slug: 'cay-phat-tai', image: 'https://i.ibb.co/60hngdTM/CAY-PHAT-TAI.jpg' },
+            { name: 'ĐẾ QUỐC HOÀNG KIM', slug: 'de-quoc-hoang-kim', image: 'https://i.ibb.co/v4t0LF30/DE-QUOC-HOANG-KIM.jpg' },
+            { name: 'ĐÊM THƯỢNG HẢI', slug: 'dem-thuong-hai', image: 'https://i.ibb.co/7NN1V9qC/DEM-THUONG-HAI.jpg' },
+            { name: 'KẸO MAY MẮN', slug: 'keo-may-man', image: 'https://i.ibb.co/1JrqcFjJ/KEO-MAY-MAN.jpg' },
+            { name: 'MEGA ACE', slug: 'mega-ace', image: 'https://i.ibb.co/4Z02P082/MEGA-ACE.jpg' },
+            { name: 'NGỌC MAY MẮN (1)', slug: 'ngoc-may-man-1', image: 'https://i.ibb.co/s9Vdfz14/NGOC-MAY-MAN.jpg' },
+            { name: 'NGỌC MAY MẮN (2)', slug: 'ngoc-may-man-2', image: 'https://i.ibb.co/fV4w3Lw6/NGOC-MAY-MAN-2.jpg' },
+            { name: 'NGỌC MAY MẮN (3)', slug: 'ngoc-may-man-3', image: 'https://i.ibb.co/CsXC4GW5/NGOC-MAY-MAN-3.jpg' },
+            { name: 'PHARAOH', slug: 'pharaoh', image: 'https://i.ibb.co/hJsPLCrB/PHARAOH.jpg' },
+            { name: 'QUẢ ỚT NÓNG BỎNG', slug: 'qua-ot-nong-bong', image: 'https://i.ibb.co/F42dTMWf/QUA-OT-NONG-BONG.jpg' },
+            { name: 'QUAN VÂN TRƯỜNG (1)', slug: 'quan-van-truong-1', image: 'https://i.ibb.co/yc9MzPpj/QUANG-VAN-TRUONG.jpg' },
+            { name: 'QUAN VÂN TRƯỜNG (2)', slug: 'quan-van-truong-2', image: 'https://i.ibb.co/TDn8VHbh/QUANG-VAN-TRUONG-2.jpg' },
+            { name: 'SIU NIU BI', slug: 'siu-niu-bi', image: 'https://i.ibb.co/wr2Pnyjv/SIU-NIU-BI.jpg' },
+            { name: 'SUPER ACE (1)', slug: 'super-ace-1', image: 'https://i.ibb.co/2Ydbm3wN/SUPER-ACE.jpg' },
+            { name: 'SUPER ACE (2)', slug: 'super-ace-2', image: 'https://i.ibb.co/VW56N24H/SUPER-ACE-2.jpg' },
+            { name: 'TIỀN MAY MẮN', slug: 'tien-may-man', image: 'https://i.ibb.co/WpyZc7Gj/TIEN-MAY-MAN.jpg' },
+            { name: 'VŨ LONG TRANH BÁ', slug: 'vu-long-tranh-ba', image: 'https://i.ibb.co/zWz5dWpF/VU-LONG-TRANH-BA.jpg' },
+            { name: 'VUA RỪNG XANH', slug: 'vua-rung-xanh', image: 'https://i.ibb.co/8DT6kS6Q/VUA-RUNG-XANH.jpg' },
+        ];
+        
+        const ONE_SIX_EIGHT_GAMES = [
+            { name: 'SIÊU THỦ ACE (1)', slug: 'sieu-thu-ace-1', image: 'https://i.ibb.co/VWsgCSNy/SI-U-TH-ACE.jpg' },
+            { name: 'ĐI SĂN OLYMPUS', slug: 'di-san-olympus', image: 'https://i.ibb.co/hJBSrdmq/DI-S-N-OLYMPUS.jpg' },
+            { name: 'HEO DISCO', slug: 'heo-disco', image: 'https://i.ibb.co/0pnSQ9jF/HEO-DISCO.jpg' },
+            { name: 'SIÊU SẮC DỰ PHÒNG', slug: 'sieu-sac-du-phong', image: 'https://i.ibb.co/fd8FYvJ3/SIEU-SAC-DU-PHONG.jpg' },
+            { name: 'SIÊU THỦ ACE (2)', slug: 'sieu-thu-ace-2', image: 'https://i.ibb.co/BKPP4SX0/SI-U-TH-ACE-2.jpg' },
+            { name: 'SƯ PHỤ WANDA (1)', slug: 'su-phu-wanda-1', image: 'https://i.ibb.co/kg6RDGnk/S-PH-WANDA.jpg' },
+            { name: 'SƯ PHỤ WANDA (2)', slug: 'su-phu-wanda-2', image: 'https://i.ibb.co/BVhJ1LpZ/SU-PHU-WANDA-2.jpg' },
+            { name: 'SƯ PHỤ WANDA (3)', slug: 'su-phu-wanda-3', image: 'https://i.ibb.co/Cs6ZQwnZ/S-PH-WANDA-3.jpg' },
+            { name: 'THỢ SĂN KHO BÁU DCM (1)', slug: 'tho-san-kho-bau-dcm-1', image: 'https://i.ibb.co/nqBBrKw5/TH-T-S-N-KHO-I-DCM.jpg' },
+            { name: 'THỢ SĂN KHO BÁU DCM (2)', slug: 'tho-san-kho-bau-dcm-2', image: 'https://i.ibb.co/ymtSGpyv/TH-T-S-N-KHO-I-DCM-2.jpg' },
+            { name: 'THỢ SĂN KHO BÁU DCMM', slug: 'tho-san-kho-bau-dcmm', image: 'https://i.ibb.co/FLPYWGQP/TH-T-S-N-KHO-I-DCMM.jpg' },
+            { name: 'MẬT CHỦ (1)', slug: 'mat-chu-1', image: 'https://i.ibb.co/G4NX7PD9/M-T-CH-C.jpg' },
+            { name: 'MẬT CHỦ (2)', slug: 'mat-chu-2', image: 'https://i.ibb.co/357BkJY0/M-T-CH-C-2.jpg' },
+            { name: 'MẬT CHỦ (3)', slug: 'mat-chu-3', image: 'https://i.ibb.co/3mFnybjX/M-T-CH-C-3.jpg' },
+        ];
+
+        const FC_GAMES = [
+            { name: '3 CON HEO', slug: '3-con-heo', image: 'https://i.ibb.co/VcndXXmD/3-CON-HEO.jpg' },
+            { name: 'TÍCH BÁI', slug: 'tich-bai', image: 'https://i.ibb.co/wZZY1zgL/T-CH-B-I.jpg' },
+            { name: 'BÁO KÍCH CHƯƠNG (2)', slug: 'bao-kich-chuong-2', image: 'https://i.ibb.co/Q3DTZwkF/B-O-K-CH-NG-2.jpg' },
+            { name: 'BÁO KÍCH CHƯƠNG NGỌT', slug: 'bao-kich-chuong-ngot', image: 'https://i.ibb.co/5hdzBLcm/B-O-K-CH-NG-NG-T.jpg' },
+            { name: 'BÁO KÍCH RỪNG XANH', slug: 'bao-kich-rung-xanh', image: 'https://i.ibb.co/GQz0Z6fg/B-O-K-CH-R-NG-XANH.jpg' },
+            { name: 'BÁO KIM TIỀN (2)', slug: 'bao-kim-tien-2', image: 'https://i.ibb.co/hRj71FV9/B-O-KIM-TI-N-2.jpg' },
+            { name: 'BÁO KIM TIỀN (1)', slug: 'bao-kim-tien-1', image: 'https://i.ibb.co/sdkWgR1t/B-O-KIM-TI-N.jpg' },
+            { name: 'BÉ BẢO CẢM', slug: 'be-bao-cam', image: 'https://i.ibb.co/zhh3Sqgg/B-B-O-C-M.jpg' },
+            { name: 'BỘ BINH HỔ', slug: 'bo-binh-ho', image: 'https://i.ibb.co/chnft8ry/B-NH-BINH-H.jpg' },
+            { name: 'CÁ CHÉP TIẾN TỚI', slug: 'ca-chep-tien-toi', image: 'https://i.ibb.co/p6bGY9x1/C-CH-P-TI-N-T-I.jpg' },
+            { name: 'CAO THỦ QUÉT MÌN', slug: 'cao-thu-quet-min', image: 'https://i.ibb.co/CKXz6Hzc/CAO-TH-QU-T-M-N.jpg' },
+            { name: 'CAO THỦ TRÈO THÁP', slug: 'cao-thu-treo-thap', image: 'https://i.ibb.co/PsVs7Z0x/CAO-TH-TR-O-TH-P.jpg' },
+            { name: 'CÔNG BUỒNG', slug: 'cong-buong', image: 'https://i.ibb.co/wFhfVs9w/C-NG-BU-NG.jpg' },
+            { name: 'CỔ MỘ TÀI LỘC', slug: 'co-mo-tai-loc', image: 'https://i.ibb.co/RkN1XGkz/C-M-T-I-L-C.jpg' },
+            { name: 'CỦA CẢI DỊ DỒ', slug: 'cua-cai-di-do', image: 'https://i.ibb.co/Fk6Xn22H/C-A-C-I-D-I-D-O.jpg' },
+            { name: 'CUỐI NĂM (1)', slug: 'cuoi-nam-1', image: 'https://i.ibb.co/Cpd3J6hD/CU-I-N-M.jpg' },
+            { name: 'CHILI HUAHUA', slug: 'chili-huahua', image: 'https://i.ibb.co/wZKkDZ64/CHILIHUAHUA.jpg' },
+            { name: 'ĐỒ CHƠI PHÁP (1)', slug: 'do-choi-phap-1', image: 'https://i.ibb.co/9HRBH493/D-O-CH-I-PH-2.jpg' },
+            { name: 'GẤU MA', slug: 'gau-ma', image: 'https://i.ibb.co/sMznBPj/U-MA.jpg' },
+            { name: 'GAME MÀU SIÊU NHIỀU', slug: 'game-mau-sieu-nhieu', image: 'https://i.ibb.co/CsPQF4G1/GAME-M-U-SI-U-NHI-U.jpg' },
+            { name: 'HẢI HỘP KÍCH TÌNH', slug: 'hai-hop-kich-tinh', image: 'https://i.ibb.co/9HnchKsd/H-I-H-P-K-CH-T-NH.jpg' },
+            { name: 'HỔNG VẬN TIỀN', slug: 'hong-van-tien', image: 'https://i.ibb.co/twCBXY99/H-NG-V-TI-N.jpg' },
+            { name: 'IMG-98 DEFAULT', slug: 'imgi-98-default', image: 'https://i.ibb.co/BKdscfDB/imgi-98-default.jpg' },
+            { name: 'KIẾM TIỀN VUI', slug: 'kiem-tien-vui', image: 'https://i.ibb.co/mrwxFxYj/KI-M-TI-N-VUI.jpg' },
+            { name: 'KIM LINH THẦN LỚN', slug: 'kim-linh-than-lon', image: 'https://i.ibb.co/rfwsv8TD/KIM-LINH-TH-N-L-N.jpg' },
+            { name: 'KHO BÁU CON CÁC', slug: 'kho-bau-con-cac', image: 'https://i.ibb.co/qQgV9qB/KHO-B-U-CON-C-C.jpg' },
+            { name: 'KHO BÁU CỦA THỎ NGỌT', slug: 'kho-bau-cua-tho-ngot', image: 'https://i.ibb.co/vvD6HtG7/KHO-B-U-C-A-TH-NG-L-N.jpg' },
+            { name: 'LUCKY 9', slug: 'lucky-9', image: 'https://i.ibb.co/TJBqqT3/LUCKY-9.jpg' },
+            { name: 'MA THUẬT GHÉP', slug: 'ma-thuat-ghep', image: 'https://i.ibb.co/0pTMt7HH/MA-THU-T-GH-P.jpg' },
+            { name: 'MÁY ĐI CÂY TIỀN', slug: 'may-di-cay-tien', image: 'https://i.ibb.co/DPpr5FH7/M-Y-I-C-Y-TI-N.jpg' },
+            { name: 'MÁY ĐI CỦA CẢI', slug: 'may-di-cua-cai', image: 'https://i.ibb.co/b4c4pw9/M-Y-I-C-A-C-I.jpg' },
+            { name: 'MÁY ĐI', slug: 'may-di', image: 'https://i.ibb.co/gMmQ7hN9/M-Y-I.jpg' },
+            { name: 'MÃO TÀI TÌM', slug: 'mao-tai-tim', image: 'https://i.ibb.co/d0Vk4KvG/M-O-T-I-T-M.jpg' },
+            { name: 'NĂM MỚI LÀ LÀ', slug: 'nam-moi-la-la', image: 'https://i.ibb.co/HLV2QqBy/N-M-M-I-L-L.jpg' },
+            { name: 'NĂM MỚI LỘC LỘC', slug: 'nam-moi-loc-loc', image: 'https://i.ibb.co/mr03GVDy/N-M-M-I-L-C-L-C-2.jpg' },
+            { name: 'NỮ CHIẾN BINH', slug: 'nu-chien-binh', image: 'https://i.ibb.co/QFBFDx7P/N-CHI-N-BINH.jpg' },
+            { name: 'NỮ HOÀNG INCA', slug: 'nu-hoang-inca', image: 'https://i.ibb.co/LdbVwHQW/N-HO-NG-INCA.jpg' },
+            { name: 'NỮ THẦN VÕ', slug: 'nu-than-vo', image: 'https://i.ibb.co/mr8xN2NT/N-TH-N-V.jpg' },
+            { name: 'NGUYÊN TỐ DÒNG TRÒ', slug: 'nguyen-to-dong-tro', image: 'https://i.ibb.co/gL2NsxBm/NGUY-N-T-D-NG-TR-O.jpg' },
+            { name: 'NGŨ TRÙM PHÁ BẢ', slug: 'ngu-trum-pha-ba', image: 'https://i.ibb.co/nsdtrHQk/NG-TR-M-PH-B.jpg' },
+            { name: 'PHÁO RỒNG TÀI', slug: 'phao-rong-tai', image: 'https://i.ibb.co/KppW1yqx/PH-O-R-NG-T-I.jpg' },
+            { name: 'PHƯỢNG HOÀNG', slug: 'phuong-hoang', image: 'https://i.ibb.co/HfndtYXR/PH-NG-HO-NG.jpg' },
+            { name: 'ROBIN HOOB', slug: 'robin-hoob', image: 'https://i.ibb.co/nsKp8Y99/ROBIN-HOOB.jpg' },
+            { name: 'RƯỢU THUA XE', slug: 'ruou-thua-xe', image: 'https://i.ibb.co/6cbCpThJ/R-A-TH-UA-XE.jpg' },
+            { name: 'TÂY BỘ PHONG BA', slug: 'tay-bo-phong-ba', image: 'https://i.ibb.co/k6g9qqcQ/T-Y-B-PHONG-BA.jpg' },
+            { name: 'THẦN TÀI PHI TÀI', slug: 'than-tai-phi-tai', image: 'https://i.ibb.co/mFJYCK3M/TH-N-T-I-PHI-T-I.jpg' },
+            { name: 'THUYỀN RỒNG', slug: 'thuyen-rong', image: 'https://i.ibb.co/7d4ntSrB/THUY-N-R-NG.jpg' },
+            { name: 'TRANH ĐẤU LA MÃ', slug: 'tranh-dau-la-ma', image: 'https://i.ibb.co/nMjNZWV4/TRANH-U-LA-M.jpg' },
+            { name: 'TRÂU HOÀNG ĐẾ', slug: 'trau-hoang-de', image: 'https://i.ibb.co/wFh5J5WD/TR-U-HOANG-D.jpg' },
+            { name: 'TRƯỜNG VÕNG', slug: 'truong-vong', image: 'https://i.ibb.co/j97t6j9W/TR-NG-V-NG.jpg' },
+            { name: 'VŨ TRỤ CHIẾN', slug: 'vu-tru-chien', image: 'https://i.ibb.co/Wpz6nvYc/V-TR-I-CHI-N.jpg' },
+            { name: 'ZUES', slug: 'zues', image: 'https://i.ibb.co/M5GhvK53/ZUES.jpg' },
+        ];
+
+
+        // --- LOGIC CHUYỂN MÀN HÌNH ---
+        // Đặt hàm này thành toàn cục để các sự kiện onclick trong HTML có thể truy cập
+        window.showScreen = function(targetScreenId) {
+            document.querySelectorAll('#screen-container > div').forEach(screen => {
+                screen.classList.add('hidden');
+                screen.style.opacity = '0';
+            });
+            const targetScreen = document.getElementById(targetScreenId);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                setTimeout(() => targetScreen.style.opacity = '1', 50);
                 
-                const blessing = {
-                    table: BACARAT_TABLES[Math.floor(Math.random() * BACARAT_TABLES.length)],
-                    side: Math.random() < 0.5 ? 'NHÀ CON' : 'NHÀ CÁI',
-                    hand: Math.floor(Math.random() * (30 - 15 + 1)) + 15
-                };
+                // Cập nhật nội dung màn hình game list nếu cần
+                if (targetScreenId.endsWith('-games-list-screen')) {
+                    const slug = targetScreenId.split('-')[0];
+                    renderGameList(slug, targetScreen);
+                }
+            }
+        }
+
+        // Đặt các hàm xử lý form thành toàn cục
+        window.handleLogin = function() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            // Logic đăng nhập giả định (Test User)
+            if ((username === 'LUCKA' && password === '123456') || (username === 'admin' && password === '123456')) {
+                document.getElementById('display-username').textContent = username;
+                showMessage("Đăng nhập thành công!", 'bg-green-600');
                 
-                setTimeout(async () => {
-                    const blessingMessage = {
-                        type: 'blessing',
-                        content: blessing,
-                        senderId: 'AQUARIUS_SYSTEM',
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                // Chuyển sang màn hình Menu chính
+                setTimeout(() => {
+                    document.getElementById('login-register-screen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('login-register-screen').classList.add('hidden');
+                        window.showScreen('main-menu-screen'); // Đã sửa: dùng window.showScreen
+                        renderMainMenu();
+                        startUpdateInterval();
+                    }, 500);
+                }, 1000); 
+
+            } else {
+                showMessage("Tên đăng nhập hoặc mật khẩu không chính xác. Vui lòng thử lại.", 'bg-red-600');
+            }
+        }
+
+        window.handleRegister = function() {
+            const username = document.getElementById('reg-username').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-password').value;
+            
+            // Logic đăng ký giả định
+            showMessage(`Đăng ký thành công tài khoản: ${username}. Vui lòng liên hệ CSKH để kích hoạt.`, 'bg-yellow-600');
+            
+            // Tự động chuyển về màn hình đăng nhập sau 3 giây
+            setTimeout(() => {
+                document.getElementById('show-login').click();
+            }, 3000);
+        }
+        
+        window.handleLogout = function() {
+            stopUpdateInterval();
+            document.getElementById('login-register-screen').classList.remove('hidden');
+            document.getElementById('login-register-screen').style.opacity = '1';
+            document.getElementById('main-menu-screen').classList.add('hidden');
+            document.getElementById('main-menu-screen').style.opacity = '0';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+        }
+
+        // Hàm hiển thị message box thay thế cho alert()
+        function showMessage(message, bgColor) {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = message;
+            messageBox.className = `mt-6 p-3 rounded-lg text-center text-sm font-medium ${bgColor}`;
+            if (bgColor === 'hidden') {
+                messageBox.classList.add('hidden');
+            } else {
+                messageBox.classList.remove('hidden');
+                // Tự động ẩn sau 4 giây
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 4000);
+            }
+        }
+
+
+        // --- LOGIC MENU CHÍNH ---
+
+        let updateInterval;
+
+        function startUpdateInterval() {
+            if (updateInterval) clearInterval(updateInterval);
+            updateInterval = setInterval(updateMainMenuAnalytics, 30000); // Cập nhật mỗi 30 giây
+            updateMainMenuAnalytics(); // Cập nhật lần đầu
+        }
+
+        function stopUpdateInterval() {
+            if (updateInterval) clearInterval(updateInterval);
+        }
+
+        // Hàm tạo giá trị ngẫu nhiên cho thanh phân tích (luôn trên 80%)
+        function getRandomAnalytics(min = 80, max = 100) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Hàm tạo giá trị độ biến động
+        function getRandomVolatility() {
+            const values = ['THẤP', 'TRUNG BÌNH', 'CAO'];
+            const random = Math.random();
+            if (random < 0.2) return { value: 'THẤP', color: 'text-green-500' };
+            if (random < 0.7) return { value: 'TRUNG BÌNH', color: 'text-yellow-500' };
+            return { value: 'CAO', color: 'text-red-500' };
+        }
+
+        // Hàm cập nhật dữ liệu cho Menu chính
+        function updateMainMenuAnalytics() {
+            GAMES.forEach(game => {
+                if (game.type === 'slot') {
+                    game.analytics = {
+                        huDangNha: getRandomAnalytics(),
+                        scaterDrop: getRandomAnalytics(),
+                        bigWinFreq: getRandomAnalytics(),
+                        returnRate: getRandomAnalytics(75, 95), // Tỉ lệ quay lại có thể thấp hơn
+                        volatility: getRandomVolatility()
                     };
-                    await db.collection(`user_chats/${currentUser.uid}/messages`).add(blessingMessage);
-                    await db.collection('users').doc(currentUser.uid).set({
-                        lastBlessingTimestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                }, 1500);
-
-                setPlea('');
-            };
-            
-            const handleInfoSubmit = async () => {
-                const { f168Account, capital, target } = infoFormData;
-                if (!f168Account || !capital || !target) {
-                    alert("VUI LÒNG NHẬP ĐẦY ĐỦ THÔNG TIN");
-                    return;
                 }
-                const infoContent = { f168Account, capital, target };
-                await sendMessage('info_submission', infoContent);
-                await db.collection('users').doc(currentUser.uid).set({ hasSubmittedInfo: true }, { merge: true });
-                setShowInfoModal(false);
-            };
+            });
+            renderMainMenu();
+        }
 
-            const formatTime = (ms) => {
-                if (ms <= 0) return "00:00:00";
-                const totalSeconds = Math.floor(ms / 1000);
-                const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-                const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-                const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-                return `${hours}:${minutes}:${seconds}`;
-            };
+        // Hàm xác định màu cho thanh tiến trình
+        function getProgressColor(percent) {
+            if (percent >= 95) return 'bg-red-500';
+            if (percent >= 90) return 'bg-yellow-500';
+            return 'bg-green-500';
+        }
 
-            const EnergyBar = ({ value }) => {
-                const percentage = Math.max(0, Math.min(100, (value / 7) * 100));
-                const barColor = percentage > 50 ? 'bg-green-500' : percentage > 20 ? 'bg-yellow-500' : 'bg-red-500';
-                const barWidth = `${percentage}%`;
-                return (
-                    <div className="w-full border border-green-700 p-1">
-                        <div className="flex items-center">
-                            <div className="text-xs sm:text-sm mr-2">N.LƯỢNG:</div>
-                            <div className="flex-1 h-4 bg-gray-800">
-                                <div className={`h-full ${barColor}`} style={{width: barWidth}}></div>
+        function renderMainMenu() {
+            const gamesGrid = document.getElementById('games-grid');
+            gamesGrid.innerHTML = GAMES.map(item => {
+                if (item.type === 'tool') {
+                    // Render Thẻ SIÊU TOOL A.I BACARAT (Link ngoài, không có phân tích)
+                    return `
+                        <a href="${item.link}" target="_blank" class="game-card-tool bg-gray-900 rounded-xl overflow-hidden shadow-lg transition duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700/50">
+                            <div class="p-3">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-36 object-cover rounded-lg mb-3 border border-yellow-500/50">
+                                <h3 class="text-lg font-bold text-yellow-500 text-center mb-2">${item.name}</h3>
                             </div>
-                            <div className="text-sm ml-2">{value}</div>
+                            <div class="bg-yellow-600/20 p-3 text-center text-sm font-semibold border-t border-yellow-500/50">
+                                <i class="ph-robot-bold mr-1 text-yellow-500 animate-pulse"></i>
+                                PHÂN TÍCH THÔNG MINH BACCARAT
+                            </div>
+                        </a>
+                    `;
+                }
+                
+                // Render Thẻ Slot Games (Có Phân tích)
+                const analytics = item.analytics || {};
+                return `
+                    <div onclick="window.showScreen('${item.screen}')" class="game-card-slot ${item.slug} bg-gray-900 rounded-xl overflow-hidden shadow-lg transition duration-300 transform hover:scale-[1.02] cursor-pointer border border-tech-blue/30">
+                        <div class="p-3">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-36 object-cover rounded-lg mb-3 border border-gray-700/50">
+                            <h3 class="text-lg font-bold text-white text-center">${item.name}</h3>
+                        </div>
+                        <div class="bg-gray-950/70 p-3 text-sm font-medium border-t border-gray-800 space-y-2">
+                            ${renderProgressBar('HỦ ĐANG NHẢ', analytics.huDangNha)}
+                            ${renderProgressBar('TỈ LỆ RỚT SCATER', analytics.scaterDrop)}
+                            ${renderProgressBar('TẦN SUẤT BIG WIN', analytics.bigWinFreq)}
+                            ${renderVolatilityBar('ĐỘ BIẾN ĐỘNG', analytics.volatility)}
+                            ${renderProgressBar('TỈ LỆ QUAY LẠI', analytics.returnRate)}
                         </div>
                     </div>
-                );
-            };
+                `;
+            }).join('');
+        }
 
-            const username = currentUser.email.split('@')[0];
-
-            return (
-                 <div className={`h-screen p-1 sm:p-2 md:p-4 ${isAnnouncing ? 'yellow-alert-flash' : ''}`}>
-                    <div className="w-full h-full flex flex-col retro-container crt-effect">
-                        <header className="retro-header flex justify-between items-center">
-                            <h2 className="text-lg sm:text-xl glitch-text">AQUARIUS TERMINAL</h2>
-                            <button onClick={() => { soundService.playClick(); onLogout(); }} className="text-xs retro-button p-2">NGẮT KẾT NỐI</button>
-                        </header>
-                        <div className="p-2 border-b border-green-900">
-                            <p className="truncate">> PILOT: {username}</p>
-                            <EnergyBar value={energy} />
-                        </div>
-                        <main ref={messagesListRef} className="flex-1 p-2 sm:p-4 overflow-y-auto">
-                            {messages.map((msg) => (
-                                <div key={msg.id} className="mb-2">
-                                    <div className={msg.senderId === currentUser.uid ? 'text-cyan-300' : ''}>
-                                        {msg.type === 'system' ? '' : <span className="mr-2">{msg.senderId === currentUser.uid ? `<${username}>` : '<AQUARIUS>'}</span>}
-                                        <MessageContent msg={msg} />
-                                    </div>
-                                </div>
-                            ))}
-                        </main>
-                        <div className="p-2 border-t border-b border-green-900 flex justify-around items-center space-x-2 relative">
-                            {cooldownTimeLeft > 0 ? (
-                                <div className="text-center text-xs">
-                                    <p className="opacity-70">HỒI CHIÊU</p>
-                                    <p className="text-sm sm:text-lg">{formatTime(cooldownTimeLeft)}</p>
-                                </div>
-                            ) : (
-                                <button onClick={() => {soundService.playClick(); setShowBlessingModal(true);}} className="retro-button text-xs sm:text-sm p-2">[BAN PHƯỚC]</button>
-                            )}
-                            <button onClick={() => {soundService.playClick(); alert('TÀI KHOẢN CỦA BẠN KHÔNG ĐỦ ĐIỀU KIỆN! HÃY CHƠI ĐỀU VÀ LÊN VIP');}} className="retro-button text-xs sm:text-sm p-2">[ỨNG TIỀN]</button>
-                        </div>
-                        <footer className="p-2 border-t border-green-900">
-                            <div className="flex w-full items-center">
-                                <span className="mr-2 text-lg">></span>
-                                <input className="flex-1 retro-input" placeholder="Nhập lệnh..." value={inputMessage} onChange={(e) => {setInputMessage(e.target.value); soundService.playTyping();}} onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleSendMessage())} />
-                                <button onClick={handleSendMessage} disabled={energy < MESSAGE_COST} className="ml-2 retro-button p-2">GỬI</button>
-                            </div>
-                        </footer>
+        // --- HÀM HỖ TRỢ RENDER PROGRESS BAR ---
+        function renderProgressBar(label, percent) {
+            if (percent === undefined) percent = getRandomAnalytics();
+            const color = getProgressColor(percent);
+            return `
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-center text-gray-400">
+                        <span><i class="ph-chart-bar-horizontal-bold mr-1 text-tech-blue/70"></i>${label}</span>
+                        <span class="${color} font-bold">${percent}%</span>
                     </div>
-                    {showBlessingModal && (
-                        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-                            <div className="p-6 retro-container w-full max-w-sm" onClick={e => e.stopPropagation()}>
-                                <h3 className="text-xl sm:text-2xl glitch-text mb-4">TRUYỀN TẢI THỈNH CẦU</h3>
-                                <textarea value={plea} onChange={e => setPlea(e.target.value)} className="w-full h-24 retro-textarea" placeholder="> Viết lời thỉnh cầu của bạn tại đây..."></textarea>
-                                <div className="flex justify-end space-x-4 mt-4">
-                                    <button onClick={() => {soundService.playClick(); setShowBlessingModal(false);}} className="retro-button">HỦY</button>
-                                    <button onClick={() => {soundService.playClick(); handleBlessingRequest();}} className="retro-button">GỬI</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {showInfoModal && (
-                        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
-                            <div className="p-6 retro-container w-full max-w-sm" onClick={e => e.stopPropagation()}>
-                                <h3 className="text-xl sm:text-2xl glitch-text mb-4">YÊU CẦU KHAI BÁO</h3>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-md sm:text-lg">> TÊN TK F168:</label>
-                                        <input value={infoFormData.f168Account} onChange={e => setInfoFormData({...infoFormData, f168Account: e.target.value})} type="text" className="w-full mt-1 retro-input" />
-                                    </div>
-                                    <div>
-                                        <label className="text-md sm:text-lg">> SỐ VỐN:</label>
-                                        <input value={infoFormData.capital} onChange={e => setInfoFormData({...infoFormData, capital: e.target.value})} type="text" className="w-full mt-1 retro-input" />
-                                    </div>
-                                     <div>
-                                        <label className="text-md sm:text-lg">> MUỐN LÊN BAO NHIÊU:</label>
-                                        <input value={infoFormData.target} onChange={e => setInfoFormData({...infoFormData, target: e.target.value})} type="text" className="w-full mt-1 retro-input" />
-                                    </div>
-                                </div>
-                                <div className="flex justify-end mt-6">
-                                    <button onClick={() => {soundService.playClick(); handleInfoSubmit();}} className="retro-button">GỬI BÁO CÁO</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                 </div>
-            );
-        };
-        
-        //================================================================================
-        // TOP-LEVEL COMPONENT: System
-        //================================================================================
-        const System = () => {
-            const [currentUser, setCurrentUser] = useState(null);
-            const [isLoading, setIsLoading] = useState(true);
-            const [isAdmin, setIsAdmin] = useState(false);
-
-            useEffect(() => {
-                const startAudio = () => {
-                    soundService.init();
-                    soundService.startAmbient();
-                    document.removeEventListener('click', startAudio);
-                    document.removeEventListener('keydown', startAudio);
-                };
-                document.addEventListener('click', startAudio);
-                document.addEventListener('keydown', startAudio);
-
-                const unsubscribeAuth = auth.onAuthStateChanged(user => {
-                    setCurrentUser(user);
-                    setIsAdmin(user ? user.email.split('@')[0] === ADMIN_USERNAME : false);
-                    setIsLoading(false);
-                    if (user) {
-                        const userStatusRef = rtdb.ref('/status/' + user.uid);
-                        const isOnline = { isOnline: true, lastSeen: firebase.database.ServerValue.TIMESTAMP };
-                        const isOffline = { isOnline: false, lastSeen: firebase.database.ServerValue.TIMESTAMP };
-                        rtdb.ref('.info/connected').on('value', snapshot => {
-                            if (snapshot.val() === false) return;
-                            userStatusRef.onDisconnect().set(isOffline).then(() => userStatusRef.set(isOnline));
-                        });
-                    }
-                });
-
-                return () => {
-                    unsubscribeAuth();
-                    document.removeEventListener('click', startAudio);
-                    document.removeEventListener('keydown', startAudio);
-                };
-            }, []);
-
-            const handleLogout = () => {
-                if (auth.currentUser) {
-                    rtdb.ref('/status/' + auth.currentUser.uid).set({
-                        isOnline: false,
-                        lastSeen: firebase.database.ServerValue.TIMESTAMP
-                    });
-                }
-                auth.signOut();
-            };
-            
-            return (
-                <div>
-                    <Starfield />
-                    {isLoading ? (
-                        <div className="min-h-screen bg-black flex items-center justify-center text-2xl animate-pulse"><p>ĐANG KHỞI ĐỘNG HỆ THỐNG...<span className="typing-cursor"></span></p></div>
-                    ) : !currentUser ? (
-                        <LoginScreen />
-                    ) : isAdmin ? (
-                        <AdminDashboard currentUser={currentUser} onLogout={handleLogout} />
-                    ) : (
-                        <UserView currentUser={currentUser} onLogout={handleLogout} />
-                    )}
+                    <div class="w-full h-1.5 bg-gray-800 rounded-full mt-1">
+                        <div class="progress-bar-segment ${color} shadow-lg shadow-black/50" style="width: ${percent}%;"></div>
+                    </div>
                 </div>
-            );
-        };
+            `;
+        }
 
-        ReactDOM.render(<System />, document.getElementById('root'));
+        // --- HÀM HỖ TRỢ RENDER ĐỘ BIẾN ĐỘNG ---
+        function renderVolatilityBar(label, volatility) {
+            if (!volatility) volatility = getRandomVolatility();
+            return `
+                <div class="flex justify-between items-center text-gray-400">
+                    <span><i class="ph-flame-bold mr-1 text-red-500/70"></i>${label}</span>
+                    <span class="${volatility.color} font-bold">${volatility.value}</span>
+                </div>
+            `;
+        }
+
+        // --- LOGIC DANH SÁCH GAME CHI TIẾT (PG/JILI/168/FC) ---
+
+        let gameListUpdateInterval;
+
+        function getGameData(slug) {
+            switch (slug) {
+                case 'pg': return PG_GAMES;
+                case 'jili': return JILI_GAMES;
+                case '168': return ONE_SIX_EIGHT_GAMES;
+                case 'fc': return FC_GAMES;
+                default: return [];
+            }
+        }
+
+        function getGameTitle(slug) {
+            const game = GAMES.find(g => g.slug === slug);
+            return game ? game.name : 'Danh Sách Trò Chơi';
+        }
+
+        function renderGameList(slug, container) {
+            const games = getGameData(slug);
+            const title = getGameTitle(slug);
+            const featuredGame = slug === 'pg' 
+                ? PG_GAMES.find(g => g.name === 'QUYẾT CHIẾN TIÊN THƯỞNG')
+                : games[Math.floor(Math.random() * games.length)]; // Ngẫu nhiên cho JILI/168/FC
+            
+            // Xóa game đề xuất khỏi danh sách (trừ PG vì game QC TT đã được hardcode tách ra)
+            const displayGames = slug === 'pg' 
+                ? games.filter(g => g.name !== 'QUYẾT CHIẾN TIÊN THƯỞNG') 
+                : games.filter(g => g.name !== featuredGame.name);
+            
+            // Dừng interval cũ nếu có
+            if (gameListUpdateInterval) clearInterval(gameListUpdateInterval);
+
+            container.innerHTML = `
+                <div class="relative z-10 w-full max-w-6xl">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-6 pt-4 border-b border-gray-700/50 pb-4">
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-yellow-500 tech-shadow flex items-center">
+                            <i class="ph-arrow-square-left-bold mr-3 cursor-pointer hover:text-tech-blue" onclick="window.showScreen('main-menu-screen')"></i>
+                            ${title}
+                        </h1>
+                        <div class="text-sm md:text-lg font-medium text-gray-300 bg-gray-900/50 p-2 rounded-lg border border-gray-700">
+                            <i class="ph-user-bold mr-1 text-yellow-400"></i>
+                            <span id="display-username-list">${document.getElementById('display-username').textContent}</span>
+                        </div>
+                    </div>
+
+                    <!-- FEATURED GAME -->
+                    <div class="w-full mb-8">
+                        <div class="p-4 bg-red-800/20 rounded-xl border-2 border-red-500 shadow-2xl shadow-red-500/30">
+                            <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-3 text-center flex items-center justify-center">
+                                <i class="ph-star-fill-bold mr-2 animate-bounce"></i>
+                                ĐỀ XUẤT NÓNG: ${featuredGame.name} (99% HỦ ĐANG NHẢ)
+                                <i class="ph-star-fill-bold ml-2 animate-bounce"></i>
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="rounded-lg overflow-hidden border border-red-500/50 h-56 md:h-full">
+                                    <img src="${featuredGame.image}" alt="${featuredGame.name}" class="w-full h-full object-cover">
+                                </div>
+                                <div class="space-y-3 flex flex-col justify-center">
+                                    ${renderProgressBar('TỈ LỆ NHẢ', 99)}
+                                    <p class="text-sm text-gray-400 pt-2">
+                                        *Hệ thống phát hiện tần suất Big Win cao nhất trong lịch sử, đề xuất cược lớn.
+                                    </p>
+                                    <button onclick="window.handleGameClick('${featuredGame.slug}', '${featuredGame.name}', '${featuredGame.image}')" class="w-full bg-red-600 text-white py-2 rounded-lg font-bold hover:bg-red-500 transition duration-300 shadow-lg shadow-red-600/50 mt-2">
+                                        <i class="ph-lightning-fill-bold mr-1"></i>
+                                        PHÂN TÍCH CHI TIẾT
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game Grid -->
+                    <div id="game-list-grid-${slug}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
+                        ${displayGames.map(game => `
+                            <div onclick="window.handleGameClick('${game.slug}', '${game.name}', '${game.image}')" class="bg-gray-800 rounded-xl overflow-hidden shadow-xl transition duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700/50">
+                                <img src="${game.image}" alt="${game.name}" class="w-full h-32 object-cover">
+                                <div class="p-2">
+                                    <h4 class="text-xs font-semibold text-white text-center truncate mb-2">${game.name}</h4>
+                                    <div class="flex flex-col text-xs font-medium text-gray-400 bg-gray-900 p-1 rounded-lg">
+                                        <div class="flex justify-between items-center">
+                                            <span><i class="ph-chart-bar-horizontal-bold mr-1 text-tech-blue/70"></i>TỈ LỆ NHẢ</span>
+                                            <span id="rate-${game.slug}" class="text-green-500 font-bold">...</span>
+                                        </div>
+                                        <div class="w-full h-1 bg-gray-700 rounded-full mt-0.5">
+                                            <div id="bar-${game.slug}" class="progress-bar-segment bg-green-500" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Bản quyền -->
+                    <div class="w-full text-center mt-12">
+                        <p class="text-xs text-gray-500 mb-4 relative z-10">
+                            BẢN QUYỀN THUỘC VỀ LONG BẢO
+                        </p>
+                    </div>
+
+                </div>
+            `;
+
+            // Bắt đầu cập nhật analytics cho Game List
+            updateGameListAnalytics(slug, displayGames);
+            gameListUpdateInterval = setInterval(() => updateGameListAnalytics(slug, displayGames), 30000);
+        }
+
+        // Hàm cập nhật analytics cho danh sách game chi tiết
+        function updateGameListAnalytics(slug, games) {
+            games.forEach(game => {
+                // Tỉ lệ nhả luôn trên 70%
+                const rate = getRandomAnalytics(70, 100); 
+                const color = getProgressColor(rate);
+
+                const rateElement = document.getElementById(`rate-${game.slug}`);
+                const barElement = document.getElementById(`bar-${game.slug}`);
+
+                if (rateElement) {
+                    rateElement.textContent = `${rate}%`;
+                    rateElement.className = `${color} font-bold`;
+                }
+
+                if (barElement) {
+                    barElement.style.width = `${rate}%`;
+                    barElement.className = `progress-bar-segment ${color}`;
+                }
+            });
+        }
+        
+        // --- LOGIC MODAL CHI TIẾT ---
+
+        // Đặt hàm này thành toàn cục để các sự kiện onclick trong HTML có thể truy cập
+        window.handleGameClick = function(slug, name, image) {
+            const scanModal = document.getElementById('scan-modal');
+            const detailModal = document.getElementById('detail-modal');
+
+            // 1. Show Scanning Modal
+            scanModal.classList.remove('hidden');
+            scanModal.classList.add('scan-modal-enter-active');
+
+            // 2. Hide Scanning Modal and Show Detail Modal after 1.5s
+            setTimeout(() => {
+                scanModal.classList.add('hidden');
+                scanModal.classList.remove('scan-modal-enter-active');
+                
+                // 3. Render Detail Content
+                renderDetailModal(slug, name, image);
+
+                // 4. Show Detail Modal
+                detailModal.classList.remove('hidden');
+                detailModal.querySelector('div').classList.add('modal-enter-active');
+            }, 1500);
+        }
+
+        // Hàm hỗ trợ đóng Modal
+        window.closeDetailModal = function() {
+            const detailModal = document.getElementById('detail-modal');
+            detailModal.querySelector('div').classList.remove('modal-enter-active');
+            detailModal.querySelector('div').classList.add('modal-enter');
+            setTimeout(() => {
+                detailModal.classList.add('hidden');
+                detailModal.querySelector('div').classList.remove('modal-enter');
+            }, 300);
+        }
+
+        // Đóng Modal khi click ra ngoài
+        document.getElementById('detail-modal').addEventListener('click', function(e) {
+            if (e.target.id === 'detail-modal') {
+                window.closeDetailModal();
+            }
+        });
+
+        // Hàm tạo Khung giờ nổ lớn
+        function getOptimalTimeSlot() {
+            const now = new Date();
+            // Cộng ngẫu nhiên 5-15 phút cho thời gian bắt đầu
+            const startOffset = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
+            const startTime = new Date(now.getTime() + startOffset * 60000);
+            
+            // Kết thúc sau 15 phút (Khung giờ là 15 phút)
+            const endTime = new Date(startTime.getTime() + 15 * 60000);
+
+            const formatTime = (date) => {
+                const h = String(date.getHours()).padStart(2, '0');
+                const m = String(date.getMinutes()).padStart(2, '0');
+                return `${h}H${m}P`;
+            };
+
+            return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+        }
+
+        // Hàm gợi ý mua Scater (có trọng số)
+        function getScaterSuggest() {
+            const options = [
+                { value: '75K', weight: 40 },
+                { value: '150K', weight: 30 },
+                { value: '300K', weight: 15 },
+                { value: '600K', weight: 10 },
+                { value: '1200K', weight: 5 },
+            ];
+
+            let totalWeight = 0;
+            options.forEach(option => totalWeight += option.weight);
+
+            let random = Math.random() * totalWeight;
+            
+            for (let i = 0; i < options.length; i++) {
+                if (random < options[i].weight) {
+                    return options[i].value;
+                }
+                random -= options[i].weight;
+            }
+        }
+        
+        // Hàm gợi ý quay thủ công (có trọng số)
+        function getManualSpinSuggest() {
+            // Ngẫu nhiên số vòng quay thường (80-200)
+            const normalSpin = Math.floor(Math.random() * (200 - 80 + 1)) + 80;
+
+            // Ngẫu nhiên mức tăng vốn (X2: 35%, X3: 40%, X5: 25%)
+            const random = Math.random();
+            let multiplier;
+            if (random < 0.25) multiplier = 'X5';
+            else if (random < 0.65) multiplier = 'X3';
+            else multiplier = 'X2';
+            
+            return {
+                normalSpin: normalSpin,
+                multiplier: multiplier
+            };
+        }
+
+
+        function renderDetailModal(slug, name, image) {
+            const container = document.getElementById('detail-modal').querySelector('div');
+            const timeSlot = getOptimalTimeSlot();
+            const scaterSuggest = getScaterSuggest();
+            const manualSpin = getManualSpinSuggest();
+
+            container.innerHTML = `
+                <div class="flex justify-end">
+                    <button onclick="window.closeDetailModal()" class="text-xl text-gray-400 hover:text-red-500 transition duration-200">
+                        <i class="ph-x-bold"></i>
+                    </button>
+                </div>
+
+                <div class="w-32 h-32 mx-auto rounded-xl overflow-hidden mb-4 border border-gray-700 shadow-xl">
+                    <img src="${image}" alt="${name}" class="w-full h-full object-cover">
+                </div>
+                <h3 class="text-xl font-extrabold text-center text-yellow-500 mb-6">${name}</h3>
+
+                <!-- 1. KHUNG GIỜ NỔ LỚN -->
+                <div class="bg-gray-800/50 p-3 rounded-lg border border-red-500/50 mb-4 shadow-inner">
+                    <div class="flex items-center text-red-400 font-bold mb-2">
+                        <i class="ph-clock-bold mr-2 text-xl"></i>
+                        KHUNG GIỜ NỔ LỚN GỢI Ý
+                    </div>
+                    <div class="bg-gray-900 p-2 rounded-lg text-center font-extrabold text-lg text-red-500">
+                        ${timeSlot}
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1 text-center">Nên bắt đầu chuẩn bị săn hũ trong khung giờ này.</p>
+                </div>
+
+                <!-- 2. ĐỀ XUẤT QUAY THỦ CÔNG -->
+                <div class="bg-gray-800/50 p-3 rounded-lg border border-tech-blue/50 mb-4 shadow-inner">
+                    <div class="flex items-center text-tech-blue font-bold mb-2">
+                        <i class="ph-arrows-clockwise-bold mr-2 text-xl"></i>
+                        ĐỀ XUẤT QUAY THỦ CÔNG
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="bg-gray-900 p-2 rounded-lg text-center font-bold text-sm text-white border border-gray-700">
+                            QUAY THƯỜNG: <span class="text-yellow-400">${manualSpin.normalSpin} VÒNG</span>
+                        </div>
+                        <div class="bg-gray-900 p-2 rounded-lg text-center font-bold text-sm text-white border border-gray-700">
+                            TĂNG VỐN <span class="text-red-500">${manualSpin.multiplier}</span> RỒI MUA SCATER
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1 text-center">Chiến thuật này có thể tối ưu hóa cơ hội thắng.</p>
+                </div>
+
+                <!-- 3. MUA SCATER GỢI Ý (NỔI BẬT) -->
+                <div class="bg-red-800/40 p-4 rounded-xl border-2 border-red-500 mb-4 shadow-2xl shadow-red-500/50">
+                    <p class="text-sm font-semibold text-center text-gray-200 mb-2">MUA SCATER GỢI Ý</p>
+                    <div class="text-center font-extrabold text-3xl text-red-400 tech-shadow">
+                        MUA SCATER ${scaterSuggest}
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 text-center">Dựa trên phân tích tần suất gần nhất.</p>
+                </div>
+            `;
+        }
+
+        // Bắt đầu ứng dụng khi tài liệu được tải
+        document.addEventListener('DOMContentLoaded', () => {
+             // Đảm bảo màn hình đăng nhập hiển thị ngay từ đầu
+             document.getElementById('login-register-screen').classList.remove('hidden');
+             document.getElementById('login-register-screen').style.opacity = '1';
+        });
+
     </script>
 </body>
 </html>
+
