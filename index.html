@@ -40,19 +40,33 @@
         }
         /* Background image for the login/register screen */
         #login-register-screen {
-            /* Hình nền mới từ yêu cầu của người dùng */
-            background-image: url('https://i.ibb.co/MyWzWmH8/unnamed.jpg');
-            background-size: cover;
-            background-position: center;
             background-repeat: no-repeat;
             position: relative;
         }
 
-        /* * Logic cho Responsive Background:
-         * Desktop (min-width: 768px): Giữ nguyên background-size: cover
-         * Mobile (max-width: 767px): Dùng background-size: cover để ảnh bao phủ vừa vặn.
-         * Đã gộp vào CSS chung phía trên.
-         */
+        /* DEFAULT (Mobile First): Sử dụng ảnh nền mới và căn chỉnh cho Mobile */
+        #login-register-screen {
+            background-image: url('https://i.ibb.co/MyWzWmH8/unnamed.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* DESKTOP: Giữ ảnh nền cũ theo yêu cầu */
+        @media (min-width: 768px) {
+            #login-register-screen {
+                /* Ảnh nền cũ cho desktop */
+                background-image: url('https://i.ibb.co/99g35nbp/123.jpg');
+            }
+        }
+        
+        /* Mobile-Specific Login Card Transparency */
+        @media (max-width: 767px) {
+            .mobile-transparent-card {
+                /* Giảm độ mờ trên di động */
+                background-color: rgba(10, 10, 16, 0.7) !important; /* Thay bg-gray-950 (0A0A0A) bằng bg-dark-bg/70 */
+                backdrop-filter: blur(5px);
+            }
+        }
         
         /* Overlay for dimming the background */
         .screen-overlay::before {
@@ -209,7 +223,7 @@
     <div id="login-register-screen" class="screen-overlay min-h-screen flex flex-col items-center justify-center p-4">
         <div class="relative z-10 w-full flex flex-col items-center">
             <!-- Card for Login/Register -->
-            <div class="w-full max-w-sm p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30">
+            <div class="w-full max-w-sm p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30 mobile-transparent-card">
                 <h2 class="text-4xl font-extrabold text-center text-tech-blue mb-6 tech-shadow">TOOL NOHU 2026</h2>
                 <!-- Toggle Buttons -->
                 <div class="flex bg-gray-800 p-1 rounded-lg mb-6">
@@ -282,7 +296,7 @@
                     <a href="https://t.me/CSKHFLY88_code" target="_blank" class="text-xs text-gray-400 hover:text-tech-blue transition duration-200 font-medium flex items-center justify-center">
                         <i class="ph-headset-bold text-lg mr-1"></i>
                         LIÊN HỆ CSKH ĐỂ KÍCH HOẠT
-                    </a>
+                    </p>
                 </div>
                 </div>
             <!-- Copyright -->
@@ -1746,7 +1760,7 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https:
             if (gameHallScreen) gameHallScreen.classList.add('hidden');
             if (pgGameScreen) pgGameScreen.classList.add('hidden');
 
-            window.activateLogin(); // Ensure login form is shown
+            window.activateLogin(); // Ensure login form is active
         };
         
         // Toggle functions for login and register forms (kept for continuity)
