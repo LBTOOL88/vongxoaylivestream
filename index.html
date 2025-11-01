@@ -296,7 +296,7 @@
                     <a href="https://t.me/CSKHFLY88_code" target="_blank" class="text-xs text-gray-400 hover:text-tech-blue transition duration-200 font-medium flex items-center justify-center">
                         <i class="ph-headset-bold text-lg mr-1"></i>
                         LIÊN HỆ CSKH ĐỂ KÍCH HOẠT
-                    </p>
+                    </a>
                 </div>
                 </div>
             <!-- Copyright -->
@@ -329,6 +329,10 @@
                         <span id="user-energy-display" class="ml-1 text-yellow-500 font-extrabold">--</span>
                     </div>
                 </div>
+                <!-- NEW: Telegram Contact Button for easy access -->
+                <a href="https://t.me/CSKHFLY88_code" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex items-center text-sm md:text-base w-full md:w-auto justify-center">
+                    <i class="ph-headset-bold mr-1"></i>Hỗ trợ CSKH
+                </a>
                 <button onclick="window.handleLogout();" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex items-center text-sm md:text-base w-full md:w-auto">
                     <i class="ph-sign-out-bold mr-1"></i>Đăng Xuất
                 </button>
@@ -560,8 +564,12 @@
     <div id="energy-warning-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="bg-gray-900 rounded-xl p-4 md:p-6 w-11/12 max-w-sm space-y-4 text-center relative">
             <h2 class="text-lg md:text-2xl font-bold text-red-500">NĂNG LƯỢNG KHÔNG ĐỦ</h2>
-            <p class="text-sm md:text-base text-gray-300">Bạn đã hết năng lượng, hãy liên hệ CSKH để nạp.</p>
-            <a href="https://t.me/CSKHFLY88_code" target="_blank" class="inline-block bg-tech-blue hover:bg-tech-blue/80 text-white font-semibold py-2 px-4 rounded-lg transition">Ấn vô đây</a>
+            <p class="text-sm md:text-base text-gray-300">
+                Bạn đã hết năng lượng. Vui lòng liên hệ CSKH Telegram để nạp thêm.
+            </p>
+            <p class="text-xs text-gray-400 font-medium">
+                (Link CSKH có sẵn ở góc trên bên phải hoặc dưới cùng màn hình game chính.)
+            </p>
             <button id="energy-close-btn" class="absolute top-2 right-2 text-gray-400 hover:text-white">
                 <i class="ph-x-circle-bold text-2xl"></i>
             </button>
@@ -789,6 +797,17 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https:
                 messageBox.classList.add('hidden');
             }, 4000);
         }
+        
+        // FIX: New function to handle the Telegram contact action from the energy modal
+        window.handleTelegramContact = function() {
+            const warnModal = document.getElementById('energy-warning-modal');
+            if (warnModal) {
+                // Hide the modal immediately
+                warnModal.classList.add('hidden');
+            }
+            // Open the Telegram link in a new window/tab
+            window.open('https://t.me/CSKHFLY88_code', '_blank');
+        };
 
         // --- Screen Switching Functions ---
 
@@ -1831,6 +1850,17 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https:
                     if (warnModal) warnModal.classList.add('hidden');
                 });
             }
+
+            // FIX: Add listener to close the energy warning modal when clicking the backdrop
+            const warnModal = document.getElementById('energy-warning-modal');
+            if (warnModal) {
+                warnModal.addEventListener('click', (e) => {
+                    // Check if the click occurred directly on the modal element (the backdrop)
+                    if (e.target.id === 'energy-warning-modal') {
+                        warnModal.classList.add('hidden');
+                    }
+                });
+            }
         });
 
         // Check auth state on load
@@ -1887,4 +1917,3 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https:
     </script>
 </body>
 </html>
-
