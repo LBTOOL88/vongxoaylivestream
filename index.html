@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tool Nohu 2026</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Load Phosphor Icons for professional icons -->
+
+    <!-- Tailwind CSS -->
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=UZ-oX73uo1iTny1elzs4NzzpyrHDA4WFk0kRvGrLta6ZYH68PrdgyR-qp5AfTFwaXHQtIa1glVwFU-cXMUv4wAKbmDAWT8xJ-3pL2eacIFMkTGij86YxMuWjRELivGOuodXwF3jvqnw9KccFTTe92t6a4ax8rNziD8LV5NPcE0eSQ9i5yJy390PjvuaO5uqcljlyAsrA4n7WN5f3r6GRj_XLS25a8cy1MF3y65hgK5FxyvvNIWHJvb4xSdikp5-v" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor icons -->
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/p.js"></script>
 
     <script>
+        // Tailwind configuration for custom fonts and colours
         tailwind.config = {
             theme: {
                 extend: {
@@ -18,16 +19,18 @@
                         sans: ['Inter', 'Roboto', 'Arial', 'sans-serif'],
                     },
                     colors: {
-                        'tech-blue': '#00BFFF', // Màu xanh nước biển công nghệ cao
-                        'dark-bg': '#0A0A10', // Nền cực tối (Professional look)
-                        'card-bg': '#1A1A22', // Nền card
+                        'tech-blue': '#00BFFF', /* Cyan for tech focus */
+                        'accent-pink': '#FF69B4', /* Pink for highlights */
+                        'dark-bg': '#0A0A10',
+                        'card-bg': '#1A1A22',
+                        'pg-green': '#10B981', /* Green for PG game analysis */
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Đảm bảo toàn bộ màn hình được sử dụng và không có cuộn */
+        /* Basic page styling */
         body, html {
             height: 100%;
             margin: 0;
@@ -35,60 +38,20 @@
             font-family: 'Inter', 'Roboto', 'Arial', 'sans-serif';
             background-color: #0A0A10;
         }
-
-        /* Hiệu ứng bóng đổ cho chữ (Sci-Fi feel) */
-        .tech-shadow {
-            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5), 0 0 10px rgba(0, 191, 255, 0.3);
-        }
-
-        /* Animation cho cảnh báo chớp tắt */
-        .animate-pulse-strong {
-            animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* --- Custom Styles cho Screen --- */
-
-        /* Screen nền (Login/Register) */
+        /* Background image for the login/register screen */
         #login-register-screen {
-            /* Desktop Background */
-            background-image: url('https://i.ibb.co/99g35nbp/123.jpg'); 
-            /* Mobile Background (Mặc định) */
-            background-image: url('https://i.ibb.co/7JHZpPPL/unnamed.jpg'); 
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat; 
+            background-image: url('https://i.ibb.co/99g35nbp/123.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
         }
-        /* Mobile Breakpoint (Overwrite for Mobile) */
         @media (min-width: 768px) {
             #login-register-screen {
-                /* Desktop Background */
-                background-image: url('https://i.ibb.co/99g35nbp/123.jpg'); 
+                background-image: url('https://i.ibb.co/99g35nbp/123.jpg');
             }
         }
-
-        /* Main Menu Screen nền */
-        #main-menu-screen {
-             /* Mobile Background (Mặc định) */
-            background-image: url('https://i.ibb.co/27FC7VYC/ZOMBILE.jpg');
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat; 
-            position: relative;
-        }
-        /* Desktop Breakpoint (Overwrite for Desktop) */
-        @media (min-width: 768px) {
-            #main-menu-screen {
-                 /* Desktop Background */
-                background-image: url('https://i.ibb.co/677k1vDy/unnamed.jpg');
-            }
-        }
-        
-        /* Lớp phủ màu tối cho ảnh nền */
+        /* Overlay for dimming the background */
         .screen-overlay::before {
             content: '';
             position: absolute;
@@ -96,881 +59,1808 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.75); /* Lớp phủ đen 75% */
-            z-index: 0; 
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 0;
+        }
+        /* Text glow effect */
+        .tech-shadow {
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5), 0 0 10px rgba(0, 191, 255, 0.3);
+        }
+        /* Strong pulse animation for warnings */
+        .animate-pulse-strong {
+            animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        /* Custom slow pulse for heartbeat icon */
+        .animate-pulse-slow {
+            animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        /* Custom move animation for heartbeat icon */
+        .animate-heartbeat-move {
+            animation: heartbeat-move 1s ease-in-out infinite alternate;
+        }
+        @keyframes heartbeat-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2px); }
         }
 
-        /* --- Custom Styles cho Card Game --- */
-        .game-card-slot:hover {
-            box-shadow: 0 0 20px rgba(0, 191, 255, 0.5); /* Tech Blue Glow */
-            transform: translateY(-5px);
-        }
-        .game-card-tool:hover {
-            box-shadow: 0 0 20px rgba(255, 165, 0, 0.5); /* Orange Glow for tool */
-            transform: translateY(-5px);
-        }
-        .scan-modal-enter {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        .scan-modal-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 300ms, transform 300ms;
+
+        /* Game Hall screen styling */
+        #game-hall-screen, #pg-game-detail-screen {
+            min-height: 100vh;
+            background-color: #0A0A10;
         }
 
-        .modal-enter {
-            opacity: 0;
-            transform: scale(0.9);
+        /* --- Neo-Brutalism/Tech Card Effect --- */
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #00BFFF; /* Tech-blue border */
+            box-shadow: 4px 4px 0px 0px #FF69B4; /* Shadow accent-pink */
         }
-        .modal-enter-active {
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 300ms, transform 300ms;
+        .game-card:hover {
+            transform: translate(-2px, -2px); /* Lift up and to the left */
+            box-shadow: 6px 6px 0px 0px #FF69B4; /* Larger shadow on hover */
+        }
+        .game-sub-card {
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            border: 2px solid #1A1A22; /* Default subtle border */
+            box-shadow: 2px 2px 0px 0px #00BFFF10; /* Soft initial shadow */
+        }
+        .game-sub-card:hover {
+            border-color: #FF69B4; /* Highlight border on hover */
+            box-shadow: 4px 4px 0px 0px #FF69B450; /* Stronger shadow */
+            transform: translateY(-2px);
         }
 
-        /* Giao diện thanh tiến trình */
-        .progress-bar-segment {
+        .risk-safe { color: #10B981; } /* Emerald-500 - AN TOÀN */
+        .risk-low { color: #3B82F6; } /* Blue-500 - THẤP */
+        .risk-medium { color: #F59E0B; } /* Amber-500 - TRUNG BÌNH */
+        .risk-high { color: #EF4444; } /* Red-500 - CAO */
+        
+        /* Custom progress bar styles */
+        .progress-bar-container {
+            height: 8px; /* Slightly smaller bar */
+            background-color: #2D3748; /* dark gray background */
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #3B82F6; /* Subtle border for tech feel */
+            margin-top: 4px; /* Separator from label */
+        }
+        .progress-bar {
             height: 100%;
-            border-radius: 9999px;
-            transition: width 0.5s ease-out, background-color 0.5s ease-out;
+            transition: width 0.3s ease-in-out;
+            background-image: linear-gradient(to right, #10B981, #00BFFF); 
+        }
+
+        /* Style for the user info header block */
+        .user-info-block {
+            padding: 8px 12px;
+            border: 2px solid #FF69B4;
+            background-color: #1A1A22;
+            box-shadow: 2px 2px 0px 0px #00BFFF;
+            border-radius: 4px;
+        }
+
+        /* --- Image Sizing and Scanline Effect --- */
+        /* Container for the image, setting a fixed height for consistency */
+        .game-image-container {
+            position: relative;
+            height: 160px; /* Reduced height for a more compact look */
+            background-color: #0D0D15;
+            overflow: hidden;
+        }
+        .game-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensures the whole image is visible without cropping */
+            object-position: center;
+        }
+
+        /* Scanline/Flicker Effect Overlay */
+        .game-image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Semi-transparent horizontal scanlines */
+            background: linear-gradient(rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.4) 50%),
+                        linear-gradient(90deg, #00BFFF20 1px, transparent 1px);
+            background-size: 100% 4px, 10px 100%;
+            opacity: 0.5; /* Initial opacity */
+            pointer-events: none;
+            z-index: 10; /* Ensures it's on top of the image */
+            animation: flicker 4s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.5; }
+            5% { opacity: 0.6; }
+            10% { opacity: 0.4; }
+            15% { opacity: 0.7; }
+            20% { opacity: 0.5; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
 <body class="antialiased text-white">
-
-    <!-- Screen Container: Chứa tất cả màn hình (Login, Menu, Games List) -->
-    <div id="screen-container" class="min-h-screen">
-        
-        <!-- 1. MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÍ -->
-        <div id="login-register-screen" class="screen-overlay min-h-screen flex flex-col items-center justify-center p-4" style="opacity: 1;">
-            
-            <div class="relative z-10 w-full flex flex-col items-center">
-                <!-- Card Đăng Nhập/Đăng Ký -->
-                <div class="w-full max-w-sm p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30">
-                    <h2 class="text-4xl font-extrabold text-center text-tech-blue mb-6 tech-shadow">
-                        TOOL NOHU 2026
-                    </h2>
-
-                    <!-- Toggle Button -->
-                    <div class="flex bg-gray-800 p-1 rounded-lg mb-6">
-                        <button id="show-login" class="flex-1 py-2 rounded-lg text-sm font-semibold transition duration-300 bg-tech-blue text-white shadow-md shadow-tech-blue/40">
-                            ĐĂNG NHẬP
-                        </button>
-                        <button id="show-register" class="flex-1 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:bg-gray-700/50 transition duration-300">
-                            ĐĂNG KÍ
-                        </button>
-                    </div>
-
-                    <!-- Form Đăng Nhập -->
-                    <form id="login-form" onsubmit="event.preventDefault(); window.handleLogin();">
-                        <div class="mb-5">
-                            <label for="username" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-user-circle-bold text-lg mr-2 text-tech-blue"></i>Tên Đăng Nhập</label>
-                            <input type="text" id="login-username" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập tên tài khoản" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="password" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-lock-key-bold text-lg mr-2 text-tech-blue"></i>Mật Khẩu</label>
-                            <input type="password" id="login-password" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập mật khẩu" required>
-                        </div>
-                        <button type="submit" class="w-full bg-tech-blue text-white py-3 rounded-lg font-bold text-lg hover:bg-opacity-90 transition duration-300 shadow-xl shadow-tech-blue/40">
-                            ĐĂNG NHẬP HỆ THỐNG
-                        </button>
-                    </form>
-
-                    <!-- Form Đăng Ký (Hidden by default) -->
-                    <form id="register-form" onsubmit="event.preventDefault(); window.handleRegister();" class="hidden">
-                         <div class="mb-5">
-                            <label for="reg-username" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-user-circle-bold text-lg mr-2 text-tech-blue"></i>Tên Đăng Nhập</label>
-                            <input type="text" id="reg-username" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Chọn tên tài khoản" required>
-                        </div>
-                         <div class="mb-5">
-                            <label for="reg-phone" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-phone-bold text-lg mr-2 text-tech-blue"></i>Số Điện Thoại</label>
-                            <input type="tel" id="reg-phone" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập số điện thoại" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="reg-password" class="block text-sm font-medium text-gray-300 mb-2 flex items-center"><i class="ph-lock-key-bold text-lg mr-2 text-tech-blue"></i>Mật Khẩu</label>
-                            <input type="password" id="reg-password" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Tạo mật khẩu" required>
-                        </div>
-                        <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3 rounded-lg font-bold text-lg hover:bg-yellow-400 transition duration-300 shadow-xl shadow-yellow-500/40">
-                            ĐĂNG KÝ TÀI KHOẢN
-                        </button>
-                    </form>
-                    
-                    <!-- Message Box -->
-                    <div id="message-box" class="mt-6 p-3 bg-red-600 rounded-lg text-center text-sm font-medium hidden"></div>
-
-                    <!-- THÔNG BÁO VÀ LIÊN KẾT HỖ TRỢ -->
-                    <div class="mt-6 pt-4 border-t border-gray-700 text-center">
-                        <p class="text-xs font-semibold text-red-500 animate-pulse-strong mb-2">
-                            <i class="ph-warning-bold mr-1"></i>
-                            TOOL CHỈ HOẠT ĐỘNG TÀI KHOẢN ĐĂNG KÍ Ở 
-                            <a href="http://www.fly88nohu.com" target="_blank" class="text-tech-blue hover:text-tech-blue/80 underline font-bold">FLY88NOHU.COM</a>
-                        </p>
-                        <a href="https://t.me/CSKHFLY88_code" target="_blank" class="text-xs text-gray-400 hover:text-tech-blue transition duration-200 font-medium flex items-center justify-center">
-                            <i class="ph-headset-bold text-lg mr-1"></i>
-                            LIÊN HỆ CSKH ĐỂ KÍCH HOẠT
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Bản quyền -->
-                <p class="text-xs text-gray-500 mt-4 mb-4 relative z-10">
-                    BẢN QUYỀN THUỘC VỀ LONG BẢO
-                </p>
-            </div>
-        </div>
-
-        <!-- 2. MÀN HÌNH MENU CHÍNH -->
-        <div id="main-menu-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
-            <div class="relative z-10 w-full max-w-6xl">
-                
-                <!-- Tiêu đề và Thông tin User -->
-                <div class="flex justify-between items-center mb-6 pt-4 border-b border-gray-700/50 pb-4">
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-tech-blue tech-shadow flex items-center">
-                        <i class="ph-gauge-bold mr-3"></i>
-                        MENU CHỌN SẢNH SĂN HỦ
-                    </h1>
-                    <div class="text-sm md:text-lg font-medium text-gray-300 bg-gray-900/50 p-2 rounded-lg border border-gray-700">
-                        <i class="ph-user-bold mr-1 text-yellow-400"></i>
-                        Xin chào, <span id="display-username"></span>
-                    </div>
-                    <button onclick="window.handleLogout()" class="text-xs md:text-sm text-red-400 hover:text-red-500 transition duration-200 flex items-center p-2 rounded-lg bg-gray-900/50 border border-gray-700">
-                        <i class="ph-sign-out-bold mr-1"></i>
-                        Đăng Xuất
+    <!-- Login/Register Screen -->
+    <div id="login-register-screen" class="screen-overlay min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="relative z-10 w-full flex flex-col items-center">
+            <!-- Wrapper to align banner and login card to the same left edge -->
+            <div class="w-full max-w-sm flex flex-col items-start">
+                <!-- Promotional banner for registration experience -->
+                <a href="https://www.f168nohu.com" target="_blank"
+                   class="mb-4 w-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500
+                          hover:from-yellow-300 hover:via-red-400 hover:to-pink-400
+                          text-gray-900 font-extrabold text-center py-3 rounded-lg shadow-lg
+                          transition-transform duration-300 transform hover:scale-105">
+                    ĐĂNG KÍ TRẢI NGHIỆM 58K BAO TRÙM IP
+                </a>
+                <!-- Card for Login/Register -->
+                <div class="w-full p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30">
+                <h2 class="text-4xl font-extrabold text-center text-tech-blue mb-6 tech-shadow">TOOL NOHU 2026</h2>
+                <!-- Toggle Buttons -->
+                <div class="flex bg-gray-800 p-1 rounded-lg mb-6">
+                    <button id="show-login" onclick="window.activateLogin()" class="flex-1 py-2 rounded-lg text-sm font-semibold transition duration-300 bg-tech-blue text-white shadow-md shadow-tech-blue/40">
+                        ĐĂNG NHẬP
+                    </button>
+                    <button id="show-register" onclick="window.activateRegister()" class="flex-1 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:bg-gray-700/50 transition duration-300">
+                        ĐĂNG KÍ
                     </button>
                 </div>
-                
-                <!-- Lưới Games -->
-                <div id="games-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mt-8">
-                    <!-- Cards sẽ được render tại đây -->
-                </div>
-
-                <div class="w-full text-center mt-12">
-                    <p class="text-xs text-gray-500 mb-4 relative z-10">
-                        BẢN QUYỀN THUỘC VỀ LONG BẢO
+                <!-- Login Form -->
+                <form id="login-form" onsubmit="event.preventDefault(); window.handleLogin();">
+                    <div class="mb-5">
+                        <label for="login-username" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+                            <i class="ph-user-circle-bold text-lg mr-2 text-tech-blue"></i>Tên Đăng Nhập
+                        </label>
+                        <input type="text" id="login-username" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập tên tài khoản" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="login-password" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+                            <i class="ph-lock-key-bold text-lg mr-2 text-tech-blue"></i>Mật Khẩu
+                        </label>
+                        <input type="password" id="login-password" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập mật khẩu" required>
+                    </div>
+                    <button type="submit" class="w-full bg-tech-blue text-white py-3 rounded-lg font-bold text-lg hover:bg-opacity-90 transition duration-300 shadow-xl shadow-tech-blue/40">
+                        ĐĂNG NHẬP HỆ THỐNG
+                    </button>
+                </form>
+                <!-- Register Form -->
+                <form id="register-form" onsubmit="event.preventDefault(); window.handleRegister();" class="hidden">
+                    <div class="mb-5">
+                        <label for="reg-username" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+                            <i class="ph-user-circle-bold text-lg mr-2 text-tech-blue"></i>Tên Đăng Nhập
+                        </label>
+                        <input type="text" id="reg-username" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Chọn tên tài khoản" required>
+                    </div>
+                    <div class="mb-5">
+                        <label for="reg-phone" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+                            <i class="ph-phone-bold text-lg mr-2 text-tech-blue"></i>Số Điện Thoại
+                        </label>
+                        <input type="tel" id="reg-phone" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Nhập số điện thoại" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="reg-password" class="block text-sm font-medium text-gray-300 mb-2 flex items-center">
+                            <i class="ph-lock-key-bold text-lg mr-2 text-tech-blue"></i>Mật Khẩu
+                        </label>
+                        <input type="password" id="reg-password" class="w-full px-4 py-2 bg-gray-800 border border-tech-blue/50 rounded-lg focus:ring-1 focus:ring-tech-blue focus:border-tech-blue transition duration-200 placeholder-gray-400 text-white" placeholder="Tạo mật khẩu" required>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-500 text-gray-900 py-3 rounded-lg font-bold text-lg hover:bg-yellow-400 transition duration-300 shadow-xl shadow-yellow-500/40">
+                        ĐĂNG KÝ TÀI KHOẢN
+                    </button>
+                </form>
+                <!-- Message Box for notifications -->
+                <div id="message-box" class="mt-6 p-3 bg-red-600 rounded-lg text-center text-sm font-medium hidden"></div>
+                <!-- Footer with warnings and support link -->
+                <div class="mt-6 pt-4 border-t border-gray-700 text-center">
+                    <p class="text-xs font-semibold text-red-500 animate-pulse-strong mb-2">
+                        <i class="ph-warning-bold mr-1"></i>
+                        TOOL CHỈ HOẠT ĐỘNG TÀI KHOẢN ĐĂNG KÍ Ở
+                        <a href="http://www.fly88nohu.com" target="_blank" class="text-tech-blue hover:text-tech-blue/80 underline font-bold">FLY88NOHU.COM</a>
                     </p>
+                    <a href="https://t.me/CSKHFLY88_code" target="_blank" class="text-xs text-gray-400 hover:text-tech-blue transition duration-200 font-medium flex items-center justify-center">
+                        <i class="ph-headset-bold text-lg mr-1"></i>
+                        LIÊN HỆ CSKH ĐỂ KÍCH HOẠT
+                    </a>
+                </div>
+                </div>
+            </div> <!-- End wrapper for banner and card -->
+            <!-- Copyright -->
+            <p class="text-xs text-gray-500 mt-4 mb-4 relative z-10">BẢN QUYỀN THUỘC VỀ LONG BẢO</p>
+        </div>
+    </div>
+
+    <!-- Game Hall Screen (Hidden by default) -->
+    <div id="game-hall-screen" class="hidden min-h-screen p-4 md:p-8">
+        <header class="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-0 mb-8 border-b border-tech-blue/30">
+            <h1 class="text-2xl md:text-3xl font-bold text-tech-blue tech-shadow flex items-center mb-4 md:mb-0">
+                <i class="ph-game-controller-bold text-4xl mr-2"></i>
+                <span class="flex items-center">
+                    ĐANG PHÂN TÍCH SẢNH GAME
+                    <!-- Heartbeat icon with movement animation -->
+                    <i class="ph-heartbeat-fill text-xl ml-2 text-red-500 animate-heartbeat-move animate-pulse-slow"></i>
+                </span>
+            </h1>
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                <!-- User Info Block -->
+                <div id="user-info" class="user-info-block text-sm md:text-base flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center text-gray-200 mr-4">
+                        <i class="ph-user-bold text-lg mr-2 text-accent-pink"></i>
+                        <span class="font-semibold text-white">Tài khoản: </span>
+                        <span id="user-username" class="ml-1 text-tech-blue font-extrabold">--</span>
+                    </div>
+                    <div class="flex items-center text-gray-200">
+                        <i class="ph-lightning-fill text-yellow-500 text-lg mr-2"></i>
+                        <span class="font-semibold text-white">Năng lượng: </span>
+                        <span id="user-energy-display" class="ml-1 text-yellow-500 font-extrabold">--</span>
+                    </div>
+                </div>
+                <button onclick="window.handleLogout();" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex items-center text-sm md:text-base w-full md:w-auto">
+                    <i class="ph-sign-out-bold mr-1"></i>Đăng Xuất
+                </button>
+            </div>
+        </header>
+
+        <!-- Game Hall Grid -->
+        <div id="game-hall-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <!-- Game Card Template will be injected here -->
+        </div>
+
+        <footer class="mt-12 text-center text-gray-500 text-xs py-4">
+            <p>Dữ liệu phân tích được cập nhật 30 giây một lần để đảm bảo độ chính xác. Vui lòng tham khảo kỹ trước khi quyết định.</p>
+        </footer>
+    </div>
+
+    <!-- PG Game Detail Screen (New Screen) -->
+    <div id="pg-game-detail-screen" class="hidden min-h-screen p-4 md:p-8">
+        <header class="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-0 mb-8 border-b border-pg-green/50">
+            <h1 class="text-2xl md:text-3xl font-bold text-pg-green tech-shadow flex items-center mb-4 md:mb-0">
+                <!-- Back button with label -->
+                <div class="flex items-center cursor-pointer mr-3 hover:text-white transition" onclick="window.goBackToHall();">
+                    <i class="ph-arrow-left-bold text-2xl"></i>
+                    <span class="ml-2 text-sm md:text-base hidden md:inline-block font-semibold">Trở lại</span>
+                </div>
+                <i class="ph-robot-fill text-4xl mr-2"></i>
+                PHÂN TÍCH GAME: SẢNH PG
+                <i class="ph-aperture-fill text-xl ml-2 text-tech-blue animate-spin"></i>
+            </h1>
+            <!-- User Info Block (Copied for consistency, ensure elements are updated by global logic) -->
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                <div id="pg-user-info" class="user-info-block text-sm md:text-base flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center text-gray-200 mr-4">
+                        <i class="ph-user-bold text-lg mr-2 text-accent-pink"></i>
+                        <span class="font-semibold text-white">Tài khoản: </span>
+                        <span id="pg-user-username" class="ml-1 text-tech-blue font-extrabold">--</span>
+                    </div>
+                    <div class="flex items-center text-gray-200">
+                        <i class="ph-lightning-fill text-yellow-500 text-lg mr-2"></i>
+                        <span class="font-semibold text-white">Năng lượng: </span>
+                        <span id="pg-user-energy-display" class="ml-1 text-yellow-500 font-extrabold">--</span>
+                    </div>
                 </div>
             </div>
+        </header>
+
+        <!-- PG Game Grid -->
+        <div id="pg-game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
+            <!-- PG Game Cards will be injected here -->
         </div>
 
-        <!-- 3. MÀN HÌNH DANH SÁCH GAME PG -->
-        <div id="pg-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
-            <!-- Content will be rendered by renderGameList -->
-        </div>
+        <footer class="mt-12 text-center text-gray-500 text-xs py-4">
+            <p>Dữ liệu phân tích game PG được cập nhật 30 giây một lần. Hãy chọn game có Tỉ lệ nhả cao để tối ưu hóa chiến thắng!</p>
+        </footer>
+    </div> <!-- End of PG Game Detail Screen -->
 
-        <!-- 4. MÀN HÌNH DANH SÁCH GAME JILI -->
-        <div id="jili-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
-            <!-- Content will be rendered by renderGameList -->
-        </div>
-
-        <!-- 5. MÀN HÌNH DANH SÁCH GAME 168 -->
-        <div id="168-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
-            <!-- Content will be rendered by renderGameList -->
-        </div>
-
-        <!-- 6. MÀN HÌNH DANH SÁCH GAME FC -->
-        <div id="fc-games-list-screen" class="screen-overlay min-h-screen hidden flex flex-col items-center p-4 md:p-8" style="opacity: 0;">
-            <!-- Content will be rendered by renderGameList -->
-        </div>
-
-        <!-- Modal Hiệu ứng Quét (Scanner) -->
-        <div id="scan-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center scan-modal-enter">
-            <div class="bg-gray-900 p-8 rounded-xl shadow-2xl w-full max-w-sm text-center border border-tech-blue/50">
-                <i class="ph-infinity-bold text-5xl text-tech-blue animate-spin mb-4"></i>
-                <h3 class="text-xl font-bold mb-3 text-tech-blue tech-shadow">ĐANG QUÉT VÀ PHÂN TÍCH DỮ LIỆU...</h3>
-                <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
-                    <div class="h-full bg-tech-blue animate-pulse-strong" style="width: 100%;"></div>
+    <!-- JILI Game Detail Screen (New Screen) -->
+    <div id="jili-game-detail-screen" class="hidden min-h-screen p-4 md:p-8">
+        <header class="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-0 mb-8 border-b border-yellow-500/50">
+            <h1 class="text-2xl md:text-3xl font-bold text-yellow-500 tech-shadow flex items-center mb-4 md:mb-0">
+                <!-- Back button with label -->
+                <div class="flex items-center cursor-pointer mr-3 hover:text-white transition" onclick="window.goBackToHall();">
+                    <i class="ph-arrow-left-bold text-2xl"></i>
+                    <span class="ml-2 text-sm md:text-base hidden md:inline-block font-semibold">Trở lại</span>
+                </div>
+                <i class="ph-robot-fill text-4xl mr-2"></i>
+                PHÂN TÍCH GAME: SẢNH JILI
+                <i class="ph-aperture-fill text-xl ml-2 text-tech-blue animate-spin"></i>
+            </h1>
+            <!-- User Info Block -->
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                <div id="jili-user-info" class="user-info-block text-sm md:text-base flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center text-gray-200 mr-4">
+                        <i class="ph-user-bold text-lg mr-2 text-accent-pink"></i>
+                        <span class="font-semibold text-white">Tài khoản: </span>
+                        <span id="jili-user-username" class="ml-1 text-tech-blue font-extrabold">--</span>
+                    </div>
+                    <div class="flex items-center text-gray-200">
+                        <i class="ph-lightning-fill text-yellow-500 text-lg mr-2"></i>
+                        <span class="font-semibold text-white">Năng lượng: </span>
+                        <span id="jili-user-energy-display" class="ml-1 text-yellow-500 font-extrabold">--</span>
+                    </div>
                 </div>
             </div>
+        </header>
+
+        <!-- JILI Game Grid -->
+        <div id="jili-game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
+            <!-- JILI Game Cards will be injected here -->
         </div>
 
-        <!-- Modal Chi tiết Game -->
-        <div id="detail-modal" class="fixed inset-0 bg-black/80 z-40 hidden flex items-center justify-center modal-enter">
-            <div class="bg-gray-950 p-4 md:p-6 rounded-xl shadow-2xl w-full max-w-xs md:max-w-md border border-yellow-500/50">
-                <!-- Modal content goes here -->
+        <footer class="mt-12 text-center text-gray-500 text-xs py-4">
+            <p>Dữ liệu phân tích game JILI được cập nhật 30 giây một lần. Hãy chọn game có Tỉ lệ nhả cao để tối ưu hóa chiến thắng!</p>
+        </footer>
+    </div>
+
+    <!-- FC Game Detail Screen (New Screen) -->
+    <div id="fc-game-detail-screen" class="hidden min-h-screen p-4 md:p-8">
+        <header class="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-0 mb-8 border-b border-purple-500/50">
+            <h1 class="text-2xl md:text-3xl font-bold text-purple-400 tech-shadow flex items-center mb-4 md:mb-0">
+                <!-- Back button with label -->
+                <div class="flex items-center cursor-pointer mr-3 hover:text-white transition" onclick="window.goBackToHall();">
+                    <i class="ph-arrow-left-bold text-2xl"></i>
+                    <span class="ml-2 text-sm md:text-base hidden md:inline-block font-semibold">Trở lại</span>
+                </div>
+                <i class="ph-robot-fill text-4xl mr-2"></i>
+                PHÂN TÍCH GAME: SẢNH FC
+                <i class="ph-aperture-fill text-xl ml-2 text-tech-blue animate-spin"></i>
+            </h1>
+            <!-- User Info Block -->
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                <div id="fc-user-info" class="user-info-block text-sm md:text-base flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center text-gray-200 mr-4">
+                        <i class="ph-user-bold text-lg mr-2 text-accent-pink"></i>
+                        <span class="font-semibold text-white">Tài khoản: </span>
+                        <span id="fc-user-username" class="ml-1 text-tech-blue font-extrabold">--</span>
+                    </div>
+                    <div class="flex items-center text-gray-200">
+                        <i class="ph-lightning-fill text-yellow-500 text-lg mr-2"></i>
+                        <span class="font-semibold text-white">Năng lượng: </span>
+                        <span id="fc-user-energy-display" class="ml-1 text-yellow-500 font-extrabold">--</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- FC Game Grid -->
+        <div id="fc-game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
+            <!-- FC Game Cards will be injected here -->
+        </div>
+        <footer class="mt-12 text-center text-gray-500 text-xs py-4">
+            <p>Dữ liệu phân tích game FC được cập nhật 30 giây một lần. Hãy chọn game có Tỉ lệ nhả cao để tối ưu hóa chiến thắng!</p>
+        </footer>
+    </div>
+
+    <!-- 168G Game Detail Screen (New Screen) -->
+    <div id="g168-game-detail-screen" class="hidden min-h-screen p-4 md:p-8">
+        <header class="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-0 mb-8 border-b border-indigo-500/50">
+            <h1 class="text-2xl md:text-3xl font-bold text-indigo-400 tech-shadow flex items-center mb-4 md:mb-0">
+                <!-- Back button with label -->
+                <div class="flex items-center cursor-pointer mr-3 hover:text-white transition" onclick="window.goBackToHall();">
+                    <i class="ph-arrow-left-bold text-2xl"></i>
+                    <span class="ml-2 text-sm md:text-base hidden md:inline-block font-semibold">Trở lại</span>
+                </div>
+                <i class="ph-robot-fill text-4xl mr-2"></i>
+                PHÂN TÍCH GAME: SẢNH 168G
+                <i class="ph-aperture-fill text-xl ml-2 text-tech-blue animate-spin"></i>
+            </h1>
+            <!-- User Info Block -->
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                <div id="g168-user-info" class="user-info-block text-sm md:text-base flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center text-gray-200 mr-4">
+                        <i class="ph-user-bold text-lg mr-2 text-accent-pink"></i>
+                        <span class="font-semibold text-white">Tài khoản: </span>
+                        <span id="g168-user-username" class="ml-1 text-tech-blue font-extrabold">--</span>
+                    </div>
+                    <div class="flex items-center text-gray-200">
+                        <i class="ph-lightning-fill text-yellow-500 text-lg mr-2"></i>
+                        <span class="font-semibold text-white">Năng lượng: </span>
+                        <span id="g168-user-energy-display" class="ml-1 text-yellow-500 font-extrabold">--</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- 168G Game Grid -->
+        <div id="g168-game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
+            <!-- 168G Game Cards will be injected here -->
+        </div>
+        <footer class="mt-12 text-center text-gray-500 text-xs py-4">
+            <p>Dữ liệu phân tích game 168G được cập nhật 30 giây một lần. Hãy chọn game có Tỉ lệ nhả cao để tối ưu hóa chiến thắng!</p>
+        </footer>
+    </div>
+        <!-- PG Analysis Modal -->
+        <div id="pg-analysis-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <!-- Modernized analysis card -->
+            <div class="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-5 md:p-6 w-11/12 max-w-md space-y-5 relative border-2 border-tech-blue/50 shadow-2xl shadow-accent-pink/20">
+                <h2 class="text-lg md:text-2xl font-bold text-center text-pg-green flex items-center justify-center space-x-2">
+                    <i class="ph-scan-bold text-xl md:text-2xl"></i>
+                    <span>ĐANG PHÂN TÍCH GAME</span>
+                </h2>
+                <!-- Progress Container -->
+                <div id="pg-analysis-progress-container" class="space-y-2">
+                    <p class="text-sm text-center text-gray-400">Vui lòng chờ trong giây lát...</p>
+                    <div class="progress-bar-container">
+                        <div id="pg-analysis-progress-bar" class="progress-bar" style="width: 0%; background-image: linear-gradient(to right, #FF69B4, #10B981);"></div>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="pg-analysis-results" class="hidden space-y-4">
+                    <!-- Spin window -->
+                    <div class="space-y-1">
+                        <p class="text-xs md:text-sm text-gray-400 flex items-center">
+                            <i class="ph-clock-bold mr-1 text-accent-pink"></i> KHUNG GIỜ QUAY:
+                        </p>
+                        <div id="analysis-spin-window" class="font-bold text-tech-blue text-lg md:text-xl"></div>
+                    </div>
+                    <!-- Instructions -->
+                    <div class="space-y-1">
+                        <p class="text-xs md:text-sm text-gray-400 flex items-center">
+                            <i class="ph-lightbulb-bold mr-1 text-tech-blue"></i> HƯỚNG DẪN QUAY:
+                        </p>
+                        <!-- The instruction text will be filled dynamically with a random strategy -->
+                        <p id="analysis-instruction-text" class="text-xs md:text-sm text-gray-300 bg-gray-800/50 p-2 rounded-lg border-l-2 border-tech-blue/50">
+                            Quay mồi vòng cược lớn (tùy theo số vòng và khung giờ phân tích) để dò nhịp nhả, sau đó hạ vốn xuống và quay cược nhỏ nhằm tối ưu lợi nhuận.
+                        </p>
+                    </div>
+                    <!-- Hack scatter section -->
+                    <div class="space-y-1">
+                        <p class="text-xs md:text-sm text-gray-400 flex items-center">
+                            <i class="ph-bug-bold mr-1 text-pg-green"></i> CHỨC NĂNG HACK MUA SCATER:
+                        </p>
+                        <p id="analysis-scatter-suggestion" class="text-base md:text-lg font-bold text-accent-pink mt-1 hidden"></p>
+                    </div>
+                    <!-- Hack button -->
+                    <button id="buy-scatter-btn" class="w-full bg-gradient-to-r from-accent-pink to-tech-blue text-white py-3 rounded-lg font-bold hover:from-accent-pink/80 hover:to-tech-blue/80 transition shadow-lg shadow-tech-blue/30">HACK MUA SCATER (-15 NL)</button>
+                    <!-- Back button -->
+                    <button id="analysis-back-btn" class="w-full bg-gray-800/70 text-white py-3 rounded-lg font-semibold hover:bg-gray-700 transition mt-2">QUAY LẠI</button>
+                </div>
+                <!-- Close Button -->
+                <button id="analysis-close-btn" class="absolute top-2 right-2 text-gray-400 hover:text-white">
+                    <i class="ph-x-circle-bold text-2xl"></i>
+                </button>
             </div>
         </div>
+    </div>
 
+
+    <!-- Energy Warning Modal -->
+    <div id="energy-warning-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-gray-900 rounded-xl p-4 md:p-6 w-11/12 max-w-sm space-y-4 text-center relative">
+            <h2 class="text-lg md:text-2xl font-bold text-red-500">NĂNG LƯỢNG KHÔNG ĐỦ</h2>
+            <p class="text-sm md:text-base text-gray-300">Bạn đã hết năng lượng, hãy liên hệ CSKH để nạp.</p>
+            <a href="https://t.me/CSKHFLY88_code" target="_blank" class="inline-block bg-tech-blue hover:bg-tech-blue/80 text-white font-semibold py-2 px-4 rounded-lg transition">Ấn vô đây</a>
+            <button id="energy-close-btn" class="absolute top-2 right-2 text-gray-400 hover:text-white">
+                <i class="ph-x-circle-bold text-2xl"></i>
+            </button>
+        </div>
     </div>
 
     <script type="module">
-        // Firebase initialization (MANDATORY for Canvas environment)
+        // Import Firebase libraries
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Primary Firebase configuration provided by the environment
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
-        // Initialize Firebase (Error handling for robustness)
         let app, db, auth;
         try {
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-            
-            // Handle Authentication
-            if (initialAuthToken) {
-                signInWithCustomToken(auth, initialAuthToken).catch(error => {
-                    console.error("Custom token sign in failed, attempting anonymous sign in:", error);
-                    signInAnonymously(auth).catch(err => console.error("Anonymous sign in failed:", err));
-                });
-            } else {
-                signInAnonymously(auth).catch(err => console.error("Anonymous sign in failed:", err));
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    console.log("Firebase Auth Ready. User ID:", user.uid);
-                } else {
-                    console.log("Firebase Auth Ready. User is anonymous/signed out.");
-                }
-            });
-
+            // Anonymous sign in for the primary app (not used directly here but required)
+            signInAnonymously(auth).catch(err => console.error('Anonymous sign in failed:', err));
         } catch (error) {
-            console.error("Failed to initialize Firebase:", error);
+            console.error('Failed to initialize primary Firebase app:', error);
         }
 
-        // --- GLOBAL STATE & DOM ELEMENTS ---
-        const GAMES = [
-            { name: 'PG GAMING', slug: 'pg', image: 'https://i.ibb.co/7JMZMSfC/PG-GAMING.webp', screen: 'pg-games-list-screen', type: 'slot' },
-            { name: 'JILI', slug: 'jili', image: 'https://i.ibb.co/GQ42Nq8R/JILI.webp', screen: 'jili-games-list-screen', type: 'slot' },
-            { name: '168 GAME', slug: '168', image: 'https://i.ibb.co/prBDV4tW/168-GAME.webp', screen: '168-games-list-screen', type: 'slot' },
-            { name: 'FC GAMING', slug: 'fc', image: 'https://i.ibb.co/xtBF4j6H/FC-GAMING.webp', screen: 'fc-games-list-screen', type: 'slot' },
-            // Thẻ mới SIÊU TOOL A.I BACARAT
-            { name: 'SIÊU TOOL A.I BACARAT', slug: 'baccarat', image: 'https://i.ibb.co/39NrvXPG/AQUA.jpg', link: 'https://www.aquariusvip.site', type: 'tool' } 
-        ];
+        // Secondary Firebase app for user management
+        // NOTE: This config is hardcoded for demonstration purposes as the environment variable is not for external use.
+        const firebaseConfigUser = {
+            apiKey: "AIzaSyARmFsGeZAwDHVB08moKkG0mIcYJq-9dIY",
+            authDomain: "tool-hu-2026.firebaseapp.com",
+            databaseURL: "https://tool-hu-2026-default-rtdb.firebaseio.com",
+            projectId: "tool-hu-2026",
+            storageBucket: "tool-hu-2026.firebasestorage.app",
+            messagingSenderId: "905200085873",
+            appId: "1:905200085873:web:3ddce2edf2f0f7f715a4d0",
+            measurementId: "G-X2NMF1B96X"
+        };
+        let userApp;
+        try {
+            userApp = initializeApp(firebaseConfigUser, 'userApp');
+        } catch (err) {
+            console.warn('Secondary Firebase app already initialised:', err);
+        }
+        const userAuth = getAuth(userApp);
+        const userFirestore = getFirestore(userApp);
 
-        const PG_GAMES = [
-            { name: 'QUYẾT CHIẾN TIÊN THƯỞNG', slug: 'quyet-chien-tien-thuong', image: 'https://i.ibb.co/NgZ7cQnt/QUYET-CHIEN-TIEN-THUONG.jpg' },
-            { name: 'KHO BÁU AZTEC', slug: 'kho-bau-aztec', image: 'https://i.ibb.co/VWhjjfbB/KHO-BAU-AZTEC.jpg' },
-            { name: 'MÈO MAY MẮN (NEKO)', slug: 'neko-may-man', image: 'https://i.ibb.co/s9vnQVRT/NEKO-MAY-MAN.jpg' },
-            { name: 'KI LÂN MẠCH NƯỚC', slug: 'ki-lan-mach-nuoc', image: 'https://i.ibb.co/p6K4Lrzw/KI-LAN-MACH-NUOC.jpg' },
-            { name: 'CÔ BÉ QUÀNG KHĂN ĐỎ', slug: 'co-be-quang-khan-do', image: 'https://i.ibb.co/ZzxRV0zJ/CO-BE-QUANG-KHAN-DO.jpg' },
-            { name: 'CHIẾN THẮNG CAISHEN', slug: 'chien-thang-caishen', image: 'https://i.ibb.co/twyfpWKB/CHIEN-THANG-CAISHEN.jpg' },
-            { name: 'ĐẠI DỊCH ZOMBIE', slug: 'dai-dich-zombie', image: 'https://i.ibb.co/gMZhJ8wQ/DAI-DICH-ZOMBIE.jpg' },
-            { name: 'ĐÊM COCKTAIL', slug: 'dem-cocktail', image: 'https://i.ibb.co/rGdpPGNB/DEM-COCKTAIL.jpg' },
-            { name: 'ĐƯỜNG MẬT CHUỘC (1)', slug: 'duong-mat-chuoc-1', image: 'https://i.ibb.co/B5HzQ2KX/DUONG-MAT-CHUOC-1.jpg' },
-            { name: 'GƯƠNG QUAY TÌNH YÊU', slug: 'guong-quay-tinh-yeu', image: 'https://i.ibb.co/WWqSGFtz/GUONG-QUAY-TINH-YEU.jpg' },
-            { name: 'KHO BÁU HIỆP SĨ', slug: 'kho-bau-hiep-si', image: 'https://i.ibb.co/Z1Y4KVMw/HKHO-BAU-HIEP-SI.jpg' },
-            { name: 'HOA ANH ĐÀO', slug: 'hoa-anh-dao', image: 'https://i.ibb.co/JLbZpHT/HOA-ANH-ĐÀO.jpg' },
-            { name: 'MAFIA', slug: 'mafia', image: 'https://i.ibb.co/6RNc3XLB/MAFIA.jpg' },
-            { name: 'MEDUSA (1)', slug: 'medusa1', image: 'https://i.ibb.co/rGtXP0LP/MEDUSA1.jpg' },
-            { name: 'NỮ HẢI TẶC', slug: 'nu-hai-tac', image: 'https://i.ibb.co/CK1MY559/NU-HAI-TAC.jpg' },
-            { name: 'PHÁO HOA WILD', slug: 'phao-hoa-wild', image: 'https://i.ibb.co/Ps3MtBKj/PHAO-HOA-WILD.jpg' },
-            { name: 'SÁCH THẦN KÌ', slug: 'sach-than-ki', image: 'https://i.ibb.co/HMhk8b8/SACH-THAN-KI.jpg' },
-            { name: 'THỎ MAY MẮN', slug: 'tho-may-man', image: 'https://i.ibb.co/pBbDPYnX/THO-MAY-MAN.jpg' },
-            { name: 'VOI MAY MẮN', slug: 'voi-may-man', image: 'https://i.ibb.co/V0rBFRvf/VOI-MAY-MAN.jpg' },
-            { name: 'WILD APE', slug: 'wild-ape', image: 'https://i.ibb.co/XxB448Fz/WILD-APE.jpg' },
-            { name: 'WILD ĐẠO TẶC', slug: 'wild-dao-tac', image: 'https://i.ibb.co/KjWrMRQV/WILD-DAO-TAC.jpg' },
-        ];
+        // State management
+        let currentUserId = null;
+        let currentEnergy = 0;
+        let currentUsername = null;
+        let energyUnsub = null;
+        let updateInterval = null;
+        let pgUpdateInterval = null;
+        let jiliUpdateInterval = null;
+        let fcUpdateInterval = null;
+        let g168UpdateInterval = null;
 
-        const JILI_GAMES = [
-            { name: 'QUYỀN VƯƠNG', slug: 'quyen-vuong', image: 'https://i.ibb.co/99LGBwK2/QUYEN-VUONG.jpg' },
-            { name: '7 ĐIÊN CUỒNG', slug: '7-dien-cuong', image: 'https://i.ibb.co/Rkm2TRdr/7-DIEN-CUONG.jpg' },
-            { name: 'CÂY PHÁT TÀI', slug: 'cay-phat-tai', image: 'https://i.ibb.co/60hngdTM/CAY-PHAT-TAI.jpg' },
-            { name: 'ĐẾ QUỐC HOÀNG KIM', slug: 'de-quoc-hoang-kim', image: 'https://i.ibb.co/v4t0LF30/DE-QUOC-HOANG-KIM.jpg' },
-            { name: 'ĐÊM THƯỢNG HẢI', slug: 'dem-thuong-hai', image: 'https://i.ibb.co/7NN1V9qC/DEM-THUONG-HAI.jpg' },
-            { name: 'KẸO MAY MẮN', slug: 'keo-may-man', image: 'https://i.ibb.co/1JrqcFjJ/KEO-MAY-MAN.jpg' },
-            { name: 'MEGA ACE', slug: 'mega-ace', image: 'https://i.ibb.co/4Z02P082/MEGA-ACE.jpg' },
-            { name: 'NGỌC MAY MẮN (1)', slug: 'ngoc-may-man-1', image: 'https://i.ibb.co/s9Vdfz14/NGOC-MAY-MAN.jpg' },
-            { name: 'NGỌC MAY MẮN (2)', slug: 'ngoc-may-man-2', image: 'https://i.ibb.co/fV4w3Lw6/NGOC-MAY-MAN-2.jpg' },
-            { name: 'NGỌC MAY MẮN (3)', slug: 'ngoc-may-man-3', image: 'https://i.ibb.co/CsXC4GW5/NGOC-MAY-MAN-3.jpg' },
-            { name: 'PHARAOH', slug: 'pharaoh', image: 'https://i.ibb.co/hJsPLCrB/PHARAOH.jpg' },
-            { name: 'QUẢ ỚT NÓNG BỎNG', slug: 'qua-ot-nong-bong', image: 'https://i.ibb.co/F42dTMWf/QUA-OT-NONG-BONG.jpg' },
-            { name: 'QUAN VÂN TRƯỜNG (1)', slug: 'quan-van-truong-1', image: 'https://i.ibb.co/yc9MzPpj/QUANG-VAN-TRUONG.jpg' },
-            { name: 'QUAN VÂN TRƯỜNG (2)', slug: 'quan-van-truong-2', image: 'https://i.ibb.co/TDn8VHbh/QUANG-VAN-TRUONG-2.jpg' },
-            { name: 'SIU NIU BI', slug: 'siu-niu-bi', image: 'https://i.ibb.co/wr2Pnyjv/SIU-NIU-BI.jpg' },
-            { name: 'SUPER ACE (1)', slug: 'super-ace-1', image: 'https://i.ibb.co/2Ydbm3wN/SUPER-ACE.jpg' },
-            { name: 'SUPER ACE (2)', slug: 'super-ace-2', image: 'https://i.ibb.co/VW56N24H/SUPER-ACE-2.jpg' },
-            { name: 'TIỀN MAY MẮN', slug: 'tien-may-man', image: 'https://i.ibb.co/WpyZc7Gj/TIEN-MAY-MAN.jpg' },
-            { name: 'VŨ LONG TRANH BÁ', slug: 'vu-long-tranh-ba', image: 'https://i.ibb.co/zWz5dWpF/VU-LONG-TRANH-BA.jpg' },
-            { name: 'VUA RỪNG XANH', slug: 'vua-rung-xanh', image: 'https://i.ibb.co/8DT6kS6Q/VUA-RUNG-XANH.jpg' },
+        // --- Game Data ---
+
+        const gameHalls = [
+            { id: 'pg', name: 'SẢNH PG', image: 'https://i.ibb.co/b5qXhqJj/S-NH-PG.png' },
+            { id: 'jili', name: 'SẢNH JILI', image: 'https://i.ibb.co/gbdRY3zY/S-NH-JILI.png' },
+            { id: '168g', name: 'SẢNH 168G', image: 'https://i.ibb.co/bxtxJcB/S-NH-168-G.png' },
+            { id: 'fc', name: 'SẢNH FC', image: 'https://i.ibb.co/s999vNQ1/S-NH-FC.png' },
         ];
         
-        const ONE_SIX_EIGHT_GAMES = [
-            { name: 'SIÊU THỦ ACE (1)', slug: 'sieu-thu-ace-1', image: 'https://i.ibb.co/VWsgCSNy/SI-U-TH-ACE.jpg' },
-            { name: 'ĐI SĂN OLYMPUS', slug: 'di-san-olympus', image: 'https://i.ibb.co/hJBSrdmq/DI-S-N-OLYMPUS.jpg' },
-            { name: 'HEO DISCO', slug: 'heo-disco', image: 'https://i.ibb.co/0pnSQ9jF/HEO-DISCO.jpg' },
-            { name: 'SIÊU SẮC DỰ PHÒNG', slug: 'sieu-sac-du-phong', image: 'https://i.ibb.co/fd8FYvJ3/SIEU-SAC-DU-PHONG.jpg' },
-            { name: 'SIÊU THỦ ACE (2)', slug: 'sieu-thu-ace-2', image: 'https://i.ibb.co/BKPP4SX0/SI-U-TH-ACE-2.jpg' },
-            { name: 'SƯ PHỤ WANDA (1)', slug: 'su-phu-wanda-1', image: 'https://i.ibb.co/kg6RDGnk/S-PH-WANDA.jpg' },
-            { name: 'SƯ PHỤ WANDA (2)', slug: 'su-phu-wanda-2', image: 'https://i.ibb.co/BVhJ1LpZ/SU-PHU-WANDA-2.jpg' },
-            { name: 'SƯ PHỤ WANDA (3)', slug: 'su-phu-wanda-3', image: 'https://i.ibb.co/Cs6ZQwnZ/S-PH-WANDA-3.jpg' },
-            { name: 'THỢ SĂN KHO BÁU DCM (1)', slug: 'tho-san-kho-bau-dcm-1', image: 'https://i.ibb.co/nqBBrKw5/TH-T-S-N-KHO-I-DCM.jpg' },
-            { name: 'THỢ SĂN KHO BÁU DCM (2)', slug: 'tho-san-kho-bau-dcm-2', image: 'https://i.ibb.co/ymtSGpyv/TH-T-S-N-KHO-I-DCM-2.jpg' },
-            { name: 'THỢ SĂN KHO BÁU DCMM', slug: 'tho-san-kho-bau-dcmm', image: 'https://i.ibb.co/FLPYWGQP/TH-T-S-N-KHO-I-DCMM.jpg' },
-            { name: 'MẬT CHỦ (1)', slug: 'mat-chu-1', image: 'https://i.ibb.co/G4NX7PD9/M-T-CH-C.jpg' },
-            { name: 'MẬT CHỦ (2)', slug: 'mat-chu-2', image: 'https://i.ibb.co/357BkJY0/M-T-CH-C-2.jpg' },
-            { name: 'MẬT CHỦ (3)', slug: 'mat-chu-3', image: 'https://i.ibb.co/3mFnybjX/M-T-CH-C-3.jpg' },
+        // PG Game List with image URLs (Updated with 15 new games)
+        const pgGames = [
+            // Games from previous request (24 games)
+            { id: 'pg_1', name: 'CÔ BÉ QUÀNG KHĂN ĐỎ', image: 'https://i.ibb.co/VcXq4FDP/CO-BE-QUANG-KHAN-DO.jpg' },
+            { id: 'pg_2', name: 'CHIẾN THẮNG CAISHEN 2', image: 'https://i.ibb.co/fd74rC6P/CHIEN-THANG-CAISHEN-2.jpg' },
+            { id: 'pg_3', name: 'CHIẾN THẮNG CAISHEN', image: 'https://i.ibb.co/ynt23mg0/CHIEN-THANG-CAISHEN.jpg' },
+            { id: 'pg_4', name: 'ĐẠI DỊCH ZOMBIE', image: 'https://i.ibb.co/7NrsJcpz/DAI-DICH-ZOMBIE.jpg' },
+            { id: 'pg_5', name: 'ĐÊM COCKTAIL', image: 'https://i.ibb.co/v6m00C5W/DEM-COCKTAIL.jpg' },
+            { id: 'pg_6', name: 'ĐƯỜNG MẬT CHUỘC 1', image: 'https://i.ibb.co/YF4GfvWJ/DUONG-MAT-CHUOC-1.jpg' },
+            { id: 'pg_7', name: 'ĐƯỜNG MẬT CHUỘC 2', image: 'https://i.ibb.co/qMHVMgjh/DUONG-MAT-CHUOC-2.jpg' },
+            { id: 'pg_8', name: 'GƯƠNG QUAY TÌNH YÊU', image: 'https://i.ibb.co/FbV93yNt/GUONG-QUAY-TINH-YEU.jpg' },
+            { id: 'pg_9', name: 'KHO BÁU HIỆP SĨ', image: 'https://i.ibb.co/Q3sqh5JV/HKHO-BAU-HIEP-SI.jpg' },
+            { id: 'pg_10', name: 'HOA ANH ĐÀO', image: 'https://i.ibb.co/r2bZfywy/HOA-ANH-DAO.jpg' },
+            { id: 'pg_11', name: 'KÌ LÂN MẠCH NƯỚC', image: 'https://i.ibb.co/93tbmhC2/KI-LAN-MACH-NUOC.jpg' },
+            { id: 'pg_12', name: 'KHO BÁU AZTEC', image: 'https://i.ibb.co/DPsrfFw0/KHO-BAU-AZTEC.jpg' },
+            { id: 'pg_13', name: 'MAFIA', image: 'https://i.ibb.co/6cnSZ6Cx/MAFIA.jpg' },
+            { id: 'pg_14', name: 'MEDUSA 2', image: 'https://i.ibb.co/JjwWQ0kQ/MEDUSA-2.jpg' },
+            { id: 'pg_15', name: 'MEDUSA 1', image: 'https://i.ibb.co/zHFk55kS/MEDUSA1.jpg' },
+            { id: 'pg_16', name: 'NEKO MAY MẮN', image: 'https://i.ibb.co/YTLmDgLq/NEKO-MAY-MAN.jpg' },
+            { id: 'pg_17', name: 'NỮ HẢI TẶC', image: 'https://i.ibb.co/yjxbHqj/NU-HAI-TAC.jpg' },
+            { id: 'pg_18', name: 'PHÁO HOA WILD', image: 'https://i.ibb.co/cc62St83/PHAO-HOA-WILD.jpg' },
+            { id: 'pg_19', name: 'QUYẾT CHIẾN TIỀN THƯỞNG', image: 'https://i.ibb.co/35w473vM/QUYET-CHIEN-TIEN-THUONG.jpg' },
+            { id: 'pg_20', name: 'SÁCH THẦN KÌ', image: 'https://i.ibb.co/S4YtMjyL/SACH-THAN-KI.jpg' },
+            { id: 'pg_21', name: 'THỎ MAY MẮN', image: 'https://i.ibb.co/whxzLdwy/THO-MAY-MAN.jpg' },
+            { id: 'pg_22', name: 'VOI MAY MẮN', image: 'https://i.ibb.co/CKK1pKfG/VOI-MAY-MAN.jpg' },
+            { id: 'pg_23', name: 'WILD APE', image: 'https://i.ibb.co/b903wRb/WILD-APE.jpg' },
+            { id: 'pg_24', name: 'WILD ĐẠO TẶC', image: 'https://i.ibb.co/8y1YbR9/WILD-DAO-TAC.jpg' },
+            // NEW GAMES from current request (15 games)
+            { id: 'pg_25', name: 'NỮ VƯƠNG CHỢ MUQUAY', image: 'https://i.ibb.co/VcbK1mN1/NH-V-CH-MUQUAY.jpg' },
+            { id: 'pg_26', name: 'RƯỢU XI CŨ TÌNH DƯỢC', image: 'https://i.ibb.co/M5MH63Vj/R-P-XI-C-T-NH-D-C.jpg' },
+            { id: 'pg_27', name: 'CÂY BÚ LỚN', image: 'https://i.ibb.co/1fLHkS24/C-Y-BU-LON.jpg' },
+            { id: 'pg_28', name: 'NINJA CHƠI SÒM', image: 'https://i.ibb.co/VYV7dHH2/NINJA-CH-I-SOME.jpg' },
+            { id: 'pg_29', name: 'VOI CON NGHỊCH NGỢM', image: 'https://i.ibb.co/Zzfm2r5K/VOI-CON-N-N.jpg' },
+            { id: 'pg_30', name: 'CHÚ TỊNH TRẠNG', image: 'https://i.ibb.co/ycx4jtxB/CH-U-TINH-TR-NG.jpg' },
+            { id: 'pg_31', name: 'ÔNG GIÀ SHANGHAI', image: 'https://i.ibb.co/jZBKdpQ7/NG-GI-SHANGHAI.jpg' },
+            { id: 'pg_32', name: 'VUA ĐẦU BẾP', image: 'https://i.ibb.co/JRt5g8mY/VUA-U-B-P.jpg' },
+            { id: 'pg_33', name: 'HUYỀN THOẠI LAMKA', image: 'https://i.ibb.co/QFjsRqSB/HUY-N-THO-I-LAMKA.jpg' },
+            { id: 'pg_34', name: 'ÔNG KHÔNG HỎI TIỀN', image: 'https://i.ibb.co/99GjKZbn/NG-KH-NG-H-I-TI-N.jpg' },
+            { id: 'pg_35', name: 'RỒNG 2', image: 'https://i.ibb.co/VWXBM2Cd/R-NG-2.jpg' },
+            { id: 'pg_36', name: 'MÁ LẠNH', image: 'https://i.ibb.co/h1rLHhkC/M-A-L-N.jpg' },
+            { id: 'pg_37', name: 'HALLOWEEN', image: 'https://i.ibb.co/ZpHkjZpb/HALLOWEN.jpg' },
+            { id: 'pg_38', name: 'PANDA QUẠY CỰC CŨ', image: 'https://i.ibb.co/ycfXJRsD/PANDA-QU-Y-C-N-C.jpg' },
+            { id: 'pg_39', name: 'CHÙM KIẾM TÌM KHO BÁU', image: 'https://i.ibb.co/PyzBy52/C-M-KI-M-T-M-KHO-B-U.jpg' },
         ];
 
-        const FC_GAMES = [
-            { name: '3 CON HEO', slug: '3-con-heo', image: 'https://i.ibb.co/VcndXXmD/3-CON-HEO.jpg' },
-            { name: 'TÍCH BÁI', slug: 'tich-bai', image: 'https://i.ibb.co/wZZY1zgL/T-CH-B-I.jpg' },
-            { name: 'BÁO KÍCH CHƯƠNG (2)', slug: 'bao-kich-chuong-2', image: 'https://i.ibb.co/Q3DTZwkF/B-O-K-CH-NG-2.jpg' },
-            { name: 'BÁO KÍCH CHƯƠNG NGỌT', slug: 'bao-kich-chuong-ngot', image: 'https://i.ibb.co/5hdzBLcm/B-O-K-CH-NG-NG-T.jpg' },
-            { name: 'BÁO KÍCH RỪNG XANH', slug: 'bao-kich-rung-xanh', image: 'https://i.ibb.co/GQz0Z6fg/B-O-K-CH-R-NG-XANH.jpg' },
-            { name: 'BÁO KIM TIỀN (2)', slug: 'bao-kim-tien-2', image: 'https://i.ibb.co/hRj71FV9/B-O-KIM-TI-N-2.jpg' },
-            { name: 'BÁO KIM TIỀN (1)', slug: 'bao-kim-tien-1', image: 'https://i.ibb.co/sdkWgR1t/B-O-KIM-TI-N.jpg' },
-            { name: 'BÉ BẢO CẢM', slug: 'be-bao-cam', image: 'https://i.ibb.co/zhh3Sqgg/B-B-O-C-M.jpg' },
-            { name: 'BỘ BINH HỔ', slug: 'bo-binh-ho', image: 'https://i.ibb.co/chnft8ry/B-NH-BINH-H.jpg' },
-            { name: 'CÁ CHÉP TIẾN TỚI', slug: 'ca-chep-tien-toi', image: 'https://i.ibb.co/p6bGY9x1/C-CH-P-TI-N-T-I.jpg' },
-            { name: 'CAO THỦ QUÉT MÌN', slug: 'cao-thu-quet-min', image: 'https://i.ibb.co/CKXz6Hzc/CAO-TH-QU-T-M-N.jpg' },
-            { name: 'CAO THỦ TRÈO THÁP', slug: 'cao-thu-treo-thap', image: 'https://i.ibb.co/PsVs7Z0x/CAO-TH-TR-O-TH-P.jpg' },
-            { name: 'CÔNG BUỒNG', slug: 'cong-buong', image: 'https://i.ibb.co/wFhfVs9w/C-NG-BU-NG.jpg' },
-            { name: 'CỔ MỘ TÀI LỘC', slug: 'co-mo-tai-loc', image: 'https://i.ibb.co/RkN1XGkz/C-M-T-I-L-C.jpg' },
-            { name: 'CỦA CẢI DỊ DỒ', slug: 'cua-cai-di-do', image: 'https://i.ibb.co/Fk6Xn22H/C-A-C-I-D-I-D-O.jpg' },
-            { name: 'CUỐI NĂM (1)', slug: 'cuoi-nam-1', image: 'https://i.ibb.co/Cpd3J6hD/CU-I-N-M.jpg' },
-            { name: 'CHILI HUAHUA', slug: 'chili-huahua', image: 'https://i.ibb.co/wZKkDZ64/CHILIHUAHUA.jpg' },
-            { name: 'ĐỒ CHƠI PHÁP (1)', slug: 'do-choi-phap-1', image: 'https://i.ibb.co/9HRBH493/D-O-CH-I-PH-2.jpg' },
-            { name: 'GẤU MA', slug: 'gau-ma', image: 'https://i.ibb.co/sMznBPj/U-MA.jpg' },
-            { name: 'GAME MÀU SIÊU NHIỀU', slug: 'game-mau-sieu-nhieu', image: 'https://i.ibb.co/CsPQF4G1/GAME-M-U-SI-U-NHI-U.jpg' },
-            { name: 'HẢI HỘP KÍCH TÌNH', slug: 'hai-hop-kich-tinh', image: 'https://i.ibb.co/9HnchKsd/H-I-H-P-K-CH-T-NH.jpg' },
-            { name: 'HỔNG VẬN TIỀN', slug: 'hong-van-tien', image: 'https://i.ibb.co/twCBXY99/H-NG-V-TI-N.jpg' },
-            { name: 'IMG-98 DEFAULT', slug: 'imgi-98-default', image: 'https://i.ibb.co/BKdscfDB/imgi-98-default.jpg' },
-            { name: 'KIẾM TIỀN VUI', slug: 'kiem-tien-vui', image: 'https://i.ibb.co/mrwxFxYj/KI-M-TI-N-VUI.jpg' },
-            { name: 'KIM LINH THẦN LỚN', slug: 'kim-linh-than-lon', image: 'https://i.ibb.co/rfwsv8TD/KIM-LINH-TH-N-L-N.jpg' },
-            { name: 'KHO BÁU CON CÁC', slug: 'kho-bau-con-cac', image: 'https://i.ibb.co/qQgV9qB/KHO-B-U-CON-C-C.jpg' },
-            { name: 'KHO BÁU CỦA THỎ NGỌT', slug: 'kho-bau-cua-tho-ngot', image: 'https://i.ibb.co/vvD6HtG7/KHO-B-U-C-A-TH-NG-L-N.jpg' },
-            { name: 'LUCKY 9', slug: 'lucky-9', image: 'https://i.ibb.co/TJBqqT3/LUCKY-9.jpg' },
-            { name: 'MA THUẬT GHÉP', slug: 'ma-thuat-ghep', image: 'https://i.ibb.co/0pTMt7HH/MA-THU-T-GH-P.jpg' },
-            { name: 'MÁY ĐI CÂY TIỀN', slug: 'may-di-cay-tien', image: 'https://i.ibb.co/DPpr5FH7/M-Y-I-C-Y-TI-N.jpg' },
-            { name: 'MÁY ĐI CỦA CẢI', slug: 'may-di-cua-cai', image: 'https://i.ibb.co/b4c4pw9/M-Y-I-C-A-C-I.jpg' },
-            { name: 'MÁY ĐI', slug: 'may-di', image: 'https://i.ibb.co/gMmQ7hN9/M-Y-I.jpg' },
-            { name: 'MÃO TÀI TÌM', slug: 'mao-tai-tim', image: 'https://i.ibb.co/d0Vk4KvG/M-O-T-I-T-M.jpg' },
-            { name: 'NĂM MỚI LÀ LÀ', slug: 'nam-moi-la-la', image: 'https://i.ibb.co/HLV2QqBy/N-M-M-I-L-L.jpg' },
-            { name: 'NĂM MỚI LỘC LỘC', slug: 'nam-moi-loc-loc', image: 'https://i.ibb.co/mr03GVDy/N-M-M-I-L-C-L-C-2.jpg' },
-            { name: 'NỮ CHIẾN BINH', slug: 'nu-chien-binh', image: 'https://i.ibb.co/QFBFDx7P/N-CHI-N-BINH.jpg' },
-            { name: 'NỮ HOÀNG INCA', slug: 'nu-hoang-inca', image: 'https://i.ibb.co/LdbVwHQW/N-HO-NG-INCA.jpg' },
-            { name: 'NỮ THẦN VÕ', slug: 'nu-than-vo', image: 'https://i.ibb.co/mr8xN2NT/N-TH-N-V.jpg' },
-            { name: 'NGUYÊN TỐ DÒNG TRÒ', slug: 'nguyen-to-dong-tro', image: 'https://i.ibb.co/gL2NsxBm/NGUY-N-T-D-NG-TR-O.jpg' },
-            { name: 'NGŨ TRÙM PHÁ BẢ', slug: 'ngu-trum-pha-ba', image: 'https://i.ibb.co/nsdtrHQk/NG-TR-M-PH-B.jpg' },
-            { name: 'PHÁO RỒNG TÀI', slug: 'phao-rong-tai', image: 'https://i.ibb.co/KppW1yqx/PH-O-R-NG-T-I.jpg' },
-            { name: 'PHƯỢNG HOÀNG', slug: 'phuong-hoang', image: 'https://i.ibb.co/HfndtYXR/PH-NG-HO-NG.jpg' },
-            { name: 'ROBIN HOOB', slug: 'robin-hoob', image: 'https://i.ibb.co/nsKp8Y99/ROBIN-HOOB.jpg' },
-            { name: 'RƯỢU THUA XE', slug: 'ruou-thua-xe', image: 'https://i.ibb.co/6cbCpThJ/R-A-TH-UA-XE.jpg' },
-            { name: 'TÂY BỘ PHONG BA', slug: 'tay-bo-phong-ba', image: 'https://i.ibb.co/k6g9qqcQ/T-Y-B-PHONG-BA.jpg' },
-            { name: 'THẦN TÀI PHI TÀI', slug: 'than-tai-phi-tai', image: 'https://i.ibb.co/mFJYCK3M/TH-N-T-I-PHI-T-I.jpg' },
-            { name: 'THUYỀN RỒNG', slug: 'thuyen-rong', image: 'https://i.ibb.co/7d4ntSrB/THUY-N-R-NG.jpg' },
-            { name: 'TRANH ĐẤU LA MÃ', slug: 'tranh-dau-la-ma', image: 'https://i.ibb.co/nMjNZWV4/TRANH-U-LA-M.jpg' },
-            { name: 'TRÂU HOÀNG ĐẾ', slug: 'trau-hoang-de', image: 'https://i.ibb.co/wFh5J5WD/TR-U-HOANG-D.jpg' },
-            { name: 'TRƯỜNG VÕNG', slug: 'truong-vong', image: 'https://i.ibb.co/j97t6j9W/TR-NG-V-NG.jpg' },
-            { name: 'VŨ TRỤ CHIẾN', slug: 'vu-tru-chien', image: 'https://i.ibb.co/Wpz6nvYc/V-TR-I-CHI-N.jpg' },
-            { name: 'ZUES', slug: 'zues', image: 'https://i.ibb.co/M5GhvK53/ZUES.jpg' },
+        // JILI Game List with image URLs (new games)
+        const jiliGames = [
+            { id: 'jili_1', name: '7 ĐIÊN CUỒNG', image: 'https://i.ibb.co/Mx8kvbBx/7-DIEN-CUONG.jpg' },
+            { id: 'jili_2', name: 'CÂY PHÁT TÀI', image: 'https://i.ibb.co/fY3jG9tv/CAY-PHAT-TAI.jpg' },
+            { id: 'jili_3', name: 'ĐẾ QUỐC HOÀNG KIM', image: 'https://i.ibb.co/fzp6Dd1L/DE-QUOC-HOANG-KIM.jpg' },
+            { id: 'jili_4', name: 'ĐÊM THƯỢNG HẢI', image: 'https://i.ibb.co/sdFMNkrn/DEM-THUONG-HAI.jpg' },
+            { id: 'jili_5', name: 'KẸO MAY MẮN', image: 'https://i.ibb.co/PsRm8kCn/KEO-MAY-MAN.jpg' },
+            { id: 'jili_6', name: 'MEGA ACE', image: 'https://i.ibb.co/PGfFVgX0/MEGA-ACE.jpg' },
+            { id: 'jili_7', name: 'NGỌC MAY MẮN', image: 'https://i.ibb.co/jvjQdTK6/NGOC-MAY-MAN.jpg' },
+            { id: 'jili_8', name: 'NGỌC MAY MẮN 2', image: 'https://i.ibb.co/Kc3CzxHY/NGOC-MAY-MAN-2.jpg' },
+            { id: 'jili_9', name: 'NGỌC MAY MẮN 3', image: 'https://i.ibb.co/JF22Kx7T/NGOC-MAY-MAN-3.jpg' },
+            { id: 'jili_10', name: 'PHARAOH', image: 'https://i.ibb.co/9k9CHqD9/PHARAOH.jpg' },
+            { id: 'jili_11', name: 'QUẢ ỚT NÓNG BỎNG', image: 'https://i.ibb.co/4wfND0jN/QUA-OT-NONG-BONG.jpg' },
+            { id: 'jili_12', name: 'QUANG VÂN TRƯỜNG', image: 'https://i.ibb.co/DDv8SvgP/QUANG-VAN-TRUONG.jpg' },
+            { id: 'jili_13', name: 'QUANG VÂN TRƯỜNG 2', image: 'https://i.ibb.co/QFFKNtq8/QUANG-VAN-TRUONG-2.jpg' },
+            { id: 'jili_14', name: 'QUYỀN VƯƠNG', image: 'https://i.ibb.co/ccfY8Wgf/QUYEN-VUONG.jpg' },
+            { id: 'jili_15', name: 'SIÊU NIÊU BÍ', image: 'https://i.ibb.co/PvCZY2R1/SIU-NIU-BI.jpg' },
+            { id: 'jili_16', name: 'SUPER ACE 2', image: 'https://i.ibb.co/kswnVFMH/SUPER-ACE-2.jpg' },
+            { id: 'jili_17', name: 'SUPER ACE', image: 'https://i.ibb.co/rR42B4L3/SUPER-ACE.jpg' },
+            { id: 'jili_18', name: 'TIỀN MAY MẮN', image: 'https://i.ibb.co/R47mRvss/TIEN-MAY-MAN.jpg' },
+            { id: 'jili_19', name: 'VŨ LONG TRANH BA', image: 'https://i.ibb.co/SXGhM4WJ/VU-LONG-TRANH-BA.jpg' },
+            { id: 'jili_20', name: 'VUA RỪNG XANH', image: 'https://i.ibb.co/XxYvHsj6/VUA-RUNG-XANH.jpg' },
+        ];
+
+        // FC Games list with IDs, names and image URLs. The names are derived from the
+        // provided alt attributes by replacing hyphens with spaces. These represent
+        // the list of FC slot games to display in the FC hall.
+        const fcGames = [
+            { id: 'fc_1', name: '3 CON HEO', image: 'https://i.ibb.co/Tx5fqY05/3-CON-HEO.jpg' },
+            { id: 'fc_2', name: 'T CH B I', image: 'https://i.ibb.co/RkfkYrLM/T-CH-B-I.jpg' },
+            { id: 'fc_3', name: 'B O K CH NG 2', image: 'https://i.ibb.co/M5crFQJn/B-O-K-CH-NG-2.jpg' },
+            { id: 'fc_4', name: 'B O K CH NG NG T', image: 'https://i.ibb.co/4Z3CsHcP/B-O-K-CH-NG-NG-T.jpg' },
+            { id: 'fc_5', name: 'B O K CH R NG XANH', image: 'https://i.ibb.co/Zpgb8B30/B-O-K-CH-R-NG-XANH.jpg' },
+            { id: 'fc_6', name: 'B O KIM TI N 2', image: 'https://i.ibb.co/BVWg1h9r/B-O-KIM-TI-N-2.jpg' },
+            { id: 'fc_7', name: 'B O KIM TI N', image: 'https://i.ibb.co/kZXb33N/B-O-KIM-TI-N.jpg' },
+            { id: 'fc_8', name: 'B B O C M', image: 'https://i.ibb.co/dsdbZB44/B-B-O-C-M.jpg' },
+            { id: 'fc_9', name: 'B NH BINH H', image: 'https://i.ibb.co/gcjhwpR/B-NH-BINH-H.jpg' },
+            { id: 'fc_10', name: 'C CH P TI N T I', image: 'https://i.ibb.co/hxLgBVPg/C-CH-P-TI-N-T-I.jpg' },
+            { id: 'fc_11', name: 'CAO TH QU T M N', image: 'https://i.ibb.co/RTzX2yJR/CAO-TH-QU-T-M-N.jpg' },
+            { id: 'fc_12', name: 'CAO TH TR O TH P', image: 'https://i.ibb.co/tTxdfnwm/CAO-TH-TR-O-TH-P.jpg' },
+            { id: 'fc_13', name: 'C NG BU NG', image: 'https://i.ibb.co/MDXpcdQt/C-NG-BU-NG.jpg' },
+            { id: 'fc_14', name: 'C M T I L C', image: 'https://i.ibb.co/KxwwKWKh/C-M-T-I-L-C.jpg' },
+            { id: 'fc_15', name: 'C A C I D I D O 3', image: 'https://i.ibb.co/jv3Lhw6T/C-A-C-I-D-I-D-O-3.jpg' },
+            { id: 'fc_16', name: 'C A C I D I D O', image: 'https://i.ibb.co/RG0SJ69w/C-A-C-I-D-I-D-O.jpg' },
+            { id: 'fc_17', name: 'CU I N M 2', image: 'https://i.ibb.co/235vrFtg/CU-I-N-M-2.jpg' },
+            { id: 'fc_18', name: 'CU I N M', image: 'https://i.ibb.co/TMYxhHbb/CU-I-N-M.jpg' },
+            { id: 'fc_19', name: 'CHILIHUAHUA', image: 'https://i.ibb.co/Df2Ft0PJ/CHILIHUAHUA.jpg' },
+            { id: 'fc_20', name: 'D O CH I PH 2', image: 'https://i.ibb.co/5hQ7R8wW/D-O-CH-I-PH-2.jpg' },
+            { id: 'fc_21', name: 'D O CH I PH M', image: 'https://i.ibb.co/NdH49ryR/D-O-CH-I-PH-M.jpg' },
+            { id: 'fc_22', name: 'U MA', image: 'https://i.ibb.co/GfWYs1mC/U-MA.jpg' },
+            { id: 'fc_23', name: 'GAME M U SI U NHI U', image: 'https://i.ibb.co/gckzmW0/GAME-M-U-SI-U-NHI-U.jpg' },
+            { id: 'fc_24', name: 'H I H P K CH T NH', image: 'https://i.ibb.co/vC9gRTBR/H-I-H-P-K-CH-T-NH.jpg' },
+            { id: 'fc_25', name: 'H NG V TI N', image: 'https://i.ibb.co/Lz2ppPXd/H-NG-V-TI-N.jpg' },
+            { id: 'fc_26', name: 'imgi 98 default', image: 'https://i.ibb.co/wZgpZLBp/imgi-98-default.jpg' },
+            { id: 'fc_27', name: 'KI M TI N VUI', image: 'https://i.ibb.co/1t6qKn25/KI-M-TI-N-VUI.jpg' },
+            { id: 'fc_28', name: 'KIM LINH TH N L N', image: 'https://i.ibb.co/QvMP9whR/KIM-LINH-TH-N-L-N.jpg' },
+            { id: 'fc_29', name: 'KHO B U CON C C', image: 'https://i.ibb.co/STt4pr2/KHO-B-U-CON-C-C.jpg' },
+            { id: 'fc_30', name: 'KHO B U C A TH NG L N', image: 'https://i.ibb.co/ZRHzWr2t/KHO-B-U-C-A-TH-NG-L-N.jpg' },
+            { id: 'fc_31', name: 'LUCKY 9', image: 'https://i.ibb.co/JRpYmWZk/LUCKY-9.jpg' },
+            { id: 'fc_32', name: 'MA THU T GH P', image: 'https://i.ibb.co/7dbkQKwX/MA-THU-T-GH-P.jpg' },
+            { id: 'fc_33', name: 'M Y I C Y TI N', image: 'https://i.ibb.co/4n2yr7xc/M-Y-I-C-Y-TI-N.jpg' },
+            { id: 'fc_34', name: 'M Y I C A C I', image: 'https://i.ibb.co/9Hb6cCT0/M-Y-I-C-A-C-I.jpg' },
+            { id: 'fc_35', name: 'M Y I', image: 'https://i.ibb.co/WvX6WKFF/M-Y-I.jpg' },
+            { id: 'fc_36', name: 'M O T I T M', image: 'https://i.ibb.co/F4pWT6bZ/M-O-T-I-T-M.jpg' },
+            { id: 'fc_37', name: 'N M M I L L', image: 'https://i.ibb.co/Y7WR4Smv/N-M-M-I-L-L.jpg' },
+            { id: 'fc_38', name: 'N M M I L C L C 2', image: 'https://i.ibb.co/KcPWrFGj/N-M-M-I-L-C-L-C-2.jpg' },
+            { id: 'fc_39', name: 'N CHI N BINH', image: 'https://i.ibb.co/PzMt7nYX/N-CHI-N-BINH.jpg' },
+            { id: 'fc_40', name: 'N HO NG INCA', image: 'https://i.ibb.co/nsqrXwcj/N-HO-NG-INCA.jpg' },
+            { id: 'fc_41', name: 'N TH N V', image: 'https://i.ibb.co/vxfTWf62/N-TH-N-V.jpg' },
+            { id: 'fc_42', name: 'NGUY N T D NG TR O', image: 'https://i.ibb.co/7NR5g6fN/NGUY-N-T-D-NG-TR-O.jpg' },
+            { id: 'fc_43', name: 'NG TR M PH B', image: 'https://i.ibb.co/207Q3jVC/NG-TR-M-PH-B.jpg' },
+            { id: 'fc_44', name: 'PH O R NG T I', image: 'https://i.ibb.co/wZ12XW53/PH-O-R-NG-T-I.jpg' },
+            { id: 'fc_45', name: 'PH NG HO NG', image: 'https://i.ibb.co/CTf4msF/PH-NG-HO-NG.jpg' },
+            { id: 'fc_46', name: 'ROBIN HOOB', image: 'https://i.ibb.co/r2XNMpmm/ROBIN-HOOB.jpg' },
+            { id: 'fc_47', name: 'R A TH UA XE', image: 'https://i.ibb.co/q37VRNCs/R-A-TH-UA-XE.jpg' },
+            { id: 'fc_48', name: 'T Y B PHONG BA', image: 'https://i.ibb.co/CKFtJ88q/T-Y-B-PHONG-BA.jpg' },
+            { id: 'fc_49', name: 'TH N T I PHI T I', image: 'https://i.ibb.co/b5Z7fYLj/TH-N-T-I-PHI-T-I.jpg' },
+            { id: 'fc_50', name: 'THUY N R NG', image: 'https://i.ibb.co/DD94L2cD/THUY-N-R-NG.jpg' },
+            { id: 'fc_51', name: 'TRANH U LA M', image: 'https://i.ibb.co/rRNGyfD2/TRANH-U-LA-M.jpg' },
+            { id: 'fc_52', name: 'TR U HOANG D', image: 'https://i.ibb.co/BHRpdGFk/TR-U-HOANG-D.jpg' },
+            { id: 'fc_53', name: 'TR NG V NG', image: 'https://i.ibb.co/zT8h0gcJ/TR-NG-V-NG.jpg' },
+            { id: 'fc_54', name: 'V TR I CHI N', image: 'https://i.ibb.co/wFStwRRj/V-TR-I-CHI-N.jpg' },
+            { id: 'fc_55', name: 'ZUES', image: 'https://i.ibb.co/ZpyyJPWz/ZUES.jpg' }
+        ];
+
+        // 168G Games list. Each object has an id, a readable name (derived from the alt
+        // attribute by replacing hyphens with spaces), and the image URL. These will
+        // populate the 168G hall with slot games.
+        const g168Games = [
+            { id: 'g168_1', name: 'DI S N OLYMPUS', image: 'https://i.ibb.co/VYdTpsxX/DI-S-N-OLYMPUS.jpg' },
+            { id: 'g168_2', name: 'HEO DISCO', image: 'https://i.ibb.co/Kxdw5KHd/HEO-DISCO.jpg' },
+            { id: 'g168_3', name: 'SIEU SAC DU PHONG', image: 'https://i.ibb.co/xS4SCnGL/SIEU-SAC-DU-PHONG.jpg' },
+            { id: 'g168_4', name: 'SI U TH ACE 2', image: 'https://i.ibb.co/TMXfTqg8/SI-U-TH-ACE-2.jpg' },
+            { id: 'g168_5', name: 'SI U TH ACE', image: 'https://i.ibb.co/tM6yrPF9/SI-U-TH-ACE.jpg' },
+            { id: 'g168_6', name: 'SU PHU WANDA 2', image: 'https://i.ibb.co/B2sX8Tyf/SU-PHU-WANDA-2.jpg' },
+            { id: 'g168_7', name: 'S PH WANDA 3', image: 'https://i.ibb.co/C31jRhcK/S-PH-WANDA-3.jpg' },
+            { id: 'g168_8', name: 'S PH WANDA', image: 'https://i.ibb.co/yBdwtfNH/S-PH-WANDA.jpg' },
+            { id: 'g168_9', name: 'TH T S N KHO I DCM 2', image: 'https://i.ibb.co/wN1pGbpy/TH-T-S-N-KHO-I-DCM-2.jpg' },
+            { id: 'g168_10', name: 'TH T S N KHO I DCM', image: 'https://i.ibb.co/Q06GkHN/TH-T-S-N-KHO-I-DCM.jpg' },
+            { id: 'g168_11', name: 'TH T S N KHO I DCMM', image: 'https://i.ibb.co/7LGsJCF/TH-T-S-N-KHO-I-DCMM.jpg' },
+            { id: 'g168_12', name: 'M T CH C 2', image: 'https://i.ibb.co/RGcD4sBs/M-T-CH-C-2.jpg' },
+            { id: 'g168_13', name: 'M T CH C 3', image: 'https://i.ibb.co/ZRh1nNmG/M-T-CH-C-3.jpg' },
+            { id: 'g168_14', name: 'M T CH C', image: 'https://i.ibb.co/S7Bj6HG5/M-T-CH-C.jpg' }
         ];
 
 
-        // --- LOGIC CHUYỂN MÀN HÌNH ---
-        // Đặt hàm này thành toàn cục để các sự kiện onclick trong HTML có thể truy cập
-        window.showScreen = function(targetScreenId) {
-            document.querySelectorAll('#screen-container > div').forEach(screen => {
-                screen.classList.add('hidden');
-                screen.style.opacity = '0';
-            });
-            const targetScreen = document.getElementById(targetScreenId);
-            if (targetScreen) {
-                targetScreen.classList.remove('hidden');
-                setTimeout(() => targetScreen.style.opacity = '1', 50);
-                
-                // Cập nhật nội dung màn hình game list nếu cần
-                if (targetScreenId.endsWith('-games-list-screen')) {
-                    const slug = targetScreenId.split('-')[0];
-                    renderGameList(slug, targetScreen);
-                }
-            }
-        }
-
-        // Đặt các hàm xử lý form thành toàn cục
-        window.handleLogin = function() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            // Logic đăng nhập giả định (Test User)
-            if ((username === 'LUCKA' && password === '123456') || (username === 'admin' && password === '123456')) {
-                document.getElementById('display-username').textContent = username;
-                showMessage("Đăng nhập thành công!", 'bg-green-600');
-                
-                // Chuyển sang màn hình Menu chính
-                setTimeout(() => {
-                    document.getElementById('login-register-screen').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('login-register-screen').classList.add('hidden');
-                        window.showScreen('main-menu-screen'); // Đã sửa: dùng window.showScreen
-                        renderMainMenu();
-                        startUpdateInterval();
-                    }, 500);
-                }, 1000); 
-
-            } else {
-                showMessage("Tên đăng nhập hoặc mật khẩu không chính xác. Vui lòng thử lại.", 'bg-red-600');
-            }
-        }
-
-        window.handleRegister = function() {
-            const username = document.getElementById('reg-username').value;
-            const phone = document.getElementById('reg-phone').value;
-            const password = document.getElementById('reg-password').value;
-            
-            // Logic đăng ký giả định
-            showMessage(`Đăng ký thành công tài khoản: ${username}. Vui lòng liên hệ CSKH để kích hoạt.`, 'bg-yellow-600');
-            
-            // Tự động chuyển về màn hình đăng nhập sau 3 giây
-            setTimeout(() => {
-                document.getElementById('show-login').click();
-            }, 3000);
-        }
-        
-        window.handleLogout = function() {
-            stopUpdateInterval();
-            document.getElementById('login-register-screen').classList.remove('hidden');
-            document.getElementById('login-register-screen').style.opacity = '1';
-            document.getElementById('main-menu-screen').classList.add('hidden');
-            document.getElementById('main-menu-screen').style.opacity = '0';
-            document.getElementById('login-username').value = '';
-            document.getElementById('login-password').value = '';
-        }
-
-        // Hàm hiển thị message box thay thế cho alert()
+        // Helper: show toast-style message in the message box
         function showMessage(message, bgColor) {
             const messageBox = document.getElementById('message-box');
             messageBox.textContent = message;
             messageBox.className = `mt-6 p-3 rounded-lg text-center text-sm font-medium ${bgColor}`;
-            if (bgColor === 'hidden') {
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
                 messageBox.classList.add('hidden');
-            } else {
-                messageBox.classList.remove('hidden');
-                // Tự động ẩn sau 4 giây
-                setTimeout(() => {
-                    messageBox.classList.add('hidden');
-                }, 4000);
-            }
+            }, 4000);
         }
 
+        // --- Screen Switching Functions ---
 
-        // --- LOGIC MENU CHÍNH ---
+        function switchToGameHall(username, energy) {
+            currentUsername = username;
+            currentEnergy = energy;
 
-        let updateInterval;
+            const loginScreen = document.getElementById('login-register-screen');
+            const gameHallScreen = document.getElementById('game-hall-screen');
+            const pgGameScreen = document.getElementById('pg-game-detail-screen');
+            const jiliGameScreen = document.getElementById('jili-game-detail-screen');
+            const fcGameScreen = document.getElementById('fc-game-detail-screen');
+            const g168GameScreen = document.getElementById('g168-game-detail-screen');
+            
+            if (loginScreen) loginScreen.classList.add('hidden');
+            if (pgGameScreen) pgGameScreen.classList.add('hidden');
+            if (jiliGameScreen) jiliGameScreen.classList.add('hidden');
+            if (fcGameScreen) fcGameScreen.classList.add('hidden');
+            if (g168GameScreen) g168GameScreen.classList.add('hidden');
+            if (gameHallScreen) gameHallScreen.classList.remove('hidden');
 
-        function startUpdateInterval() {
+            updateHeaderInfo(username, energy, 'hall');
+
+            // Start the hall analysis update loop
+            if (pgUpdateInterval) clearInterval(pgUpdateInterval);
+            if (jiliUpdateInterval) clearInterval(jiliUpdateInterval);
+            if (fcUpdateInterval) clearInterval(fcUpdateInterval);
+            if (g168UpdateInterval) clearInterval(g168UpdateInterval);
             if (updateInterval) clearInterval(updateInterval);
-            updateInterval = setInterval(updateMainMenuAnalytics, 30000); // Cập nhật mỗi 30 giây
-            updateMainMenuAnalytics(); // Cập nhật lần đầu
+            updateInterval = setInterval(updateAllGameHallAnalysis, 30000); // 30 seconds
+            updateAllGameHallAnalysis(); // Initial update
         }
 
-        function stopUpdateInterval() {
+        function switchToPGGameDetail(username, energy) {
+            const loginScreen = document.getElementById('login-register-screen');
+            const gameHallScreen = document.getElementById('game-hall-screen');
+            const pgGameScreen = document.getElementById('pg-game-detail-screen');
+            const jiliGameScreen = document.getElementById('jili-game-detail-screen');
+            const fcGameScreen = document.getElementById('fc-game-detail-screen');
+            const g168GameScreen = document.getElementById('g168-game-detail-screen');
+            
+            if (loginScreen) loginScreen.classList.add('hidden');
+            if (gameHallScreen) gameHallScreen.classList.add('hidden');
+            if (jiliGameScreen) jiliGameScreen.classList.add('hidden');
+            if (fcGameScreen) fcGameScreen.classList.add('hidden');
+            if (g168GameScreen) g168GameScreen.classList.add('hidden');
+            if (pgGameScreen) pgGameScreen.classList.remove('hidden');
+
+            updateHeaderInfo(username, energy, 'pg');
+
+            // Start the PG game analysis update loop
             if (updateInterval) clearInterval(updateInterval);
+            if (pgUpdateInterval) clearInterval(pgUpdateInterval);
+            if (jiliUpdateInterval) clearInterval(jiliUpdateInterval);
+            if (fcUpdateInterval) clearInterval(fcUpdateInterval);
+            if (g168UpdateInterval) clearInterval(g168UpdateInterval);
+            pgUpdateInterval = setInterval(updateAllPGGameAnalysis, 30000); // 30 seconds
+            updateAllPGGameAnalysis(); // Initial update
         }
 
-        // Hàm tạo giá trị ngẫu nhiên cho thanh phân tích (luôn trên 80%)
-        function getRandomAnalytics(min = 80, max = 100) {
+        /**
+         * Switches to the JILI game detail screen.
+         * Hides the login and hall screens, shows the JILI screen, updates
+         * header information and starts the JILI update loop. Also renders
+         * the JILI game grid. Similar to the PG implementation but uses
+         * JILI-specific DOM elements and intervals.
+         */
+        function switchToJiliGameDetail(username, energy) {
+            const loginScreen = document.getElementById('login-register-screen');
+            const gameHallScreen = document.getElementById('game-hall-screen');
+            const jiliGameScreen = document.getElementById('jili-game-detail-screen');
+            const pgGameScreen = document.getElementById('pg-game-detail-screen');
+            const fcGameScreen = document.getElementById('fc-game-detail-screen');
+            const g168GameScreen = document.getElementById('g168-game-detail-screen');
+
+            if (loginScreen) loginScreen.classList.add('hidden');
+            if (gameHallScreen) gameHallScreen.classList.add('hidden');
+            if (pgGameScreen) pgGameScreen.classList.add('hidden');
+            if (fcGameScreen) fcGameScreen.classList.add('hidden');
+            if (g168GameScreen) g168GameScreen.classList.add('hidden');
+            if (jiliGameScreen) jiliGameScreen.classList.remove('hidden');
+
+            // Update user info for JILI screen
+            updateHeaderInfo(username, energy, 'jili');
+
+            // Clear any existing update intervals
+            if (updateInterval) clearInterval(updateInterval);
+            if (pgUpdateInterval) clearInterval(pgUpdateInterval);
+            if (fcUpdateInterval) clearInterval(fcUpdateInterval);
+            if (g168UpdateInterval) clearInterval(g168UpdateInterval);
+            if (jiliUpdateInterval) clearInterval(jiliUpdateInterval);
+
+            // Start the JILI game analysis update loop
+            jiliUpdateInterval = setInterval(updateAllJiliGameAnalysis, 30000); // 30 seconds
+            // Render the game grid and perform an immediate update
+            renderJiliGameGrid();
+            updateAllJiliGameAnalysis();
+        }
+
+        /**
+         * Switches to the FC game detail screen.
+         * Similar to PG and JILI implementations. Hides other screens,
+         * shows the FC screen, updates user info, starts FC analysis updates and
+         * renders the FC game grid.
+         */
+        function switchToFcGameDetail(username, energy) {
+            const loginScreen = document.getElementById('login-register-screen');
+            const gameHallScreen = document.getElementById('game-hall-screen');
+            const pgGameScreen = document.getElementById('pg-game-detail-screen');
+            const jiliGameScreen = document.getElementById('jili-game-detail-screen');
+            const fcGameScreen = document.getElementById('fc-game-detail-screen');
+            const g168GameScreen = document.getElementById('g168-game-detail-screen');
+
+            if (loginScreen) loginScreen.classList.add('hidden');
+            if (gameHallScreen) gameHallScreen.classList.add('hidden');
+            if (pgGameScreen) pgGameScreen.classList.add('hidden');
+            if (jiliGameScreen) jiliGameScreen.classList.add('hidden');
+            if (g168GameScreen) g168GameScreen.classList.add('hidden');
+            if (fcGameScreen) fcGameScreen.classList.remove('hidden');
+
+            // Update user info for FC screen
+            updateHeaderInfo(username, energy, 'fc');
+
+            // Clear existing update intervals
+            if (updateInterval) clearInterval(updateInterval);
+            if (pgUpdateInterval) clearInterval(pgUpdateInterval);
+            if (jiliUpdateInterval) clearInterval(jiliUpdateInterval);
+            if (g168UpdateInterval) clearInterval(g168UpdateInterval);
+            if (fcUpdateInterval) clearInterval(fcUpdateInterval);
+
+            // Start the FC game analysis update loop
+            fcUpdateInterval = setInterval(updateAllFcGameAnalysis, 30000);
+
+            // Render and perform an immediate update
+            renderFcGameGrid();
+            updateAllFcGameAnalysis();
+        }
+
+        /**
+         * Switches to the 168G game detail screen. Hides other screens, updates user info,
+         * clears existing analysis intervals, starts the 168G analysis update, and renders the grid.
+         */
+        function switchToG168GameDetail(username, energy) {
+            const loginScreen = document.getElementById('login-register-screen');
+            const gameHallScreen = document.getElementById('game-hall-screen');
+            const pgGameScreen = document.getElementById('pg-game-detail-screen');
+            const jiliGameScreen = document.getElementById('jili-game-detail-screen');
+            const fcGameScreen = document.getElementById('fc-game-detail-screen');
+            const g168GameScreen = document.getElementById('g168-game-detail-screen');
+
+            if (loginScreen) loginScreen.classList.add('hidden');
+            if (gameHallScreen) gameHallScreen.classList.add('hidden');
+            if (pgGameScreen) pgGameScreen.classList.add('hidden');
+            if (jiliGameScreen) jiliGameScreen.classList.add('hidden');
+            if (fcGameScreen) fcGameScreen.classList.add('hidden');
+            if (g168GameScreen) g168GameScreen.classList.remove('hidden');
+
+            // Update user info
+            updateHeaderInfo(username, energy, 'g168');
+
+            // Clear all existing intervals
+            if (updateInterval) clearInterval(updateInterval);
+            if (pgUpdateInterval) clearInterval(pgUpdateInterval);
+            if (jiliUpdateInterval) clearInterval(jiliUpdateInterval);
+            if (fcUpdateInterval) clearInterval(fcUpdateInterval);
+            if (g168UpdateInterval) clearInterval(g168UpdateInterval);
+
+            // Start 168G update interval
+            g168UpdateInterval = setInterval(updateAllG168GameAnalysis, 30000);
+
+            // Render grid and immediate update
+            renderG168GameGrid();
+            updateAllG168GameAnalysis();
+        }
+
+        window.goBackToHall = function() {
+            switchToGameHall(currentUsername, currentEnergy);
+        };
+
+        // Helper to update user info across different headers
+        function updateHeaderInfo(username, energy, screen) {
+            const usernameDisplay = document.getElementById('user-username');
+            const energyDisplay = document.getElementById('user-energy-display');
+            const pgUsernameDisplay = document.getElementById('pg-user-username');
+            const pgEnergyDisplay = document.getElementById('pg-user-energy-display');
+            const jiliUsernameDisplay = document.getElementById('jili-user-username');
+            const jiliEnergyDisplay = document.getElementById('jili-user-energy-display');
+            const fcUsernameDisplay = document.getElementById('fc-user-username');
+            const fcEnergyDisplay = document.getElementById('fc-user-energy-display');
+            const g168UsernameDisplay = document.getElementById('g168-user-username');
+            const g168EnergyDisplay = document.getElementById('g168-user-energy-display');
+
+            if (usernameDisplay) usernameDisplay.textContent = username;
+            if (energyDisplay) energyDisplay.textContent = energy;
+            if (pgUsernameDisplay) pgUsernameDisplay.textContent = username;
+            if (pgEnergyDisplay) pgEnergyDisplay.textContent = energy;
+            if (jiliUsernameDisplay) jiliUsernameDisplay.textContent = username;
+            if (jiliEnergyDisplay) jiliEnergyDisplay.textContent = energy;
+            if (fcUsernameDisplay) fcUsernameDisplay.textContent = username;
+            if (fcEnergyDisplay) fcEnergyDisplay.textContent = energy;
+            if (g168UsernameDisplay) g168UsernameDisplay.textContent = username;
+            if (g168EnergyDisplay) g168EnergyDisplay.textContent = energy;
+        }
+
+
+        // --- Hall Analysis Logic (Existing) ---
+
+        // Generates a random percentage between min and max (inclusive)
+        function generateRandomPercentage(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        // Hàm tạo giá trị độ biến động
-        function getRandomVolatility() {
-            const values = ['THẤP', 'TRUNG BÌNH', 'CAO'];
-            const random = Math.random();
-            if (random < 0.2) return { value: 'THẤP', color: 'text-green-500' };
-            if (random < 0.7) return { value: 'TRUNG BÌNH', color: 'text-yellow-500' };
-            return { value: 'CAO', color: 'text-red-500' };
+        // Generates the risk level based on probability
+        function generateRandomRisk() {
+            const rand = Math.random();
+            if (rand < 0.60) return { label: 'AN TOÀN', class: 'risk-safe' };
+            if (rand < 0.73) return { label: 'THẤP', class: 'risk-low' }; 
+            if (rand < 0.86) return { label: 'TRUNG BÌNH', class: 'risk-medium' }; 
+            return { label: 'CAO', class: 'risk-high' };
         }
 
-        // Hàm cập nhật dữ liệu cho Menu chính
-        function updateMainMenuAnalytics() {
-            GAMES.forEach(game => {
-                if (game.type === 'slot') {
-                    game.analytics = {
-                        huDangNha: getRandomAnalytics(),
-                        scaterDrop: getRandomAnalytics(),
-                        bigWinFreq: getRandomAnalytics(),
-                        returnRate: getRandomAnalytics(75, 95), // Tỉ lệ quay lại có thể thấp hơn
-                        volatility: getRandomVolatility()
-                    };
-                }
-            });
-            renderMainMenu();
-        }
+        // Updates the analysis display for a single game hall
+        function updateGameHallAnalysis(hallId) {
+            const bigWin = generateRandomPercentage(60, 100); 
+            const winRate = generateRandomPercentage(30, 80); 
+            const risk = generateRandomRisk();
 
-        // Hàm xác định màu cho thanh tiến trình
-        function getProgressColor(percent) {
-            if (percent >= 95) return 'bg-red-500';
-            if (percent >= 90) return 'bg-yellow-500';
-            return 'bg-green-500';
-        }
+            const bigWinElem = document.getElementById(`bigwin-rate-${hallId}`);
+            const winRateElem = document.getElementById(`win-rate-${hallId}`);
+            const riskElem = document.getElementById(`risk-level-${hallId}`);
+            const bigWinProgressBar = document.getElementById(`bigwin-progress-${hallId}`);
+            const winRateProgressBar = document.getElementById(`winrate-progress-${hallId}`);
 
-        function renderMainMenu() {
-            const gamesGrid = document.getElementById('games-grid');
-            gamesGrid.innerHTML = GAMES.map(item => {
-                if (item.type === 'tool') {
-                    // Render Thẻ SIÊU TOOL A.I BACARAT (Link ngoài, không có phân tích)
-                    return `
-                        <a href="${item.link}" target="_blank" class="game-card-tool bg-gray-900 rounded-xl overflow-hidden shadow-lg transition duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700/50">
-                            <div class="p-3">
-                                <img src="${item.image}" alt="${item.name}" class="w-full h-36 object-cover rounded-lg mb-3 border border-yellow-500/50">
-                                <h3 class="text-lg font-bold text-yellow-500 text-center mb-2">${item.name}</h3>
-                            </div>
-                            <div class="bg-yellow-600/20 p-3 text-center text-sm font-semibold border-t border-yellow-500/50">
-                                <i class="ph-robot-bold mr-1 text-yellow-500 animate-pulse"></i>
-                                PHÂN TÍCH THÔNG MINH BACCARAT
-                            </div>
-                        </a>
-                    `;
-                }
-                
-                // Render Thẻ Slot Games (Có Phân tích)
-                const analytics = item.analytics || {};
-                return `
-                    <div onclick="window.showScreen('${item.screen}')" class="game-card-slot ${item.slug} bg-gray-900 rounded-xl overflow-hidden shadow-lg transition duration-300 transform hover:scale-[1.02] cursor-pointer border border-tech-blue/30">
-                        <div class="p-3">
-                            <img src="${item.image}" alt="${item.name}" class="w-full h-36 object-cover rounded-lg mb-3 border border-gray-700/50">
-                            <h3 class="text-lg font-bold text-white text-center">${item.name}</h3>
-                        </div>
-                        <div class="bg-gray-950/70 p-3 text-sm font-medium border-t border-gray-800 space-y-2">
-                            ${renderProgressBar('HỦ ĐANG NHẢ', analytics.huDangNha)}
-                            ${renderProgressBar('TỈ LỆ RỚT SCATER', analytics.scaterDrop)}
-                            ${renderProgressBar('TẦN SUẤT BIG WIN', analytics.bigWinFreq)}
-                            ${renderVolatilityBar('ĐỘ BIẾN ĐỘNG', analytics.volatility)}
-                            ${renderProgressBar('TỈ LỆ QUAY LẠI', analytics.returnRate)}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+            if (bigWinElem) bigWinElem.textContent = bigWin + '%';
+            if (winRateElem) winRateElem.textContent = winRate + '%';
 
-        // --- HÀM HỖ TRỢ RENDER PROGRESS BAR ---
-        function renderProgressBar(label, percent) {
-            if (percent === undefined) percent = getRandomAnalytics();
-            const color = getProgressColor(percent);
-            return `
-                <div class="flex flex-col">
-                    <div class="flex justify-between items-center text-gray-400">
-                        <span><i class="ph-chart-bar-horizontal-bold mr-1 text-tech-blue/70"></i>${label}</span>
-                        <span class="${color} font-bold">${percent}%</span>
-                    </div>
-                    <div class="w-full h-1.5 bg-gray-800 rounded-full mt-1">
-                        <div class="progress-bar-segment ${color} shadow-lg shadow-black/50" style="width: ${percent}%;"></div>
-                    </div>
-                </div>
-            `;
-        }
+            if (riskElem) {
+                riskElem.textContent = risk.label;
+                riskElem.classList.remove('risk-safe', 'risk-low', 'risk-medium', 'risk-high');
+                riskElem.classList.add(risk.class);
+            }
 
-        // --- HÀM HỖ TRỢ RENDER ĐỘ BIẾN ĐỘNG ---
-        function renderVolatilityBar(label, volatility) {
-            if (!volatility) volatility = getRandomVolatility();
-            return `
-                <div class="flex justify-between items-center text-gray-400">
-                    <span><i class="ph-flame-bold mr-1 text-red-500/70"></i>${label}</span>
-                    <span class="${volatility.color} font-bold">${volatility.value}</span>
-                </div>
-            `;
-        }
-
-        // --- LOGIC DANH SÁCH GAME CHI TIẾT (PG/JILI/168/FC) ---
-
-        let gameListUpdateInterval;
-
-        function getGameData(slug) {
-            switch (slug) {
-                case 'pg': return PG_GAMES;
-                case 'jili': return JILI_GAMES;
-                case '168': return ONE_SIX_EIGHT_GAMES;
-                case 'fc': return FC_GAMES;
-                default: return [];
+            if (bigWinProgressBar) {
+                bigWinProgressBar.style.width = bigWin + '%';
+            }
+            if (winRateProgressBar) {
+                winRateProgressBar.style.width = winRate + '%';
             }
         }
 
-        function getGameTitle(slug) {
-            const game = GAMES.find(g => g.slug === slug);
-            return game ? game.name : 'Danh Sách Trò Chơi';
+        // Updates analysis for all game halls
+        function updateAllGameHallAnalysis() {
+            gameHalls.forEach(hall => updateGameHallAnalysis(hall.id));
         }
 
-        function renderGameList(slug, container) {
-            const games = getGameData(slug);
-            const title = getGameTitle(slug);
-            const featuredGame = slug === 'pg' 
-                ? PG_GAMES.find(g => g.name === 'QUYẾT CHIẾN TIÊN THƯỞNG')
-                : games[Math.floor(Math.random() * games.length)]; // Ngẫu nhiên cho JILI/168/FC
-            
-            // Xóa game đề xuất khỏi danh sách (trừ PG vì game QC TT đã được hardcode tách ra)
-            const displayGames = slug === 'pg' 
-                ? games.filter(g => g.name !== 'QUYẾT CHIẾN TIÊN THƯỞNG') 
-                : games.filter(g => g.name !== featuredGame.name);
-            
-            // Dừng interval cũ nếu có
-            if (gameListUpdateInterval) clearInterval(gameListUpdateInterval);
+        // --- PG Game Detail Analysis Logic (New) ---
 
-            container.innerHTML = `
-                <div class="relative z-10 w-full max-w-6xl">
-                    <!-- Header -->
-                    <div class="flex justify-between items-center mb-6 pt-4 border-b border-gray-700/50 pb-4">
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-yellow-500 tech-shadow flex items-center">
-                            <i class="ph-arrow-square-left-bold mr-3 cursor-pointer hover:text-tech-blue" onclick="window.showScreen('main-menu-screen')"></i>
-                            ${title}
-                        </h1>
-                        <div class="text-sm md:text-lg font-medium text-gray-300 bg-gray-900/50 p-2 rounded-lg border border-gray-700">
-                            <i class="ph-user-bold mr-1 text-yellow-400"></i>
-                            <span id="display-username-list">${document.getElementById('display-username').textContent}</span>
-                        </div>
+        function updatePGGameAnalysis(gameId) {
+            const releaseRate = generateRandomPercentage(60, 100); // Tỉ lệ nhả: 60% - 100%
+            
+            const releaseRateElem = document.getElementById(`pg-release-rate-${gameId}`);
+            const releaseProgressBar = document.getElementById(`pg-release-progress-${gameId}`);
+            const recommendationElem = document.getElementById(`pg-recommendation-${gameId}`);
+            
+            // Cập nhật Tỉ lệ nhả
+            if (releaseRateElem) releaseRateElem.textContent = releaseRate + '%';
+            if (releaseProgressBar) {
+                releaseProgressBar.style.width = releaseRate + '%';
+            }
+
+            // Cập nhật Đề xuất chơi
+            let recommendation = { label: 'KHÔNG', class: 'text-red-500' };
+            if (releaseRate >= 80) {
+                recommendation = { label: 'CÓ', class: 'text-pg-green' };
+            }
+
+            if (recommendationElem) {
+                recommendationElem.textContent = recommendation.label;
+                recommendationElem.classList.remove('text-red-500', 'text-pg-green');
+                recommendationElem.classList.add(recommendation.class);
+            }
+        }
+
+        function updateAllPGGameAnalysis() {
+            pgGames.forEach(game => updatePGGameAnalysis(game.id));
+        }
+
+        // --- JILI Game Detail Analysis Logic (New) ---
+        function updateJiliGameAnalysis(gameId) {
+            // Tỉ lệ nhả: 60% - 100%
+            const releaseRate = generateRandomPercentage(60, 100);
+            const releaseRateElem = document.getElementById(`jili-release-rate-${gameId}`);
+            const releaseProgressBar = document.getElementById(`jili-release-progress-${gameId}`);
+            const recommendationElem = document.getElementById(`jili-recommendation-${gameId}`);
+            // Update display
+            if (releaseRateElem) releaseRateElem.textContent = releaseRate + '%';
+            if (releaseProgressBar) releaseProgressBar.style.width = releaseRate + '%';
+            // Recommendation
+            let recommendation = { label: 'KHÔNG', class: 'text-red-500' };
+            if (releaseRate >= 80) {
+                recommendation = { label: 'CÓ', class: 'text-pg-green' };
+            }
+            if (recommendationElem) {
+                recommendationElem.textContent = recommendation.label;
+                recommendationElem.classList.remove('text-red-500', 'text-pg-green');
+                recommendationElem.classList.add(recommendation.class);
+            }
+        }
+        function updateAllJiliGameAnalysis() {
+            jiliGames.forEach(game => updateJiliGameAnalysis(game.id));
+        }
+
+        // --- FC Game Detail Analysis Logic (New) ---
+        function updateFcGameAnalysis(gameId) {
+            // Tỉ lệ nhả: 60% - 100%
+            const releaseRate = generateRandomPercentage(60, 100);
+            const releaseRateElem = document.getElementById(`fc-release-rate-${gameId}`);
+            const releaseProgressBar = document.getElementById(`fc-release-progress-${gameId}`);
+            const recommendationElem = document.getElementById(`fc-recommendation-${gameId}`);
+            // Update display
+            if (releaseRateElem) releaseRateElem.textContent = releaseRate + '%';
+            if (releaseProgressBar) releaseProgressBar.style.width = releaseRate + '%';
+            // Recommendation logic similar to PG/JILI
+            let recommendation = { label: 'KHÔNG', class: 'text-red-500' };
+            if (releaseRate >= 80) {
+                recommendation = { label: 'CÓ', class: 'text-pg-green' };
+            }
+            if (recommendationElem) {
+                recommendationElem.textContent = recommendation.label;
+                recommendationElem.classList.remove('text-red-500', 'text-pg-green');
+                recommendationElem.classList.add(recommendation.class);
+            }
+        }
+        function updateAllFcGameAnalysis() {
+            fcGames.forEach(game => updateFcGameAnalysis(game.id));
+        }
+
+        // --- 168G Game Detail Analysis Logic ---
+        function updateG168GameAnalysis(gameId) {
+            // Tỉ lệ nhả: 60% - 100%
+            const releaseRate = generateRandomPercentage(60, 100);
+            const releaseRateElem = document.getElementById(`g168-release-rate-${gameId}`);
+            const releaseProgressBar = document.getElementById(`g168-release-progress-${gameId}`);
+            const recommendationElem = document.getElementById(`g168-recommendation-${gameId}`);
+            if (releaseRateElem) releaseRateElem.textContent = releaseRate + '%';
+            if (releaseProgressBar) releaseProgressBar.style.width = releaseRate + '%';
+            let recommendation = { label: 'KHÔNG', class: 'text-red-500' };
+            if (releaseRate >= 80) {
+                recommendation = { label: 'CÓ', class: 'text-pg-green' };
+            }
+            if (recommendationElem) {
+                recommendationElem.textContent = recommendation.label;
+                recommendationElem.classList.remove('text-red-500', 'text-pg-green');
+                recommendationElem.classList.add(recommendation.class);
+            }
+        }
+        function updateAllG168GameAnalysis() {
+            g168Games.forEach(game => updateG168GameAnalysis(game.id));
+        }
+
+        // --- UI Rendering ---
+
+        // Renders a single game hall card (Existing)
+        function renderGameCard(hall) {
+            const placeholderImageUrl = `https://placehold.co/400x160/0A0A10/00BFFF?text=${encodeURIComponent(hall.name)}`;
+            const imageUrl = hall.image.startsWith('https://') ? hall.image : placeholderImageUrl;
+
+            return `
+                <div class="game-card bg-card-bg rounded-xl overflow-hidden hover:scale-[1.02] active:scale-100 transition-all duration-300" onclick="window.selectGameHall('${hall.id}')">
+                    <!-- Game Image/Header -->
+                    <div class="game-image-container border-b-2 border-accent-pink">
+                        <img src="${imageUrl}" alt="${hall.name}"
+                             onerror="this.onerror=null;this.src='${placeholderImageUrl}';"
+                             class="transform transition duration-500 ease-in-out hover:scale-105"
+                             loading="lazy">
+                        <span class="absolute top-3 left-3 bg-tech-blue/90 text-white text-sm font-extrabold px-3 py-1 rounded-full shadow-lg border border-white z-20">
+                            ${hall.name}
+                        </span>
                     </div>
 
-                    <!-- FEATURED GAME -->
-                    <div class="w-full mb-8">
-                        <div class="p-4 bg-red-800/20 rounded-xl border-2 border-red-500 shadow-2xl shadow-red-500/30">
-                            <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-3 text-center flex items-center justify-center">
-                                <i class="ph-star-fill-bold mr-2 animate-bounce"></i>
-                                ĐỀ XUẤT NÓNG: ${featuredGame.name} (99% HỦ ĐANG NHẢ)
-                                <i class="ph-star-fill-bold ml-2 animate-bounce"></i>
-                            </h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="rounded-lg overflow-hidden border border-red-500/50 h-56 md:h-full">
-                                    <img src="${featuredGame.image}" alt="${featuredGame.name}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="space-y-3 flex flex-col justify-center">
-                                    ${renderProgressBar('TỈ LỆ NHẢ', 99)}
-                                    <p class="text-sm text-gray-400 pt-2">
-                                        *Hệ thống phát hiện tần suất Big Win cao nhất trong lịch sử, đề xuất cược lớn.
-                                    </p>
-                                    <button onclick="window.handleGameClick('${featuredGame.slug}', '${featuredGame.name}', '${featuredGame.image}')" class="w-full bg-red-600 text-white py-2 rounded-lg font-bold hover:bg-red-500 transition duration-300 shadow-lg shadow-red-600/50 mt-2">
-                                        <i class="ph-lightning-fill-bold mr-1"></i>
-                                        PHÂN TÍCH CHI TIẾT
-                                    </button>
-                                </div>
+                    <!-- Analysis Body: Cleaned up and reorganized for better aesthetics -->
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- Block 1: BIGWIN Rate -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-end">
+                                <p class="text-sm font-medium text-gray-300 flex items-center">
+                                    <i class="ph-sparkle-fill text-yellow-500 mr-2"></i> MỨC ĐỘ NHẢ BIGWIN
+                                </p>
+                                <span id="bigwin-rate-${hall.id}" class="text-xl font-extrabold text-tech-blue tech-shadow">--%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="bigwin-progress-${hall.id}" class="progress-bar" style="width: 0%;"></div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Game Grid -->
-                    <div id="game-list-grid-${slug}" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8">
-                        ${displayGames.map(game => `
-                            <div onclick="window.handleGameClick('${game.slug}', '${game.name}', '${game.image}')" class="bg-gray-800 rounded-xl overflow-hidden shadow-xl transition duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700/50">
-                                <img src="${game.image}" alt="${game.name}" class="w-full h-32 object-cover">
-                                <div class="p-2">
-                                    <h4 class="text-xs font-semibold text-white text-center truncate mb-2">${game.name}</h4>
-                                    <div class="flex flex-col text-xs font-medium text-gray-400 bg-gray-900 p-1 rounded-lg">
-                                        <div class="flex justify-between items-center">
-                                            <span><i class="ph-chart-bar-horizontal-bold mr-1 text-tech-blue/70"></i>TỈ LỆ NHẢ</span>
-                                            <span id="rate-${game.slug}" class="text-green-500 font-bold">...</span>
-                                        </div>
-                                        <div class="w-full h-1 bg-gray-700 rounded-full mt-0.5">
-                                            <div id="bar-${game.slug}" class="progress-bar-segment bg-green-500" style="width: 0%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
+
+                        <!-- Block 2: Win Rate (Now with Progress Bar) -->
+                        <div class="space-y-1 pt-2 border-t border-gray-700/50 border-dashed">
+                             <div class="flex justify-between items-end">
+                                <p class="text-sm font-medium text-gray-300 flex items-center">
+                                    <i class="ph-trophy-fill text-green-400 mr-2"></i> TỈ LỆ THẮNG CỰC LỚN
+                                </p>
+                                <span id="win-rate-${hall.id}" class="text-xl font-extrabold text-green-400">--%</span>
                             </div>
-                        `).join('')}
-                    </div>
+                            <div class="progress-bar-container">
+                                <div id="winrate-progress-${hall.id}" class="progress-bar" style="width: 0%; background-image: linear-gradient(to right, #FF69B4, #3B82F6);"></div>
+                            </div>
+                        </div>
 
-                    <!-- Bản quyền -->
-                    <div class="w-full text-center mt-12">
-                        <p class="text-xs text-gray-500 mb-4 relative z-10">
-                            BẢN QUYỀN THUỘC VỀ LONG BẢO
-                        </p>
+                        <!-- Block 3: Risk Analysis -->
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-700/50 border-dashed">
+                            <p class="text-sm font-medium text-gray-300 flex items-center">
+                                <i class="ph-warning-fill mr-2 text-accent-pink"></i> PHÂN TÍCH RỦI RO:
+                            </p>
+                            <span id="risk-level-${hall.id}" class="text-xl font-extrabold risk-safe">--</span>
+                        </div>
                     </div>
-
                 </div>
             `;
-
-            // Bắt đầu cập nhật analytics cho Game List
-            updateGameListAnalytics(slug, displayGames);
-            gameListUpdateInterval = setInterval(() => updateGameListAnalytics(slug, displayGames), 30000);
         }
 
-        // Hàm cập nhật analytics cho danh sách game chi tiết
-        function updateGameListAnalytics(slug, games) {
-            games.forEach(game => {
-                // Tỉ lệ nhả luôn trên 70%
-                const rate = getRandomAnalytics(70, 100); 
-                const color = getProgressColor(rate);
-
-                const rateElement = document.getElementById(`rate-${game.slug}`);
-                const barElement = document.getElementById(`bar-${game.slug}`);
-
-                if (rateElement) {
-                    rateElement.textContent = `${rate}%`;
-                    rateElement.className = `${color} font-bold`;
-                }
-
-                if (barElement) {
-                    barElement.style.width = `${rate}%`;
-                    barElement.className = `progress-bar-segment ${color}`;
-                }
-            });
+        // Renders all game hall cards
+        function renderGameHallGrid() {
+            const grid = document.getElementById('game-hall-grid');
+            if (grid) {
+                grid.innerHTML = gameHalls.map(renderGameCard).join('');
+                updateAllGameHallAnalysis(); 
+            }
         }
-        
-        // --- LOGIC MODAL CHI TIẾT ---
 
-        // Đặt hàm này thành toàn cục để các sự kiện onclick trong HTML có thể truy cập
-        window.handleGameClick = function(slug, name, image) {
-            const scanModal = document.getElementById('scan-modal');
-            const detailModal = document.getElementById('detail-modal');
+        // Renders a single PG game card (New)
+        function renderPGGameCard(game) {
+             const placeholderImageUrl = `https://placehold.co/200x120/0D0D15/10B981?text=${encodeURIComponent(game.name)}`;
+             const imageUrl = game.image.startsWith('https://') ? game.image : placeholderImageUrl;
 
-            // 1. Show Scanning Modal
-            scanModal.classList.remove('hidden');
-            scanModal.classList.add('scan-modal-enter-active');
+            return `
+                <div class="game-sub-card bg-card-bg rounded-lg overflow-hidden flex flex-col" onclick="window.analyzePGGame('${game.id}', '${game.name}')">
+                    <!-- Game Image/Header -->
+                    <div class="game-image-container relative h-28 border-b border-pg-green/30">
+                        <img src="${imageUrl}" alt="${game.name}"
+                             onerror="this.onerror=null;this.src='${placeholderImageUrl}';"
+                             class="w-full h-full object-cover"
+                             loading="lazy">
+                        <!-- Game Name Overlay -->
+                         <div class="absolute inset-x-0 bottom-0 bg-gray-900/80 backdrop-blur-sm p-1">
+                            <p class="text-xs font-bold text-center text-pg-green truncate">${game.name}</p>
+                        </div>
+                    </div>
 
-            // 2. Hide Scanning Modal and Show Detail Modal after 1.5s
-            setTimeout(() => {
-                scanModal.classList.add('hidden');
-                scanModal.classList.remove('scan-modal-enter-active');
+                    <!-- Analysis Body -->
+                    <div class="p-3 flex-grow flex flex-col justify-between space-y-3">
+                        
+                        <!-- Block 1: Tỉ lệ nhả -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-funnel-simple-bold text-base mr-1 text-tech-blue"></i> TỈ LỆ NHẢ
+                                </p>
+                                <span id="pg-release-rate-${game.id}" class="text-lg font-extrabold text-tech-blue">--%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="pg-release-progress-${game.id}" class="progress-bar" style="width: 0%; background-image: linear-gradient(to right, #FF69B4, #10B981);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Block 2: Đề xuất chơi -->
+                        <div class="pt-2 border-t border-gray-700/50">
+                            <div class="flex justify-between items-center">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-thumbs-up-bold text-base mr-1 text-accent-pink"></i> ĐỀ XUẤT CHƠI:
+                                </p>
+                                <span id="pg-recommendation-${game.id}" class="text-lg font-extrabold text-red-500">KHÔNG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renders all PG game cards
+        function renderPGGameGrid() {
+            const grid = document.getElementById('pg-game-grid');
+            if (grid) {
+                grid.innerHTML = pgGames.map(renderPGGameCard).join('');
+                updateAllPGGameAnalysis(); // Initial analysis update
+            }
+        }
+
+        // Renders a single JILI game card (similar to PG)
+        function renderJiliGameCard(game) {
+             const placeholderImageUrl = `https://placehold.co/200x120/0D0D15/FFC107?text=${encodeURIComponent(game.name)}`;
+             const imageUrl = game.image.startsWith('https://') ? game.image : placeholderImageUrl;
+            return `
+                <div class="game-sub-card bg-card-bg rounded-lg overflow-hidden flex flex-col" onclick="window.analyzePGGame('${game.id}', '${game.name}')">
+                    <!-- Game Image/Header -->
+                    <div class="game-image-container relative h-28 border-b border-yellow-400/30">
+                        <img src="${imageUrl}" alt="${game.name}"
+                             onerror="this.onerror=null;this.src='${placeholderImageUrl}';"
+                             class="w-full h-full object-cover"
+                             loading="lazy">
+                        <!-- Game Name Overlay -->
+                         <div class="absolute inset-x-0 bottom-0 bg-gray-900/80 backdrop-blur-sm p-1">
+                            <p class="text-xs font-bold text-center text-yellow-400 truncate">${game.name}</p>
+                        </div>
+                    </div>
+                    <!-- Analysis Body -->
+                    <div class="p-3 flex-grow flex flex-col justify-between space-y-3">
+                        <!-- Block 1: Tỉ lệ nhả -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-funnel-simple-bold text-base mr-1 text-tech-blue"></i> TỈ LỆ NHẢ
+                                </p>
+                                <span id="jili-release-rate-${game.id}" class="text-lg font-extrabold text-tech-blue">--%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="jili-release-progress-${game.id}" class="progress-bar" style="width: 0%; background-image: linear-gradient(to right, #FF69B4, #10B981);"></div>
+                            </div>
+                        </div>
+                        <!-- Block 2: Đề xuất chơi -->
+                        <div class="pt-2 border-t border-gray-700/50">
+                            <div class="flex justify-between items-center">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-thumbs-up-bold text-base mr-1 text-accent-pink"></i> ĐỀ XUẤT CHƠI:
+                                </p>
+                                <span id="jili-recommendation-${game.id}" class="text-lg font-extrabold text-red-500">KHÔNG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renders all JILI game cards
+        function renderJiliGameGrid() {
+            const grid = document.getElementById('jili-game-grid');
+            if (grid) {
+                grid.innerHTML = jiliGames.map(renderJiliGameCard).join('');
+                updateAllJiliGameAnalysis();
+            }
+        }
+
+        // Renders a single FC game card (similar to PG/JILI but with purple accents)
+        function renderFcGameCard(game) {
+             const placeholderImageUrl = `https://placehold.co/200x120/0D0D15/9F7AEA?text=${encodeURIComponent(game.name)}`;
+             const imageUrl = game.image.startsWith('https://') ? game.image : placeholderImageUrl;
+            return `
+                <div class="game-sub-card bg-card-bg rounded-lg overflow-hidden flex flex-col" onclick="window.analyzePGGame('${game.id}', '${game.name}')">
+                    <!-- Game Image/Header -->
+                    <div class="game-image-container relative h-28 border-b border-purple-400/30">
+                        <img src="${imageUrl}" alt="${game.name}"
+                             onerror="this.onerror=null;this.src='${placeholderImageUrl}';"
+                             class="w-full h-full object-cover"
+                             loading="lazy">
+                        <!-- Game Name Overlay -->
+                         <div class="absolute inset-x-0 bottom-0 bg-gray-900/80 backdrop-blur-sm p-1">
+                            <p class="text-xs font-bold text-center text-purple-400 truncate">${game.name}</p>
+                        </div>
+                    </div>
+                    <!-- Analysis Body -->
+                    <div class="p-3 flex-grow flex flex-col justify-between space-y-3">
+                        <!-- Block 1: Tỉ lệ nhả -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-funnel-simple-bold text-base mr-1 text-tech-blue"></i> TỈ LỆ NHẢ
+                                </p>
+                                <span id="fc-release-rate-${game.id}" class="text-lg font-extrabold text-tech-blue">--%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="fc-release-progress-${game.id}" class="progress-bar" style="width: 0%; background-image: linear-gradient(to right, #FF69B4, #10B981);"></div>
+                            </div>
+                        </div>
+                        <!-- Block 2: Đề xuất chơi -->
+                        <div class="pt-2 border-t border-gray-700/50">
+                            <div class="flex justify-between items-center">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-thumbs-up-bold text-base mr-1 text-accent-pink"></i> ĐỀ XUẤT CHƠI:
+                                </p>
+                                <span id="fc-recommendation-${game.id}" class="text-lg font-extrabold text-red-500">KHÔNG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renders all FC game cards
+        function renderFcGameGrid() {
+            const grid = document.getElementById('fc-game-grid');
+            if (grid) {
+                grid.innerHTML = fcGames.map(renderFcGameCard).join('');
+                updateAllFcGameAnalysis();
+            }
+        }
+
+        // Renders a single 168G game card
+        function renderG168GameCard(game) {
+             const placeholderImageUrl = `https://placehold.co/200x120/0D0D15/6366F1?text=${encodeURIComponent(game.name)}`;
+             const imageUrl = game.image.startsWith('https://') ? game.image : placeholderImageUrl;
+            return `
+                <div class="game-sub-card bg-card-bg rounded-lg overflow-hidden flex flex-col" onclick="window.analyzePGGame('${game.id}', '${game.name}')">
+                    <div class="game-image-container relative h-28 border-b border-indigo-400/30">
+                        <img src="${imageUrl}" alt="${game.name}"
+                             onerror="this.onerror=null;this.src='${placeholderImageUrl}';"
+                             class="w-full h-full object-cover"
+                             loading="lazy">
+                        <div class="absolute inset-x-0 bottom-0 bg-gray-900/80 backdrop-blur-sm p-1">
+                            <p class="text-xs font-bold text-center text-indigo-400 truncate">${game.name}</p>
+                        </div>
+                    </div>
+                    <div class="p-3 flex-grow flex flex-col justify-between space-y-3">
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-funnel-simple-bold text-base mr-1 text-tech-blue"></i> TỈ LỆ NHẢ
+                                </p>
+                                <span id="g168-release-rate-${game.id}" class="text-lg font-extrabold text-tech-blue">--%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="g168-release-progress-${game.id}" class="progress-bar" style="width: 0%; background-image: linear-gradient(to right, #FF69B4, #10B981);"></div>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-gray-700/50">
+                            <div class="flex justify-between items-center">
+                                <p class="text-xs font-medium text-gray-400 flex items-center">
+                                    <i class="ph-thumbs-up-bold text-base mr-1 text-accent-pink"></i> ĐỀ XUẤT CHƠI:
+                                </p>
+                                <span id="g168-recommendation-${game.id}" class="text-lg font-extrabold text-red-500">KHÔNG</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renders all 168G game cards
+        function renderG168GameGrid() {
+            const grid = document.getElementById('g168-game-grid');
+            if (grid) {
+                grid.innerHTML = g168Games.map(renderG168GameCard).join('');
+                updateAllG168GameAnalysis();
+            }
+        }
+
+
+        // --- Main Logic Handlers ---
+
+        window.selectGameHall = function(hallId) {
+            if (currentEnergy <= 0) {
+                // Show energy warning modal when there is no energy left
+                showEnergyWarning();
+                return;
+            }
+
+            if (hallId === 'pg') {
+                // Switch to PG hall: render grid and start PG analysis
+                switchToPGGameDetail(currentUsername, currentEnergy);
+                renderPGGameGrid();
+            } else if (hallId === 'jili') {
+                // Switch to JILI hall: render grid and start JILI analysis
+                switchToJiliGameDetail(currentUsername, currentEnergy);
+            } else if (hallId === 'fc') {
+                // Switch to FC hall: render grid and start FC analysis
+                switchToFcGameDetail(currentUsername, currentEnergy);
+            } else if (hallId === '168g') {
+                // Switch to 168G hall: render grid and start 168G analysis
+                switchToG168GameDetail(currentUsername, currentEnergy);
+            } else {
+                // For other halls, show the initial analysis message
+                const selectedHall = gameHalls.find(h => h.id === hallId);
+                const riskLevel = document.getElementById(`risk-level-${hallId}`)?.textContent || '--';
+                const bigWinRate = document.getElementById(`bigwin-rate-${hallId}`)?.textContent || '--';
+
+                const message = `BẠN ĐÃ CHỌN: ${selectedHall.name}\n\nPHÂN TÍCH HIỆN TẠI:\n- BIGWIN: ${bigWinRate}\n- RỦI RO: ${riskLevel}\n\nCHỨC NĂNG VÀO GAME ĐANG ĐƯỢC PHÁT TRIỂN.`;
+                showMessage(message, 'bg-tech-blue');
+                console.log(`Đang vào sảnh game: ${hallId}`);
+            }
+        };
+
+        window.startGame = function(gameId, gameName) {
+             if (currentEnergy <= 0) {
+                 // Show energy warning modal when there is no energy left
+                 showEnergyWarning();
+                 return;
+            }
+            const releaseRate = document.getElementById(`pg-release-rate-${gameId}`)?.textContent || '--';
+            const recommendation = document.getElementById(`pg-recommendation-${gameId}`)?.textContent || '--';
+
+            const message = `BẠN ĐÃ CHỌN GAME: ${gameName}\n\nPHÂN TÍCH HIỆN TẠI:\n- Tỉ lệ nhả: ${releaseRate}\n- Đề xuất: ${recommendation}\n\nĐANG VÀO GAME!`;
+            showMessage(message, 'bg-pg-green');
+
+            console.log(`Đang vào game PG: ${gameName}`);
+        };
+
+        /**
+         * Generates a random integer between min and max (inclusive)
+         */
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        /**
+         * Decreases the current user's energy by a given amount. Returns a Promise
+         * resolving to true if the deduction was successful, or false if there was
+         * insufficient energy. On success, updates Firestore and local UI.
+         */
+        async function decreaseEnergy(amount) {
+            // Ensure we have a user and valid energy
+            if (!currentUserId || typeof currentEnergy !== 'number') {
+                showMessage('Không thể xác định trạng thái năng lượng. Vui lòng đăng nhập lại.', 'bg-red-600');
+                return false;
+            }
+            const newEnergy = currentEnergy - amount;
+            if (newEnergy < 0) {
+                // Trigger the energy warning modal instead of a simple toast
+                showEnergyWarning();
+                return false;
+            }
+            try {
+                // Update locally for immediate feedback
+                currentEnergy = newEnergy;
+                updateHeaderInfo(currentUsername, currentEnergy, 'all');
+                // Persist change to Firestore
+                await updateDoc(doc(userFirestore, 'users', currentUserId), { energy: newEnergy });
+                return true;
+            } catch (err) {
+                console.error('Lỗi khi cập nhật năng lượng:', err);
+                showMessage('Không thể cập nhật năng lượng. Vui lòng thử lại.', 'bg-red-600');
+                return false;
+            }
+        }
+
+        // Options for Scatter purchase values (in thousands)
+        const scatterOptions = [75, 90, 150, 225, 300, 600, 900, 1200, 1800];
+
+        /**
+         * A collection of suggested spin strategies for nổ hủ games. One of these
+         * messages will be chosen at random each time a game analysis completes.
+         * You can expand or adjust these strategies as desired to keep guidance
+         * varied and engaging for users.
+         */
+        const spinInstructions = [
+            'Bắt đầu bằng một vài vòng cược nhỏ để dò nhịp, sau đó tăng dần cược khi thấy máy nhả nhiều rồi hạ xuống lúc nhịp chậm.',
+            'Mồi bằng một vài vòng cược lớn để kích hoạt nhịp nổ hũ, sau đó giảm cược và quay đều tay để tích lũy.',
+            'Chọn khung giờ vàng, vào cược cao 2–3 vòng; nếu máy trúng thưởng thì tiếp tục, nếu không hãy hạ cược và quan sát.',
+            'Quay nhanh 5–10 vòng với cược trung bình để xem tỉ lệ nhả, rồi tăng cược khi thấy máy “hào phóng”.',
+            'Bắt đầu bằng một vòng cược cực lớn, sau đó giảm xuống mức thấp nhất để kéo dài thời gian và chờ nổ hũ.',
+            'Sau khi ăn scatter, hãy quay với cược nhỏ vài vòng để “dưỡng máy”, rồi quay cược lớn trở lại khi nhịp nhả ổn định.'
+        ];
+
+        /**
+         * Formats the spin window string given the number of rounds and start/end times
+         */
+        function formatSpinWindow(rounds, startTime, endTime) {
+            const startStr = startTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+            const endStr = endTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+            return `${rounds} vòng | ${startStr} → ${endStr}`;
+        }
+
+        /**
+         * Begins analysis for a PG game. Consumes 5 energy, animates a progress bar,
+         * then displays the results including a random spin schedule and a scatter
+         * purchase suggestion. The scatter suggestion is stored on the modal element
+         * so it can be referenced when purchasing.
+         */
+        window.analyzePGGame = async function(gameId, gameName) {
+            const canProceed = await decreaseEnergy(5);
+            if (!canProceed) return;
+
+            const modal = document.getElementById('pg-analysis-modal');
+            const progressContainer = document.getElementById('pg-analysis-progress-container');
+            const resultsContainer = document.getElementById('pg-analysis-results');
+            const progressBar = document.getElementById('pg-analysis-progress-bar');
+            const spinWindowElem = document.getElementById('analysis-spin-window');
+            const scatterElem = document.getElementById('analysis-scatter-suggestion');
+
+            // Reset state
+            if (resultsContainer) resultsContainer.classList.add('hidden');
+            if (progressContainer) progressContainer.classList.remove('hidden');
+            if (progressBar) progressBar.style.width = '0%';
+            if (modal) modal.classList.remove('hidden');
+
+            // Precompute random results
+            const rounds = randomInt(80, 250);
+            const startOffset = randomInt(5, 15);
+            const endOffset = randomInt(3, 10);
+            const now = new Date();
+            const startTime = new Date(now.getTime() + startOffset * 60000);
+            const endTime = new Date(startTime.getTime() + endOffset * 60000);
+            const spinWindowText = formatSpinWindow(rounds, startTime, endTime);
+            const scatterValue = scatterOptions[randomInt(0, scatterOptions.length - 1)];
+            // Choose a random spin instruction from the predefined list
+            const instruction = spinInstructions[randomInt(0, spinInstructions.length - 1)];
+
+            // Animate progress bar from 0% to 100%
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += 1;
+                if (progressBar) progressBar.style.width = percent + '%';
+                if (percent >= 100) {
+                    clearInterval(interval);
+                    if (progressContainer) progressContainer.classList.add('hidden');
+                    if (resultsContainer) resultsContainer.classList.remove('hidden');
+                    if (spinWindowElem) spinWindowElem.textContent = spinWindowText;
+                    // Display the randomly chosen instruction
+                    const instructionElem = document.getElementById('analysis-instruction-text');
+                    if (instructionElem) {
+                        instructionElem.textContent = instruction;
+                    }
+                    // Store scatter value but do not display it until the user triggers the hack function
+                    if (scatterElem) {
+                        scatterElem.textContent = '';
+                        scatterElem.classList.add('hidden');
+                    }
+                    if (modal) {
+                        modal.dataset.scatter = scatterValue;
+                        modal.dataset.gameName = gameName;
+                    }
+                }
+            }, 25);
+        };
+
+        /**
+         * Handles purchasing a scatter. Consumes 15 energy and shows a confirmation message.
+         */
+        window.buyScatter = async function() {
+            const modal = document.getElementById('pg-analysis-modal');
+            if (!modal) return;
+            const value = modal.dataset.scatter;
+            const gameName = modal.dataset.gameName || '';
+            const canProceed = await decreaseEnergy(15);
+            if (!canProceed) return;
+            // Display the hidden scatter suggestion and disable the hack button
+            const valText = value ? value + 'K' : '';
+            const scatterElem = document.getElementById('analysis-scatter-suggestion');
+            if (scatterElem) {
+                scatterElem.textContent = valText;
+                scatterElem.classList.remove('hidden');
+            }
+            const scatterBtn = document.getElementById('buy-scatter-btn');
+            if (scatterBtn) {
+                scatterBtn.disabled = true;
+                scatterBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            showMessage('Bạn đã hack mua Scatter thành công!', 'bg-pg-green');
+        };
+
+        /**
+         * Displays a modal warning when the user does not have enough energy.
+         * Provides a link to contact customer support for energy top-up.
+         */
+        function showEnergyWarning() {
+            const warnModal = document.getElementById('energy-warning-modal');
+            if (warnModal) warnModal.classList.remove('hidden');
+        }
+
+
+        // --- Firebase Auth Handlers (Unchanged) ---
+
+        window.handleLogin = async function() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const email = `${username}@toolhu.local`;
+            try {
+                const credential = await signInWithEmailAndPassword(userAuth, email, password);
+                const user = credential.user;
+                // Fetch user data from Firestore
+                let userData = null;
+                try {
+                    const docSnap = await getDoc(doc(userFirestore, 'users', user.uid));
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                    }
+                } catch (firestoreError) {
+                    console.warn('Lỗi khi lấy hồ sơ người dùng từ Firestore:', firestoreError);
+                }
+                currentUserId = user.uid;
+                const energy = userData && typeof userData.energy === 'number' ? userData.energy : 0;
                 
-                // 3. Render Detail Content
-                renderDetailModal(slug, name, image);
+                // Listen for energy changes
+                if (energyUnsub) {
+                    energyUnsub();
+                    energyUnsub = null;
+                }
+                energyUnsub = onSnapshot(doc(userFirestore, 'users', currentUserId), (snap) => {
+                    const d = snap.data();
+                    if (d && typeof d.energy === 'number') {
+                        currentEnergy = d.energy;
+                        updateHeaderInfo(currentUsername, currentEnergy);
+                    }
+                });
 
-                // 4. Show Detail Modal
-                detailModal.classList.remove('hidden');
-                detailModal.querySelector('div').classList.add('modal-enter-active');
-            }, 1500);
-        }
+                showMessage('Đăng nhập thành công!', 'bg-green-600');
+                // Switch to game hall screen
+                setTimeout(() => {
+                    switchToGameHall(username, energy);
+                }, 1000);
+            } catch (error) {
+                console.error('Đăng nhập thất bại:', error);
+                const code = error && error.code ? error.code : '';
+                let msg = 'Đăng nhập thất bại. Vui lòng thử lại.';
+                if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+                    msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.';
+                } else if (code === 'auth/invalid-api-key') {
+                    msg = 'Lỗi cấu hình Firebase. Vui lòng kiểm tra API key.';
+                }
+                showMessage(msg, 'bg-red-600');
+            }
+        };
 
-        // Hàm hỗ trợ đóng Modal
-        window.closeDetailModal = function() {
-            const detailModal = document.getElementById('detail-modal');
-            detailModal.querySelector('div').classList.remove('modal-enter-active');
-            detailModal.querySelector('div').classList.add('modal-enter');
-            setTimeout(() => {
-                detailModal.classList.add('hidden');
-                detailModal.querySelector('div').classList.remove('modal-enter');
-            }, 300);
-        }
+        window.handleRegister = async function() {
+            const username = document.getElementById('reg-username').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const email = `${username}@toolhu.local`;
+            try {
+                const credential = await createUserWithEmailAndPassword(userAuth, email, password);
+                const user = credential.user;
+                await setDoc(doc(userFirestore, 'users', user.uid), {
+                    username: username,
+                    phone: phone,
+                    energy: 5
+                });
+                showMessage(`Đăng ký thành công tài khoản: ${username}. Bạn có thể đăng nhập ngay.`, 'bg-green-600');
+                setTimeout(() => {
+                    window.activateLogin();
+                }, 3000);
+            } catch (error) {
+                console.error('Đăng ký thất bại:', error);
+                const code = error && error.code ? error.code : '';
+                let msg = 'Đăng ký thất bại. Vui lòng thử lại.';
+                if (code === 'auth/email-already-in-use') {
+                    msg = 'Tài khoản này đã tồn tại. Vui lòng đăng nhập thay vì đăng ký.';
+                } else if (code === 'auth/invalid-api-key') {
+                    msg = 'Lỗi cấu hình Firebase. Vui lòng kiểm tra API key.';
+                }
+                showMessage(msg, 'bg-red-600');
+            }
+        };
 
-        // Đóng Modal khi click ra ngoài
-        document.getElementById('detail-modal').addEventListener('click', function(e) {
-            if (e.target.id === 'detail-modal') {
-                window.closeDetailModal();
+        window.handleLogout = function() {
+            if (userAuth && userAuth.currentUser) {
+                signOut(userAuth).catch((err) => console.warn('Lỗi khi đăng xuất:', err));
+            }
+            // Clear state and interval
+            currentUserId = null;
+            currentEnergy = 0;
+            currentUsername = null;
+            if (energyUnsub) {
+                energyUnsub();
+                energyUnsub = null;
+            }
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+            if (pgUpdateInterval) {
+                clearInterval(pgUpdateInterval);
+                pgUpdateInterval = null;
+            }
+
+            // Switch back to login screen
+            const loginScreen = document.getElementById('login-register-screen');
+            const gameHallScreen = document.getElementById('game-hall-screen');
+            const pgGameScreen = document.getElementById('pg-game-detail-screen');
+            
+            if (loginScreen) loginScreen.classList.remove('hidden');
+            if (gameHallScreen) gameHallScreen.classList.add('hidden');
+            if (pgGameScreen) pgGameScreen.classList.add('hidden');
+
+            window.activateLogin(); // Ensure login form is shown
+        };
+        
+        // Toggle functions for login and register forms (kept for continuity)
+        window.activateLogin = function() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const showLoginBtn = document.getElementById('show-login');
+            const showRegisterBtn = document.getElementById('show-register');
+            if (loginForm && registerForm && showLoginBtn && showRegisterBtn) {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                showLoginBtn.classList.add('bg-tech-blue', 'text-white', 'shadow-md', 'shadow-tech-blue/40');
+                showLoginBtn.classList.remove('text-gray-400', 'hover:bg-gray-700/50', 'shadow-none');
+                showRegisterBtn.classList.remove('bg-tech-blue', 'text-white', 'shadow-md', 'shadow-tech-blue/40');
+                showRegisterBtn.classList.add('text-gray-400', 'hover:bg-gray-700/50', 'shadow-none');
+            }
+        };
+        window.activateRegister = function() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const showLoginBtn = document.getElementById('show-login');
+            const showRegisterBtn = document.getElementById('show-register');
+            if (loginForm && registerForm && showLoginBtn && showRegisterBtn) {
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                showRegisterBtn.classList.add('bg-tech-blue', 'text-white', 'shadow-md', 'shadow-tech-blue/40');
+                showRegisterBtn.classList.remove('text-gray-400', 'hover:bg-gray-700/50', 'shadow-none');
+                showLoginBtn.classList.remove('bg-tech-blue', 'text-white', 'shadow-md', 'shadow-tech-blue/40');
+                showLoginBtn.classList.add('text-gray-400', 'hover:bg-gray-700/50', 'shadow-none');
+            }
+        };
+
+        // Initial setup on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGameHallGrid(); // Render main hall cards
+            renderPGGameGrid(); // Render PG detail cards (hidden by default)
+            window.activateLogin(); // Ensure login form is active
+
+            // Attach modal button handlers once DOM elements are present
+            const scatterBtn = document.getElementById('buy-scatter-btn');
+            if (scatterBtn) {
+                scatterBtn.addEventListener('click', () => {
+                    window.buyScatter();
+                });
+            }
+            const closeBtn = document.getElementById('analysis-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    const modal = document.getElementById('pg-analysis-modal');
+                    if (modal) modal.classList.add('hidden');
+                });
+            }
+
+            // Back button inside analysis modal
+            const analysisBackBtn = document.getElementById('analysis-back-btn');
+            if (analysisBackBtn) {
+                analysisBackBtn.addEventListener('click', () => {
+                    const modal = document.getElementById('pg-analysis-modal');
+                    if (modal) modal.classList.add('hidden');
+                });
+            }
+
+            // Energy warning modal close button
+            const energyCloseBtn = document.getElementById('energy-close-btn');
+            if (energyCloseBtn) {
+                energyCloseBtn.addEventListener('click', () => {
+                    const warnModal = document.getElementById('energy-warning-modal');
+                    if (warnModal) warnModal.classList.add('hidden');
+                });
             }
         });
 
-        // Hàm tạo Khung giờ nổ lớn
-        function getOptimalTimeSlot() {
-            const now = new Date();
-            // Cộng ngẫu nhiên 5-15 phút cho thời gian bắt đầu
-            const startOffset = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
-            const startTime = new Date(now.getTime() + startOffset * 60000);
-            
-            // Kết thúc sau 15 phút (Khung giờ là 15 phút)
-            const endTime = new Date(startTime.getTime() + 15 * 60000);
+        // Check auth state on load
+        onAuthStateChanged(userAuth, (user) => {
+            if (user) {
+                // User is signed in, check if it's a known user
+                getDoc(doc(userFirestore, 'users', user.uid)).then(docSnap => {
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+                        currentUserId = user.uid;
+                        const energy = userData.energy || 0;
+                        const username = userData.username;
+                        
+                        switchToGameHall(username, energy);
 
-            const formatTime = (date) => {
-                const h = String(date.getHours()).padStart(2, '0');
-                const m = String(date.getMinutes()).padStart(2, '0');
-                return `${h}H${m}P`;
-            };
+                         // Listen for energy changes
+                        if (energyUnsub) {
+                            energyUnsub();
+                            energyUnsub = null;
+                        }
+                        energyUnsub = onSnapshot(doc(userFirestore, 'users', currentUserId), (snap) => {
+                            const d = snap.data();
+                            if (d && typeof d.energy === 'number') {
+                                currentEnergy = d.energy;
+                                updateHeaderInfo(currentUsername, currentEnergy);
+                            }
+                        });
 
-            return `${formatTime(startTime)} - ${formatTime(endTime)}`;
-        }
+                    } else {
+                        // Signed in user without firestore profile (shouldn't happen post-register, but logout just in case)
+                        signOut(userAuth);
+                        window.handleLogout();
+                    }
+                }).catch(error => {
+                    console.error("Error fetching user document:", error);
+                    signOut(userAuth);
+                    window.handleLogout();
+                });
+            } else {
+                // User is signed out
+                const loginScreen = document.getElementById('login-register-screen');
+                const gameHallScreen = document.getElementById('game-hall-screen');
+                const pgGameScreen = document.getElementById('pg-game-detail-screen');
 
-        // Hàm gợi ý mua Scater (có trọng số)
-        function getScaterSuggest() {
-            const options = [
-                { value: '75K', weight: 40 },
-                { value: '150K', weight: 30 },
-                { value: '300K', weight: 15 },
-                { value: '600K', weight: 10 },
-                { value: '1200K', weight: 5 },
-            ];
+                if (loginScreen) loginScreen.classList.remove('hidden');
+                if (gameHallScreen) gameHallScreen.classList.add('hidden');
+                if (pgGameScreen) pgGameScreen.classList.add('hidden');
 
-            let totalWeight = 0;
-            options.forEach(option => totalWeight += option.weight);
-
-            let random = Math.random() * totalWeight;
-            
-            for (let i = 0; i < options.length; i++) {
-                if (random < options[i].weight) {
-                    return options[i].value;
-                }
-                random -= options[i].weight;
+                // Set default display for header elements
+                updateHeaderInfo('--', '--', 'all');
             }
-        }
-        
-        // Hàm gợi ý quay thủ công (có trọng số)
-        function getManualSpinSuggest() {
-            // Ngẫu nhiên số vòng quay thường (80-200)
-            const normalSpin = Math.floor(Math.random() * (200 - 80 + 1)) + 80;
-
-            // Ngẫu nhiên mức tăng vốn (X2: 35%, X3: 40%, X5: 25%)
-            const random = Math.random();
-            let multiplier;
-            if (random < 0.25) multiplier = 'X5';
-            else if (random < 0.65) multiplier = 'X3';
-            else multiplier = 'X2';
-            
-            return {
-                normalSpin: normalSpin,
-                multiplier: multiplier
-            };
-        }
-
-
-        function renderDetailModal(slug, name, image) {
-            const container = document.getElementById('detail-modal').querySelector('div');
-            const timeSlot = getOptimalTimeSlot();
-            const scaterSuggest = getScaterSuggest();
-            const manualSpin = getManualSpinSuggest();
-
-            container.innerHTML = `
-                <div class="flex justify-end">
-                    <button onclick="window.closeDetailModal()" class="text-xl text-gray-400 hover:text-red-500 transition duration-200">
-                        <i class="ph-x-bold"></i>
-                    </button>
-                </div>
-
-                <div class="w-32 h-32 mx-auto rounded-xl overflow-hidden mb-4 border border-gray-700 shadow-xl">
-                    <img src="${image}" alt="${name}" class="w-full h-full object-cover">
-                </div>
-                <h3 class="text-xl font-extrabold text-center text-yellow-500 mb-6">${name}</h3>
-
-                <!-- 1. KHUNG GIỜ NỔ LỚN -->
-                <div class="bg-gray-800/50 p-3 rounded-lg border border-red-500/50 mb-4 shadow-inner">
-                    <div class="flex items-center text-red-400 font-bold mb-2">
-                        <i class="ph-clock-bold mr-2 text-xl"></i>
-                        KHUNG GIỜ NỔ LỚN GỢI Ý
-                    </div>
-                    <div class="bg-gray-900 p-2 rounded-lg text-center font-extrabold text-lg text-red-500">
-                        ${timeSlot}
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1 text-center">Nên bắt đầu chuẩn bị săn hũ trong khung giờ này.</p>
-                </div>
-
-                <!-- 2. ĐỀ XUẤT QUAY THỦ CÔNG -->
-                <div class="bg-gray-800/50 p-3 rounded-lg border border-tech-blue/50 mb-4 shadow-inner">
-                    <div class="flex items-center text-tech-blue font-bold mb-2">
-                        <i class="ph-arrows-clockwise-bold mr-2 text-xl"></i>
-                        ĐỀ XUẤT QUAY THỦ CÔNG
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <div class="bg-gray-900 p-2 rounded-lg text-center font-bold text-sm text-white border border-gray-700">
-                            QUAY THƯỜNG: <span class="text-yellow-400">${manualSpin.normalSpin} VÒNG</span>
-                        </div>
-                        <div class="bg-gray-900 p-2 rounded-lg text-center font-bold text-sm text-white border border-gray-700">
-                            TĂNG VỐN <span class="text-red-500">${manualSpin.multiplier}</span> RỒI MUA SCATER
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1 text-center">Chiến thuật này có thể tối ưu hóa cơ hội thắng.</p>
-                </div>
-
-                <!-- 3. MUA SCATER GỢI Ý (NỔI BẬT) -->
-                <div class="bg-red-800/40 p-4 rounded-xl border-2 border-red-500 mb-4 shadow-2xl shadow-red-500/50">
-                    <p class="text-sm font-semibold text-center text-gray-200 mb-2">MUA SCATER GỢI Ý</p>
-                    <div class="text-center font-extrabold text-3xl text-red-400 tech-shadow">
-                        MUA SCATER ${scaterSuggest}
-                    </div>
-                    <p class="text-xs text-gray-400 mt-2 text-center">Dựa trên phân tích tần suất gần nhất.</p>
-                </div>
-            `;
-        }
-
-        // Bắt đầu ứng dụng khi tài liệu được tải
-        document.addEventListener('DOMContentLoaded', () => {
-             // Đảm bảo màn hình đăng nhập hiển thị ngay từ đầu
-             document.getElementById('login-register-screen').classList.remove('hidden');
-             document.getElementById('login-register-screen').style.opacity = '1';
         });
 
     </script>
 </body>
 </html>
-
