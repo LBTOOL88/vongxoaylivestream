@@ -6,7 +6,7 @@
     <title>Tool Nohu 2026</title>
 
     <!-- Tailwind CSS -->
-    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=UZ-oX73uo1iTny1elzs4NzzpyrHDA4WFk0kRvGrLta6ZYH68PrdgyR-qp5AfTFwaXHQtIa1glVwFU-cXMUv4wAKbmDAWT8xJ-3pL2eacIFMkTGij86YxMuWjRELivGOuodXwF3jvqnw9KccFTTe92t6a4ax8rNziD8LV5NPcE0eSQ9i5yJy390PjvuaO5uqcljlyAsrA4n7WN5f3r6GRj_XLS25a8cy1MF3y65hgK5FxyvvNIWHJvb4xSdikp5-v" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=DtVDI2Gxy9-OnIWV8Zmxm4cKuBZiUrpkHhYTDZz1LMFI_WdX65uddcyAalk5AwAjYmnPuwyTR7Bp2bmZpTrcOEOSNFaXT9OjZUEfU4_iNNtMoqmHC3itWXOL5XNANzpZT_p_NRX_RWLK2sdaZEo-oZBpZLRXPSWMe612CTb4AHgZe0UU74qMOOZ8zaFsn46jq7CdSiEbLmThRO-Ozkdd-AA4FrVjZ5vcHMg-sDpDFie9NqKYl1S-6VU1dInZraC5" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
     <!-- Phosphor icons -->
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/p.js"></script>
 
@@ -190,24 +190,23 @@
             20% { opacity: 0.5; }
             100% { opacity: 0.5; }
         }
+
+        /* Mobile-specific background for the game hall selection screen */
+        @media (max-width: 767px) {
+            #game-hall-screen {
+                background-image: url('https://i.ibb.co/FRbqLnk/ZOMBILE.jpg');
+                background-size: cover;
+                background-position: center;
+            }
+        }
     </style>
 </head>
 <body class="antialiased text-white">
     <!-- Login/Register Screen -->
     <div id="login-register-screen" class="screen-overlay min-h-screen flex flex-col items-center justify-center p-4">
         <div class="relative z-10 w-full flex flex-col items-center">
-            <!-- Wrapper to align banner and login card to the same left edge -->
-            <div class="w-full max-w-sm flex flex-col items-start">
-                <!-- Promotional banner for registration experience -->
-                <a href="https://www.f168nohu.com" target="_blank"
-                   class="mb-4 w-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500
-                          hover:from-yellow-300 hover:via-red-400 hover:to-pink-400
-                          text-gray-900 font-extrabold text-center py-3 rounded-lg shadow-lg
-                          transition-transform duration-300 transform hover:scale-105">
-                    ĐĂNG KÍ TRẢI NGHIỆM 58K BAO TRÙM IP
-                </a>
-                <!-- Card for Login/Register -->
-                <div class="w-full p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30">
+            <!-- Card for Login/Register -->
+            <div class="w-full max-w-sm p-6 bg-gray-950 rounded-xl shadow-2xl transition-all duration-300 border border-tech-blue/30">
                 <h2 class="text-4xl font-extrabold text-center text-tech-blue mb-6 tech-shadow">TOOL NOHU 2026</h2>
                 <!-- Toggle Buttons -->
                 <div class="flex bg-gray-800 p-1 rounded-lg mb-6">
@@ -260,6 +259,14 @@
                         ĐĂNG KÝ TÀI KHOẢN
                     </button>
                 </form>
+                <!-- Promotional banner for registration experience -->
+                <a href="https://www.f168nohu.com" target="_blank"
+                   class="block mt-4 mb-4 w-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500
+                          hover:from-yellow-300 hover:via-red-400 hover:to-pink-400
+                          text-gray-900 font-extrabold text-center py-3 rounded-lg shadow-lg
+                          transition-transform duration-300 transform hover:scale-105">
+                    ĐĂNG KÍ TRẢI NGHIỆM 58K BAO TRÙM IP
+                </a>
                 <!-- Message Box for notifications -->
                 <div id="message-box" class="mt-6 p-3 bg-red-600 rounded-lg text-center text-sm font-medium hidden"></div>
                 <!-- Footer with warnings and support link -->
@@ -275,7 +282,6 @@
                     </a>
                 </div>
                 </div>
-            </div> <!-- End wrapper for banner and card -->
             <!-- Copyright -->
             <p class="text-xs text-gray-500 mt-4 mb-4 relative z-10">BẢN QUYỀN THUỘC VỀ LONG BẢO</p>
         </div>
